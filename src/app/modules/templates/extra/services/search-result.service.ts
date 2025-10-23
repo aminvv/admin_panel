@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
-import {SearchResult} from '../models';
 
 @Injectable({
   providedIn: 'root'

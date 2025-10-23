@@ -26,38 +26,9 @@ const TREE_DATA: any = [
 ];
 
 const TemplateNode: any = [
-  {
-    name: 'Core',
-    children: [
-      { name: 'Typography', route: routes.TYPOGRAPHY, active: 'active' },
-      { name: 'Colors', route: routes.COLORS, active: 'active' },
-      { name: 'Grid', route: routes.GRID, active: 'active' },
-    ]
-  },
-  {
-    name: 'Tables',
-    children: [
-      { name: 'Tables Basic', route: routes.TABLES_BASIC, active: 'active' },
-      { name: 'Tables Dynamic', route: routes.TABLES_DYNAMIC, active: 'active' },
-    ]
-  },
-  {
-    name: 'UI Elements',
-    children: [
-      { name: 'Icon', route: routes.ICONS, active: 'active' },
-      { name: 'Badge', route: routes.BADGE, active: 'active' },
-      { name: 'Carousel', route: routes.CAROUSEL, active: 'active' },
-      { name: 'Cards', route: routes.CARDS, active: 'active' },
-      { name: 'Modal', route: routes.MODAL, active: 'active' },
-      { name: 'Notification', route: routes.NOTIFICATION, active: 'active' },
-      { name: 'Navbar', route: routes.NAVBAR, active: 'active' },
-      { name: 'Tooltips', route: routes.TOOLTIPS, active: 'active' },
-      { name: 'Tabs', route: routes.TABS, active: 'active' },
-      { name: 'Pagination', route: routes.PAGINATION, active: 'active' },
-      { name: 'Progress', route: routes.PROGRESS, active: 'active' },
-      { name: 'Widget', route: routes.WIDGET, active: 'active' },
-    ]
-  },
+
+  
+  
   {
     name: 'Forms',
     children: [
@@ -86,31 +57,10 @@ const TemplateNode: any = [
     children: [
       { name: 'Calendar', route: routes.CALENDAR, active: 'active' },
       { name: 'Invoice', route: routes.INVOICE, active: 'active' },
-      { name: 'Login Page', route: routes.LOGIN_PAGE, active: 'active' },
-      { name: 'Error Page', route: routes.ERROR_PAGE, active: 'active' },
-      { name: 'Gallery', route: routes.GALLERY, active: 'active' },
-      { name: 'Search Result', route: routes.SEARCH_RESULT, active: 'active' },
-      { name: 'Time Line', route: routes.TIME_LINE, active: 'active' }
+
     ]
   },
-  {
-    name: 'Menu Levels',
-    children: [
-      { name: 'Level 1.1' },
-      {
-        name: 'Level 1.2',
-        children: [
-          { name: 'Level 2.1' },
-          {
-            name: 'Level 2.2',
-            children: [
-              { name: 'Level 3.1'}
-            ]
-          }
-        ]
-      }
-    ]
-  }
+
 ];
 
 
@@ -163,13 +113,4 @@ export class SidebarComponent {
     this.isOpenUiElements = !this.isOpenUiElements;
   }
 
-  public openChat(): void {
-    this.dialog.open(ChatPopupComponent, {
-      width: '436px'
-    });
-  }
-
-  public stopPropagation(event){
-    event.stopPropagation();
-  }
 }

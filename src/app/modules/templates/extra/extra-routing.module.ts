@@ -5,10 +5,8 @@ import { AuthPageComponent } from '../../auth/containers';
 import { NotFoundComponent } from '../../../shared/not-found/not-found.component';
 import {
   CalendarPageComponent,
-  GalleryPageComponent,
   InvoicePageComponent,
-  SearchResultPageComponent,
-  TimeLinePageComponent
+  
 } from './containers';
 
 const routes: Routes = [
@@ -32,18 +30,7 @@ const routes: Routes = [
     path: 'error',
     component: NotFoundComponent
   },
-  {
-    path: 'gallery',
-    component: GalleryPageComponent
-  },
-  {
-    path: 'search result',
-    component: SearchResultPageComponent
-  },
-  {
-    path: 'time line',
-    component: TimeLinePageComponent
-  }
+  
 ];
 
 @NgModule({

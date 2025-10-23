@@ -6,7 +6,6 @@ import {Calendar, EventApi, View} from '@fullcalendar/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {DayInfoComponent} from '../../components/day-info/day-info.component';
-import {NewDayEventComponent} from '../../components/new-day-event/new-day-event.component';
 import {FullCalendarComponent} from '@fullcalendar/angular';
 
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -171,7 +170,6 @@ export class CalendarPageComponent implements OnInit, AfterViewInit {
       end,
       allDay
     });
-    this.openNewEventDialog();
   }
 
   public onEventClick({ event }: {
@@ -195,31 +193,7 @@ export class CalendarPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public openNewEventDialog(): void {
-    const dialogRef = this.dialog.open(NewDayEventComponent, {
-      data: {event: ''}
-    });
 
-    dialogRef.afterClosed()
-      .pipe(
-        take(1)
-      )
-      .subscribe((result: string) => {
-        const title: string = result;
-        const { start, end, allDay, backgroundColor, textColor } = this.eventForm.value;
-
-        if (result && result.length !== 0) {
-          this.calendarApi.addEvent({
-            title,
-            start,
-            end,
-            allDay,
-            backgroundColor,
-            textColor
-          });
-        }
-      });
-  }
 
   public changeCalendarView(view: string): void {
     this.calendarView = view;

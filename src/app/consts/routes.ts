@@ -78,9 +78,5 @@ export enum routes {
 
   CALENDAR = '/extra/calendar',
   INVOICE = '/extra/invoice',
-  LOGIN_PAGE = '/extra/login',
-  ERROR_PAGE = '/extra/errorpage',
-  GALLERY = '/extra/gallery',
-  SEARCH_RESULT = '/extra/search result',
-  TIME_LINE = '/extra/time line',
+
 }

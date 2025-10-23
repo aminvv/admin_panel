@@ -44,21 +44,7 @@ const route: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () => import('./modules/e-commerce/e-commerce.module').then(m => m.ECommerceModule)
       },
-      {
-        path: 'core',
-        canActivate: [AuthGuard],
-        loadChildren: () => import('./modules/templates/core/core.module').then(m => m.CoreModule)
-      },
-      {
-        path: 'tables',
-        canActivate: [AuthGuard],
-        loadChildren: () => import('./modules/templates/tables/tables.module').then(m => m.TablesModule)
-      },
-      {
-        path: 'ui',
-        canActivate: [AuthGuard],
-        loadChildren: () => import('./modules/templates/ui-elements/ui-elements.module').then(m => m.UiElementsModule)
-      },
+
       {
         path: 'forms',
         canActivate: [AuthGuard],
