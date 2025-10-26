@@ -1,13 +1,13 @@
 <app-breadcrumb [path]="routes.PRODUCT"></app-breadcrumb>
 
 <mat-card class="product-info-wrapper">
-  <img class="product-image" [src]="(product$ | async).imageLarge" alt="product-image">
+  <img class="product-image" [src]="(product$ | async).image" alt="product-image">
 
   <div class="info-wrapper">
     <div class="info-title-wrapper">
       <div class="info-inner-wrapper">
-        <p class="product-title">{{(product$ | async).title}}</p>
-        <p class="product-subtitle">{{(product$ | async).subtitle}}</p>
+        <p class="product-title">{{(product$ | async).productName}}</p>
+        <p class="product-subtitle">{{(product$ | async).productName}}</p>
       </div>
 
       <div class="product-pop-wrapper">
@@ -81,21 +81,21 @@
       <p class="text-info-title">PRODUCT DESCRIPTION</p>
 
       <ul>
-        <li>{{(product$ | async).description1}}</li>
-        <li>{{(product$ | async).description2}}</li>
+        <li>{{(product$ | async).description}}</li>
+        <li>{{(product$ | async).description}}</li>
       </ul>
     </div>
 
     <div class="text-info-item-wrapper middle-block">
       <div>
         <p class="text-info-title">PRODUCT CODE</p>
-        <p>{{(product$ | async).code}}</p>
+        <p>{{(product$ | async).quantity}}</p>
       </div>
 
       <div>
         <p class="text-info-title">TECHNOLOGY</p>
         <ul>
-          <li *ngFor="let technology of (product$ | async).technology">{{technology}}</li>
+          <li *ngFor="let technology of (product$ | async).productName">{{technology}}</li>
         </ul>
       </div>
     </div>
@@ -103,7 +103,7 @@
     <div class="text-info-item-wrapper">
       <p class="text-info-title">SHARE</p>
 
-      <p>Share photo with a tag <span class="tag">{{(product$ | async).hashtag}}</span></p>
+      <p>Share photo with a tag <span class="tag">{{(product$ | async).productName}}</span></p>
 
       <div class="icons-wrapper">
         <div class="icon-wrapper">

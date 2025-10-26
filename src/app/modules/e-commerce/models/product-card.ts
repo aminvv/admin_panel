@@ -1,9 +1,14 @@
 export interface ProductCard {
-  id: string;
-  image: string;
-  title: string;
-  subtitle: string;
-  price: string;
-  rating: string;
-  status: string;
+  id?: number;
+  productCode: string;
+  productName: string;
+  price: number;
+  quantity: number;
+  discountPercent?: number;
+  discountAmount?: number;
+  description?: string;  
+  image?: string[];
+  rating:number
+  status:string
+
 }

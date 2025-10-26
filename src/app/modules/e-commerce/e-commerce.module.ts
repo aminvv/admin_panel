@@ -15,7 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
-import { ProductsService } from './services';
+// import { ProductsService } from './services';
 import { ECommerceRoutingModule } from './e-commerce-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { ProductEditFormComponent, ProductCardComponent } from './components';
@@ -56,7 +56,7 @@ import {
     MatPaginatorModule
   ],
   providers: [
-    ProductsService
+    // ProductsService
   ]
 })
 export class ECommerceModule { }

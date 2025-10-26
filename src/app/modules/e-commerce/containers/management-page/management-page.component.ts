@@ -24,7 +24,7 @@ export class ManagementPageComponent implements OnInit {
   public displayedColumns: string[] = ['select', 'id', 'image', 'title', 'subtitle', 'price', 'rating', 'actions'];
   public dataSource: MatTableDataSource<ProductDetails>;
   deleteConfirmSubscription;
-  selectedId: string;
+  selectedId: number;
 
   selection = new SelectionModel<any>(true, []);
 
@@ -71,7 +71,7 @@ export class ManagementPageComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  openDeleteModal(id: string): void {
+  openDeleteModal(id: number): void {
     this.selectedId = id;
     const dialogRef = this.dialog.open(DeletePopupComponent, {
       width: '512px'
@@ -82,7 +82,7 @@ export class ManagementPageComponent implements OnInit {
     });
   }
 
-  public delete(id: string) {
+  public delete(id: number) {
     this.service.deleteProduct(id);
 
     this.products$ = this.service.getProducts();

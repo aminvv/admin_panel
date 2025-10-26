@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {routes} from '../../../../consts';
 import {FormControl, FormGroup} from '@angular/forms';
-import {ProductService, ProductsService} from '../../services';
+import {ProductService,} from '../../services';
 import {Observable} from 'rxjs';
 import {ProductCard} from '../../models';
 import {ProductDetails} from '../../models/product-details';
@@ -35,7 +35,7 @@ export class ProductPageComponent implements OnInit {
       if (params.params.id) {
         this.product$ = this.service.getProduct(params.params.id);
       } else {
-        this.product$ = this.service.getProduct('1');
+        this.product$ = this.service.getProduct(1);
       }
     });
   }

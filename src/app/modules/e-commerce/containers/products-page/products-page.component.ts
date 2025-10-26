@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 import { routes } from '../../../../consts';
-import {ProductsService} from '../../services';
+// import {ProductsService} from '../../services';
 import {Observable} from 'rxjs';
 import {ProductCard} from '../../models';
 import {FormControl, FormGroup } from '@angular/forms';
@@ -16,9 +16,9 @@ export class ProductsPageComponent implements OnInit {
   public products$: Observable<ProductCard[]>
   public form: FormGroup;
 
-  constructor(private service: ProductsService) {
-    this.products$ = this.service.getProducts();
-  }
+  // constructor(private service: ProductsService) {
+  //   // this.products$ = this.service.getProducts();
+  // }
 
   public ngOnInit() {
     this.form = new FormGroup({
