@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { routes } from '../../../../consts';
 import { ProductDetails } from '../../models/product-details';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-product-edit-form',
   templateUrl: './product-edit-form.component.html',
-  styleUrls: ['./product-edit-form.component.scss'],
+  styleUrls: ['./product-edit-form.component.css'],
 })
 export class ProductEditFormComponent implements OnInit {
   @Input() product: ProductDetails;
@@ -15,7 +15,63 @@ export class ProductEditFormComponent implements OnInit {
   public form: FormGroup;
 
   selected = 'option';
-  selectedFiles: File[] = []; // اضافه شد
+  selectedFiles: { file: File; preview: string }[] = [];
+
+
+
+
+
+
+
+
+
+
+
+
+onFileChange(event: any) {
+    const files: FileList = event.target.files;
+    if (!files || files.length === 0) return;
+
+    Array.from(files).forEach((file: File) => {
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        this.selectedFiles.push({
+          file: file,
+          preview: e.target.result,
+        });
+      };
+
+      reader.readAsDataURL(file); // برای ساخت preview
+    });
+
+    event.target.value = '';
+  }
+
+  removeFile(index: number) {
+    this.selectedFiles.splice(index, 1);
+  }
+
+  getFileSize(size: number): string {
+    return size > 1024 * 1024
+      ? (size / (1024 * 1024)).toFixed(1) + ' MB'
+      : (size / 1024).toFixed(1) + ' KB';
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   constructor() {
     this.form = new FormGroup({
@@ -29,6 +85,8 @@ export class ProductEditFormComponent implements OnInit {
       image: new FormControl([]),
       rating: new FormControl('', Validators.required),
       status: new FormControl('', Validators.required),
+      features: new FormArray([this.createFeature()])
+
     });
   }
 
@@ -44,13 +102,38 @@ export class ProductEditFormComponent implements OnInit {
       this.image.setValue(this.product.image || []);
       this.rating.setValue(this.product.rating);
       this.status.setValue(this.product.status);
-      
-      // اگر محصول موجود هست، selectedFiles رو هم مقداردهی کن
-      if (this.product.image) {
-        this.selectedFiles = this.product.image as any;
-      }
     }
   }
+
+
+
+
+
+  createFeature(): FormGroup {
+    return new FormGroup({
+      name: new FormControl('', Validators.required),
+      value: new FormControl('', Validators.required)
+    });
+  }
+
+  // گرفتن لیست ویژگی‌ها
+  get features(): FormArray {
+    return this.form.get('features') as FormArray;
+  }
+
+  // افزودن ویژگی جدید
+  addFeature() {
+    this.features.push(this.createFeature());
+  }
+
+  // حذف ویژگی بر اساس ایندکس
+  removeFeature(index: number) {
+    this.features.removeAt(index);
+  }
+
+
+
+
 
   public save(): void {
     this.editProduct.emit({
@@ -62,37 +145,25 @@ export class ProductEditFormComponent implements OnInit {
       discountPercent: this.discountPercent.value,
       discountAmount: this.discountAmount.value,
       description: this.description.value,
-      image: this.product?.image||[], // استفاده از selectedFiles به جای image.value
+      image: this.product?.image || [],
       rating: this.rating.value,
       status: this.status.value,
+      features: this.features.value
     });
   }
 
-  public onFileChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const filesArray = Array.from(input.files);
-      this.selectedFiles = filesArray; // ذخیره در selectedFiles
-      this.image.setValue(filesArray); // ذخیره در form control هم
-    }
-  }
 
-  // اضافه کردن متد removeFile
-  public removeFile(fileToRemove: File) {
-    this.selectedFiles = this.selectedFiles.filter(file => file !== fileToRemove);
-    this.image.setValue(this.selectedFiles); // آپدیت form control
-  }
 
-  // اضافه کردن متد getFileSize
-  public getFileSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
-    
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  }
+
+
+
+
+
+
+
+
+
+
 
   get productCode() { return this.form.get('productCode') as FormControl; }
   get productName() { return this.form.get('productName') as FormControl; }

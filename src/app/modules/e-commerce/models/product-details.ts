@@ -20,14 +20,15 @@
 
 export interface ProductDetails {
   id?: number;
-  productCode: string;
   productName: string;
+  productCode: string;
   price: number;
   quantity: number;
   discountPercent?: number;
   discountAmount?: number;
   description?: string;  
   image?: string[];
+  features?: string[];
   rating:number
   status:string
 }

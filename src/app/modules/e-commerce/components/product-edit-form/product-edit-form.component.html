@@ -1,123 +1,104 @@
-<mat-card class="card">
-  <mat-card-title>
-    <p>محصول جدید</p>
-  </mat-card-title>
+<section class="add-product">
+    <h2 class="add-product__title">افزودن محصول جدید</h2>
 
-  <mat-card-content>
-<!-- 
-    <div class="input-wrapper">
-      <p class="input-title">عکس</p>
-      <mat-form-field class="input-field" appearance="standard">
-        <mat-select [(value)]="selected" [ngClass]="selected">
-          <mat-option>None</mat-option>
-          <mat-option value="option">Option 1</mat-option>
-          <mat-option value="option2">Option 2</mat-option>
-          <mat-option value="option3">Option 3</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div> -->
-
-    
-<div class="input-wrapper">
-  <p class="input-title">تصویر محصول</p>
-  
-  <mat-form-field appearance="outline" class="input-field">
-    <mat-label>انتخاب تصاویر</mat-label>
-    <input type="file" 
-           (change)="onFileChange($event)" 
-           multiple 
-           accept="image/*"
-           style="padding: 10px;">
-  </mat-form-field>
-
-  <div *ngIf="selectedFiles?.length" class="files-preview">
-    <p class="files-title">تصاویر انتخاب شده:</p>
-    <div class="file-list">
-      <div *ngFor="let file of selectedFiles" class="file-item"> 
-        <mat-icon>image</mat-icon>
-        <span class="file-name">{{ file.name }}</span>
-        <span class="file-size">({{ getFileSize(file.size) }})</span>
-        <button mat-icon-button color="warn" (click)="removeFile(file)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-    <div class="input-wrapper">
-      <p class="input-title">کد محصول</p>
-      <mat-form-field appearance="outline" class="input-field">
-        <input matInput [formControl]="productCode" class="input-text">
-      </mat-form-field>
-    </div>
-
-    <div class="input-wrapper">
-      <p class="input-title">نام محصول<p>
-      <mat-form-field appearance="outline" class="input-field">
-        <input matInput [formControl]="productName" class="input-text">
-      </mat-form-field>
-    </div>
-
-    <div class="input-wrapper">
-      <p class="input-title">قیمت</p>
-      <mat-form-field appearance="outline" class="input-field">
-        <input matInput [formControl]="price" class="input-text" type="number">
-      </mat-form-field>
-    </div>
-
-    <div class="input-wrapper">
-      <p class="input-title">تعداد</p>
-      <mat-form-field appearance="outline" class="input-field">
-        <input matInput [formControl]="quantity" class="input-text" type="number">
-      </mat-form-field>
-    </div>
-
-    <div class="input-wrapper">
-      <p class="input-title"> درصد تخفیف</p>
-      <mat-form-field appearance="outline" class="input-field">
-        <input matInput [formControl]="discountPercent" class="input-text">
-      </mat-form-field>
-    </div>
-
-    <div class="input-wrapper">
-      <p class="input-title"> مقدار تخفیف</p>
-      <mat-form-field appearance="outline" class="input-field">
-        <input matInput [formControl]="discountAmount" class="input-text">
-      </mat-form-field>
-    </div>
-
-    <div class="input-wrapper">
-      <p class="input-title">description</p>
-      <mat-form-field appearance="outline" class="input-field">
-        <input matInput [formControl]="description" class="input-text" type="number">
-      </mat-form-field>
-    </div>
-
-    <div class="input-wrapper">
-      <p class="input-title">عکس</p>
-      <mat-form-field appearance="outline" class="input-field">
-        <input matInput [formControl]="image" class="input-text">
-      </mat-form-field>
-    </div>
-
-    <div class="input-wrapper">
-      <p class="input-title">ویژگی ها</p>
-      <mat-form-field appearance="outline" class="input-field">
-        <input matInput [formControl]="product" class="input-text">
-      </mat-form-field>
-    </div>
-
-
-
-    <button mat-flat-button color="success" (click)="save()">save</button>
-    <button mat-flat-button color="defailt" routerLink="{{router.MANAGEMENT}}">back</button>
-
-  </mat-card-content>
-</mat-card>
+    <form [formGroup]="form" (ngSubmit)="save()" class="product__form">
 
 
 
 
 
+        <!-- ✅ آپلود چند عکس -->
+        <div class="form-group">
+            <label class="form-label">آپلود تصاویر</label>
+            <input id="imageUpload" type="file" multiple accept="image/*" class="form-input"
+                (change)="onFileChange($event)" />
+        </div>
 
+        <!-- ✅ پیش‌نمایش عکس‌ها -->
+        <div class="preview-list" *ngIf="selectedFiles.length > 0">
+            <div class="preview-item" *ngFor="let file of selectedFiles; let i = index">
+                <img [src]="file.preview" class="preview-thumb" alt="preview" />
+                <div class="preview-info">
+                    <span>{{ file.file.name }}</span>
+                    <span>({{ getFileSize(file.file.size) }})</span>
+                </div>
+                <button type="button" class="btn btn--remove" (click)="removeFile(i)">
+                    ×
+                </button>
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group">
+            <label class="form-label">نام محصول</label>
+            <input class="form-input" formControlName="productName" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">کد محصول</label>
+            <input class="form-input" formControlName="productCode" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">قیمت</label>
+            <input type="number" class="form-input" formControlName="price" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">تعداد</label>
+            <input type="number" class="form-input" formControlName="quantity" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">درصد تخفیف</label>
+            <input type="number" class="form-input" formControlName="discountPercent" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">مبلغ تخفیف</label>
+            <input type="number" class="form-input" formControlName="discountAmount" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">توضیحات</label>
+            <textarea class="form-textarea" formControlName="description"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">امتیاز</label>
+            <input type="number" min="0" max="5" class="form-input" formControlName="rating" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">وضعیت</label>
+            <select class="form-input" formControlName="status">
+                <option value="1">فعال</option>
+                <option value="0">غیرفعال</option>
+            </select>
+        </div>
+
+        <label class="form-label">ویژگی‌ها</label>
+        <div class="form-section form-section--features" formArrayName="features">
+
+            <div *ngFor="let feature of features.controls; let i = index" [formGroupName]="i" class="feature-item">
+                <input type="text" class="form-input" formControlName="name" placeholder="نام ویژگی" />
+                <input type="text" class="form-input" formControlName="value" placeholder="مقدار ویژگی" />
+                <button type="button" class="btn btn--remove-feature" (click)="removeFeature(i)">
+                    ×
+                </button>
+            </div>
+
+            <button type="button" class="btn btn--add" (click)="addFeature()">
+                افزودن ویژگی
+            </button>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary">ذخیره</button>
+            <button type="button" class="btn btn--secondary">انصراف</button>
+        </div>
+
+    </form>
+</section>
