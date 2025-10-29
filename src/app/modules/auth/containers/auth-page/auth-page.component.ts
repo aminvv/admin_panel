@@ -33,9 +33,7 @@ export class AuthPageComponent {
     this.authService.loginUser(creds);
   }
 
-  public sendSignForm(creds: any): void {
-    this.authService.registerUser(creds);
-  }
+
 
   public googleLogin() {
     this.authService.loginUser({ social: 'google' });

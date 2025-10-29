@@ -145,7 +145,7 @@ onFileChange(event: any) {
       discountPercent: this.discountPercent.value,
       discountAmount: this.discountAmount.value,
       description: this.description.value,
-      image: this.product?.image || [],
+      image: this.selectedFiles.map(f => f.file),
       rating: this.rating.value,
       status: this.status.value,
       features: this.features.value

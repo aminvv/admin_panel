@@ -85,25 +85,7 @@ export class AuthService {
     }
   }
 
-  registerUser(payload) {
-    this.requestRegister();
-    const creds = payload;
-    if (creds.email.length > 0 && creds.password.length > 0) {
-      this.http
-        .post(`${this.api}/signup`, creds, { responseType: 'text' })
-        .subscribe(
-          (token: string) => {
-            this.toastr.success("You've been registered successfully");
-            this.router.navigate([this.ROUTES.LOGIN]);
-          },
-          (err) => {
-            this.registerError(err.response.data);
-          },
-        );
-    } else {
-      this.registerError('Something was wrong. Try again');
-    }
-  }
+
 
   requestRegister() {
     this.isFetching = true;

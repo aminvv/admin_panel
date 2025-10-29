@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {ProductDetails} from '../models/product-details';
 import {ProductCard} from '../models';
+import { HttpClient } from '@angular/common/http';
+import { switchMap } from 'rxjs/operators';
 
 export const products: ProductDetails[] = [
   {
@@ -46,10 +48,29 @@ export const products: ProductDetails[] = [
 ];
 
 
+
+
+
+
 @Injectable({
   providedIn: 'root'
 })
+
+
+
+
+
 export class ProductService {
+
+
+  private productBaseUrl = 'http://localhost:4000/product';
+  private detailBaseUrl = 'http://localhost:4000/product-detail';
+
+
+  constructor(private http: HttpClient){}
+
+
+  
   public getProducts(): Observable<ProductDetails[]> {
     return of(products);
   }
@@ -74,6 +95,45 @@ export class ProductService {
     });
   }
 
+  
+  public createProduct(product: ProductDetails) {
+    const formData= new FormData()
+    formData.append('productCode',product.productCode)
+    formData.append('productName',product.productName)
+    formData.append('price',product.price.toString())
+    formData.append('quantity',product.quantity.toString())
+    formData.append('discountAmount',product.discountAmount.toString()||'0')
+    formData.append('discountPercent',product.discountPercent.toString()||'0')
+    formData.append('description',product.description||'')
+    formData.append('rating',product.rating.toString())
+    formData.append('status',product.status)
+
+if (product.image && product.image.length > 0) {
+  for (let item of product.image) {
+    if (item instanceof File) {
+      formData.append('image', item)
+    }
+  }
+}
+
+
+
+    return this.http.post<{ message: string; product: { id: number } }>(`${this.productBaseUrl}`,formData).pipe(
+      switchMap((res)=>{
+        const productId=res.product?.id
+        const FeaturesProduct=product.features.map((feature)=>
+          this.http.post(`${this.detailBaseUrl}`,{
+            key:feature.name,
+            value:feature.value,
+            productId
+          })
+        )
+         return forkJoin(FeaturesProduct)
+      })
+    )
+
+    // products.push(product);
+  }
   public getSimilarProducts(): Observable<ProductCard[]> {
     return of([
         {
@@ -116,9 +176,5 @@ export class ProductService {
     status: 'New'
   }
     ]);
-  }
-
-  public createProduct(product: ProductDetails): void {
-    products.push(product);
   }
 }

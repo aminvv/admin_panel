@@ -31,8 +31,8 @@ export class Users {
 
   avatar: any[];
 
-  createdBy: any; // Users;
-  updatedBy: any; //Users;
+  createdBy: any; 
+  updatedBy: any; 
 }
 
 export interface UsersList {

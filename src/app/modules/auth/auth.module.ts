@@ -9,7 +9,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AuthPageComponent } from './containers';
 import { AuthRoutingModule } from './auth-routing.module';
 import { YearPipe } from './pipes';
-import { LoginFormComponent, SignFormComponent } from './components';
+import { LoginFormComponent } from './components';
 import { AuthGuard } from './guards';
 import { HomeComponent } from '../pages/home/home.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
@@ -19,7 +19,6 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
     AuthPageComponent,
     YearPipe,
     LoginFormComponent,
-    SignFormComponent,
     HomeComponent,
     VerifyEmailComponent,
   ],
