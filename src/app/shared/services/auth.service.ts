@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Injectable } from '@angular/core';
@@ -15,6 +15,7 @@ const jwt = new JwtHelperService();
 export class AuthService {
   config: any;
   api = '/api/auth';
+private apiUrl = 'http://127.0.0.1:4000/authAdmin';
   ROUTES: typeof routes = routes;
 
   constructor(
@@ -71,10 +72,11 @@ export class AuthService {
         this.config.baseURLApi + `${this.api}/signin/` + creds.social;
     } else if (creds.email.length > 0 && creds.password.length > 0) {
       this.http
-        .post(`${this.api}/signin/local`, creds, { responseType: 'text' })
+        .post(`${this.apiUrl}/login-admin`, creds, { responseType: 'json' } )
         .subscribe(
-          (token: string) => {
-            this.receiveToken(token);
+          (res: any) => {
+            this.receiveToken(res.accessToken);
+            this.toastr.success('ورود موفق');
           },
           (err) => {
             this.toastr.error('Something was wrong. Try again');
@@ -84,6 +86,13 @@ export class AuthService {
       this.toastr.error('Something was wrong. Try again');
     }
   }
+
+
+
+
+
+
+
 
 
 
@@ -101,14 +110,14 @@ export class AuthService {
     this.errorMessage = payload;
   }
 
-  receiveToken(token) {
-    let user: any = {};
-    user = jwt.decodeToken(token).user;
+receiveToken(token) {
+  const decoded: any = jwt.decodeToken(token);
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    this.receiveLogin();
-  }
+  localStorage.setItem('token', token);
+  localStorage.setItem('userId', decoded.userId)
+
+  this.receiveLogin();
+}
 
   logoutUser() {
     localStorage.removeItem('token');

@@ -22,10 +22,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "./node_modules/font-awesome/scss/font-awesome.scss",
               "./node_modules/ngx-toastr/toastr.css",
@@ -34,11 +31,6 @@
             "scripts": []
           },
           "configurations": {
-            "development": {
-              "sourceMap": false,
-              "optimization": false,
-              "vendorChunk": false
-            },
             "production": {
               "fileReplacements": [
                 {
@@ -46,13 +38,13 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": false,
+              "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
-              "namedChunks": true,
-              "extractLicenses": false,
-              "vendorChunk": true,
-              "buildOptimizer": false,
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -74,8 +66,7 @@
                 }
               ]
             }
-          },
-          "defaultConfiguration": "development"
+          }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -86,9 +77,6 @@
           "configurations": {
             "production": {
               "browserTarget": "angular-material-admin:build:production"
-            },
-            "development": {
-              "browserTarget": "angular-material-admin:build:development"
             },
             "hmr": {
               "hmr": true,
@@ -110,9 +98,7 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
