@@ -15,7 +15,7 @@ const jwt = new JwtHelperService();
 export class AuthService {
   config: any;
   api = '/api/auth';
-private apiUrl = 'http://127.0.0.1:4000/authAdmin';
+  private apiUrl = 'http://127.0.0.1:4000/authAdmin';
   ROUTES: typeof routes = routes;
 
   constructor(
@@ -69,21 +69,23 @@ private apiUrl = 'http://127.0.0.1:4000/authAdmin';
     if (creds.social) {
       // tslint:disable-next-line
       window.location.href =
-        this.config.baseURLApi + `${this.api}/signin/` + creds.social;
+        this.config.baseURLApi + `${this.api}/signin/` + creds.social
     } else if (creds.email.length > 0 && creds.password.length > 0) {
       this.http
-        .post(`${this.apiUrl}/login-admin`, creds, { responseType: 'json' } )
+        .post(`${this.apiUrl}/login-admin`, creds, { responseType: 'json' })
         .subscribe(
           (res: any) => {
             this.receiveToken(res.accessToken);
             this.toastr.success('ورود موفق');
           },
           (err) => {
-            this.toastr.error('Something was wrong. Try again');
+            const msg =
+              err.error?.message || err.message || 'خطایی رخ داده است';
+            this.toastr.error(msg);
           },
         );
     } else {
-      this.toastr.error('Something was wrong. Try again');
+      this.toastr.error(' لطفا ابمیل و پسورد خود را وارید کنید');
     }
   }
 
@@ -110,14 +112,14 @@ private apiUrl = 'http://127.0.0.1:4000/authAdmin';
     this.errorMessage = payload;
   }
 
-receiveToken(token) {
-  const decoded: any = jwt.decodeToken(token);
+  receiveToken(token) {
+    const decoded: any = jwt.decodeToken(token);
 
-  localStorage.setItem('token', token);
-  localStorage.setItem('userId', decoded.userId)
+    localStorage.setItem('token', token);
+    localStorage.setItem('userId', decoded.userId)
 
-  this.receiveLogin();
-}
+    this.receiveLogin();
+  }
 
   logoutUser() {
     localStorage.removeItem('token');

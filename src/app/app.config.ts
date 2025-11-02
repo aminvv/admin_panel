@@ -17,8 +17,8 @@ export class AppConfig {
     portApi,
     baseURLApi,
     auth: {
-      email: 'admin@flatlogic.com',
-      password: 'password'
+      email: 'aminviper1378@gmail.com',
+      password: '123456'
     },
   };
 
