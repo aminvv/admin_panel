@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { AppConfig } from '../../app.config';
 import { routes } from '../../consts';
+import { decode } from 'querystring';
 
 const jwt = new JwtHelperService();
 
@@ -15,7 +16,7 @@ const jwt = new JwtHelperService();
 export class AuthService {
   config: any;
   api = '/api/auth';
-  private apiUrl = 'http://127.0.0.1:4000/authAdmin';
+  private apiUrl = '/authAdmin';
   ROUTES: typeof routes = routes;
 
   constructor(
@@ -46,23 +47,22 @@ export class AuthService {
   set errorMessage(val: string) {
     this._errorMessage = val;
   }
+isAuthenticated() {
+  const token = localStorage.getItem('token');
+  if (!token) return false;
 
-  isAuthenticated() {
-    const token = localStorage.getItem('token');
-    let data = null;
-
-    // We check if app runs with backend mode
-    if (!this.config.isBackend && token) return true;
-    if (!token) return;
-    const date = new Date().getTime() / 1000;
-    try {
-      data = jwt.decodeToken(token);
-    } catch (e) {
-      this.router.navigate(['/login']);
-    }
-    if (!data) return;
+  const date = new Date().getTime() / 1000;
+  try {
+    const data = jwt.decodeToken(token);
+    if (!data || !data.exp) return false;
     return date < data.exp;
+  } catch (e) {
+    console.error('Token decode error:', e);
+    this.router.navigate(['/login']);
+    return false;
   }
+}
+
 
   loginUser(creds) {
     this.requestLogin();
@@ -71,11 +71,11 @@ export class AuthService {
       window.location.href =
         this.config.baseURLApi + `${this.api}/signin/` + creds.social
     } else if (creds.email.length > 0 && creds.password.length > 0) {
-      this.http
-        .post(`${this.apiUrl}/login-admin`, creds, { responseType: 'json' })
+      this.http.post(`${this.apiUrl}/login-admin`, creds, { responseType: 'json' })
         .subscribe(
           (res: any) => {
-            this.receiveToken(res.accessToken);
+            console.log('res accessToken', res.accessToken);
+            this.receiveToken(res);
             this.toastr.success('ورود موفق');
           },
           (err) => {
@@ -112,14 +112,16 @@ export class AuthService {
     this.errorMessage = payload;
   }
 
-  receiveToken(token) {
-    const decoded: any = jwt.decodeToken(token);
+receiveToken(res: any) {
+  const token = res.accessToken;                  
+  const decoded = jwt.decodeToken(token)
+  console.log('token',token);
+  console.log('token decoded.userId',decoded.userId);
+  localStorage.setItem('token', token)   
+  localStorage.setItem('userId', decoded.userId.toString())
+  this.receiveLogin();
+}
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('userId', decoded.userId)
-
-    this.receiveLogin();
-  }
 
   logoutUser() {
     localStorage.removeItem('token');
@@ -144,7 +146,7 @@ export class AuthService {
   }
 
   getCurrentUserInfo(): Observable<any> {
-    return this.http.get(`${this.api}/me`);
+    return this.http.get(`${this.apiUrl}/me`);
   }
 
   changePassword(data): Observable<any> {

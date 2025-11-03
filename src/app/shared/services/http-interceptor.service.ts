@@ -26,6 +26,17 @@ export class HttpInterceptorService implements HttpInterceptor {
     req = req.clone({ url: this.config.baseURLApi + req.url });
 
     const token: string = localStorage.getItem('token');
+
+
+    // 🔴 اضافه کردن این لاگ‌ها
+    console.log('🟢 Interceptor - Request URL:', req.url);
+    console.log('🟢 Interceptor - Token exists:', !!token);
+    if (token) {
+      console.log('🟢 Interceptor - Token:', token);
+    }
+
+
+
     if (token) {
       req = req.clone({
         headers: req.headers.set('Authorization', 'Bearer ' + token),
@@ -34,10 +45,14 @@ export class HttpInterceptorService implements HttpInterceptor {
 
     return next.handle(req).pipe(
       tap(
-        (event) => {},
+        (event) => { },
         (err) => {
+          console.log('❌ Request failed - URL:', req.url); // اضافه کردن این
+          console.log('❌ Request failed - Error:', err); // اضافه کردن این
           if (err instanceof HttpErrorResponse) {
+            console.log('🔴 Error Status:', err.status);
             if (err.status == 401) {
+              console.log('🔴 401 Error - Logging out...');
               this.authService.logoutUser();
             }
           }

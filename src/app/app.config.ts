@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 
-const hostApi = process.env.NODE_ENV === 'development' ? 'http://localhost' : 'https://sing-generator-node.herokuapp.com';
-const portApi = process.env.NODE_ENV === 'development' ? '8080' : '';
-const baseURLApi = `${hostApi}${portApi ? `:${portApi}` : ``}`;
+const hostApi = 'http://localhost';
+const portApi = '4000';
+const baseURLApi = `${hostApi}:${portApi}`;
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ const baseURLApi = `${hostApi}${portApi ? `:${portApi}` : ``}`;
 export class AppConfig {
   config = {
     version: '1.2.0',
-    remote: 'https://sing-generator-node.herokuapp.com',
+    // remote: 'http://localhost:4000',
     isBackend: environment.backend,
     hostApi,
     portApi,

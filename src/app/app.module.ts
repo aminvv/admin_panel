@@ -49,11 +49,11 @@ import { HttpInterceptorService } from './shared/services/http-interceptor.servi
     HttpClientModule,
   ],
   providers: [
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: HttpInterceptorService,
-    //   multi: true,
-    // },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorService,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
