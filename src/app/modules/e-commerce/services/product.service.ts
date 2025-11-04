@@ -63,8 +63,8 @@ export const products: ProductDetails[] = [
 export class ProductService {
 
 
-  private productBaseUrl = 'http://localhost:4000/product';
-  private detailBaseUrl = 'http://localhost:4000/product-detail';
+  private productBaseUrl = '/product/create-product';
+  private detailBaseUrl = '/product-detail/create-detail';
 
 
   constructor(private http: HttpClient) { }
@@ -115,10 +115,9 @@ export class ProductService {
         }
       }
     }
-console.log("tttttoken",localStorage.getItem('token'));
- const headers = new HttpHeaders({
-  Authorization: `Bearer ${localStorage.getItem('token') || ''}`
-});
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token') || ''}`
+    });
 
     return this.http
       .post<{ message: string; product: { id: number } }>(
@@ -128,22 +127,29 @@ console.log("tttttoken",localStorage.getItem('token'));
       )
       .pipe(
         switchMap((res) => {
+          console.log('✅ Product create response:', res);
+          console.log('🆔 Product ID returned from backend:', res.product?.id);
           const productId = res.product?.id;
           const features = product.features || [];
           if (!features.length) return of(res);
 
-          const featureRequests = features.map((feature) =>
-            this.http.post(`${this.detailBaseUrl}`, {
+          const featureRequests = features.map((feature) => {
+            if (!productId) {
+              console.error('❌ productId is MISSING! Cannot create details.', res);
+              return of(res);
+            }
+
+            return this.http.post(`${this.detailBaseUrl}`, {
               key: feature.name,
               value: feature.value,
               productId,
             })
-          );
+          });
           return forkJoin(featureRequests).pipe(
-          map(() => ({
-            message: res.message,
-            product: res.product,
-          })));
+            map(() => ({
+              message: res.message,
+              product: res.product,
+            })));
         })
       );
   }

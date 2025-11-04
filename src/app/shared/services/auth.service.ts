@@ -57,7 +57,6 @@ isAuthenticated() {
     if (!data || !data.exp) return false;
     return date < data.exp;
   } catch (e) {
-    console.error('Token decode error:', e);
     this.router.navigate(['/login']);
     return false;
   }
@@ -74,7 +73,6 @@ isAuthenticated() {
       this.http.post(`${this.apiUrl}/login-admin`, creds, { responseType: 'json' })
         .subscribe(
           (res: any) => {
-            console.log('res accessToken', res.accessToken);
             this.receiveToken(res);
             this.toastr.success('ورود موفق');
           },
@@ -115,8 +113,6 @@ isAuthenticated() {
 receiveToken(res: any) {
   const token = res.accessToken;                  
   const decoded = jwt.decodeToken(token)
-  console.log('token',token);
-  console.log('token decoded.userId',decoded.userId);
   localStorage.setItem('token', token)   
   localStorage.setItem('userId', decoded.userId.toString())
   this.receiveLogin();
