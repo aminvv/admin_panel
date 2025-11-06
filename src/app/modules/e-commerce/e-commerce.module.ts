@@ -26,6 +26,7 @@ import {
   ProductEditPageComponent,
   ProductCreatePageComponent
 } from './containers';
+import { BaseService } from 'src/app/shared/services/base.service';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {
   ],
   providers: [
     // ProductsService
+    BaseService
   ]
 })
 export class ECommerceModule { }

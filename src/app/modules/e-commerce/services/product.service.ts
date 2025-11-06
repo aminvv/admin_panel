@@ -4,6 +4,8 @@ import { ProductDetails } from '../models/product-details';
 import { ProductCard } from '../models';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
+import { BaseService } from 'src/app/shared/services/base.service';
+import { JSONParser } from '@amcharts/amcharts4/core';
 
 export const products: ProductDetails[] = [
   {
@@ -63,11 +65,15 @@ export const products: ProductDetails[] = [
 export class ProductService {
 
 
-  private productBaseUrl = '/product/create-product';
+  private productCreateUrl = '/product/create-product';
+  private productEditUrl = '/product/edit-product';
   private detailBaseUrl = '/product-detail/create-detail';
 
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private baseServe: BaseService
+  ) { }
 
 
 
@@ -96,7 +102,16 @@ export class ProductService {
   }
 
 
-  public createProduct(product: ProductDetails) {
+
+
+
+
+
+
+
+
+  // ================= PRODUCT FORM DATA =================
+  private buildProductFormData(product: ProductDetails): FormData {
     const formData = new FormData();
     formData.append('productCode', product.productCode);
     formData.append('productName', product.productName);
@@ -115,27 +130,27 @@ export class ProductService {
         }
       }
     }
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('token') || ''}`
-    });
+    return formData
+  }
+
+
+
+  // ================= CREATE =================
+  public createProduct(product: ProductDetails) {
+    const formData = this.buildProductFormData(product)
+    const headers = this.baseServe.getAuthHeader()
 
     return this.http
-      .post<{ message: string; product: { id: number } }>(
-        `${this.productBaseUrl}`,
-        formData,
-        { headers }
-      )
+      .post<{ message: string; product: { id: number } }>(`${this.productCreateUrl}`, formData, { headers })
       .pipe(
         switchMap((res) => {
-          console.log('✅ Product create response:', res);
-          console.log('🆔 Product ID returned from backend:', res.product?.id);
+
           const productId = res.product?.id;
           const features = product.features || [];
           if (!features.length) return of(res);
 
           const featureRequests = features.map((feature) => {
             if (!productId) {
-              console.error('❌ productId is MISSING! Cannot create details.', res);
               return of(res);
             }
 
@@ -153,6 +168,37 @@ export class ProductService {
         })
       );
   }
+
+
+
+
+
+
+
+
+  // ================= UPDATE =================
+  public editProduct(product: ProductDetails) {
+    const formData = this.buildProductFormData(product)
+    const headers = this.baseServe.getAuthHeader()
+
+    const features = product.features|| []
+    if (features.length > 0){
+          formData.append('details', JSON.stringify(features))
+    }
+
+    if(product.image && product.image.length>0){
+      for(const img of product.image){
+        if( img instanceof File){
+          formData.append('image',img)
+        }
+      }
+    }
+
+      return this.http.patch(`${this.productEditUrl}/${product.id}`, formData, { headers, })
+  }
+
+
+
 
   public getSimilarProducts(): Observable<ProductCard[]> {
     return of([
