@@ -28,7 +28,7 @@ export interface ProductDetails {
   discountAmount?: number;
   description?: string;  
   image?: (string | File)[];
-  features?: { name: string; value: string }[]
+  features?: { key: string; value: string }[]
   rating:number
   status:string
 }

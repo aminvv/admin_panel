@@ -3,9 +3,8 @@ import { forkJoin, Observable, of } from 'rxjs';
 import { ProductDetails } from '../models/product-details';
 import { ProductCard } from '../models';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { BaseService } from 'src/app/shared/services/base.service';
-import { JSONParser } from '@amcharts/amcharts4/core';
 
 export const products: ProductDetails[] = [
   {
@@ -51,7 +50,10 @@ export const products: ProductDetails[] = [
 
 
 
-
+export interface ProductResponse {
+  pagination: any;     
+  products: ProductDetails[];
+}
 
 
 @Injectable({
@@ -67,6 +69,8 @@ export class ProductService {
 
   private productCreateUrl = '/product/create-product';
   private productEditUrl = '/product/edit-product';
+  private productsGetUrl = '/product/get-products';
+  private productGetUrl = '/product/get-product';
   private detailBaseUrl = '/product-detail/create-detail';
 
 
@@ -78,20 +82,47 @@ export class ProductService {
 
 
   public getProducts(): Observable<ProductDetails[]> {
-    return of(products);
+    const headers = this.baseServe.getAuthHeader()
+    return this.http.get<ProductResponse>(this.productsGetUrl, { headers }).pipe(
+      map(response => response.products)
+    )
   }
+  
+  // public getProduct(id: number): Observable<ProductDetails> {
+  //   const headers = this.baseServe.getAuthHeader()
+  //   return this.http.get<ProductDetails>(`${this.productGetUrl}/${id}`, { headers })
+  // }
 
-  public getProduct(id: number): Observable<ProductDetails> {
-    return of(products.find((product: ProductDetails) => product.id === id));
-  }
 
-  public saveChangedProduct(editProduct: ProductDetails) {
-    products.map((product: ProductDetails, i: number) => {
-      if (product.id === editProduct.id) {
-        products.splice(i, 1, editProduct);
-      }
-    });
-  }
+
+
+public getProduct(id: number): Observable<ProductDetails> {
+  const headers = this.baseServe.getAuthHeader()
+  return this.http.get<any>(`${this.productGetUrl}/${id}`, { headers }).pipe(
+    map(response => {
+      // 🔥 تبدیل درست details به features
+      const features = response.details ? response.details.map((detail: any) => ({
+        key: detail.key,
+        value: detail.value
+      })) : [];
+
+      return {
+        ...response,
+        features: features
+      };
+    })
+  );
+}
+
+
+
+  // public saveChangedProduct(editProduct: ProductDetails) {
+  //   products.map((product: ProductDetails, i: number) => {
+  //     if (product.id === editProduct.id) {
+  //       products.splice(i, 1, editProduct);
+  //     }
+  //   });
+  // }
 
   public deleteProduct(id: number): void {
     products.map((product: ProductDetails, i: number) => {
@@ -155,7 +186,7 @@ export class ProductService {
             }
 
             return this.http.post(`${this.detailBaseUrl}`, {
-              key: feature.name,
+              key: feature.key,
               value: feature.value,
               productId,
             })
@@ -176,26 +207,26 @@ export class ProductService {
 
 
 
-  // ================= UPDATE =================
-  public editProduct(product: ProductDetails) {
-    const formData = this.buildProductFormData(product)
-    const headers = this.baseServe.getAuthHeader()
+  // // ================= UPDATE =================
+  // public saveChangedProduct(product: ProductDetails) {
+  //   const formData = this.buildProductFormData(product)
+  //   const headers = this.baseServe.getAuthHeader()
 
-    const features = product.features|| []
-    if (features.length > 0){
-          formData.append('details', JSON.stringify(features))
-    }
+  //   const features = product.features || []
+  //   if (features.length > 0) {
+  //     formData.append('details', JSON.stringify(features))
+  //   }
 
-    if(product.image && product.image.length>0){
-      for(const img of product.image){
-        if( img instanceof File){
-          formData.append('image',img)
-        }
-      }
-    }
+  //   if (product.image && product.image.length > 0) {
+  //     for (const img of product.image) {
+  //       if (img instanceof File) {
+  //         formData.append('image', img)
+  //       }
+  //     }
+  //   }
 
-      return this.http.patch(`${this.productEditUrl}/${product.id}`, formData, { headers, })
-  }
+  //   return this.http.patch(`${this.productEditUrl}/${product.id}`, formData, { headers, })
+  // }
 
 
 
@@ -243,4 +274,52 @@ export class ProductService {
       }
     ]);
   }
+
+
+
+
+
+
+
+public saveChangedProduct(product: ProductDetails) {
+  console.log('🔴 Data before FormData creation:', product);
+  
+  const formData = new FormData();
+  
+  // اضافه کردن فیلدهای اصلی
+  formData.append('productCode', product.productCode);
+  formData.append('productName', product.productName);
+  formData.append('price', product.price.toString());
+  formData.append('quantity', product.quantity.toString());
+  formData.append('discountAmount', product.discountAmount?.toString() || '0');
+  formData.append('discountPercent', product.discountPercent?.toString() || '0');
+  formData.append('description', product.description || '');
+  formData.append('rating', product.rating?.toString() || '0');
+  formData.append('status', product.status);
+
+  // لاگ محتوای FormData
+  console.log('📋 FormData contents:');
+  for (let pair of (formData as any).entries()) {
+    console.log(pair[0] + ': ' + pair[1]);
+  }
+
+  const headers = this.baseServe.getAuthHeader();
+  
+  return this.http.patch(`${this.productEditUrl}/${product.id}`, formData, { 
+    headers,
+    observe: 'response' // 🔥 برای دیدن response کامل
+  }).pipe(
+    tap(response => {
+      console.log('✅ Backend response:', response);
+    })
+  );
+}
+
+
+
+
+
+
+
+
 }

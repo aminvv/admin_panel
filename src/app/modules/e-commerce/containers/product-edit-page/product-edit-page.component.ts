@@ -1,9 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {routes} from '../../../../consts';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {ProductService} from '../../services';
-import {ProductDetails} from '../../models/product-details';
+import { Component, OnInit } from '@angular/core';
+import { routes } from '../../../../consts';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { ProductService } from '../../services';
+import { ProductDetails } from '../../models/product-details';
+import { FormBuilder, FormGroup } from '@angular/forms';
+
+
 
 @Component({
   selector: 'app-product-edit-page',
@@ -12,7 +15,7 @@ import {ProductDetails} from '../../models/product-details';
 })
 export class ProductEditPageComponent implements OnInit {
   public routes: typeof routes = routes;
-  public product$: Observable<any>;
+  public product: ProductDetails; // محصول واقعی که به فرم میدیم
 
   constructor(
     private route: ActivatedRoute,
@@ -21,16 +24,54 @@ export class ProductEditPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params: any) => {
-      if (params.params.id) {
-        this.product$ = this.service.getProduct(params.params.id);
-      }
-    })
+    const id = +this.route.snapshot.params['id'];
+    if (id) {
+      this.service.getProduct(id).subscribe({
+        next: (product) => {
+          this.product = product;
+        },
+        error: (err) => console.error(err)
+      });
+    }
   }
 
-  public saveEditProduct(product: ProductDetails) {
-    this.service.saveChangedProduct(product);
+  // public saveEditProduct(updatedProduct: ProductDetails) {
+  //   updatedProduct.id = +this.route.snapshot.params['id'];
+  //   this.service.saveChangedProduct(updatedProduct).subscribe({
+  //     next: () => this.router.navigate([this.routes.MANAGEMENT]),
+  //     error: (err) => console.error(err)
+  //   });
+  // }
 
-    this.router.navigate([this.routes.MANAGEMENT]).then();
+
+
+public saveEditProduct(updatedProduct: ProductDetails) {
+  const id = +this.route.snapshot.params['id'];
+
+  if (id) {
+    // اگر id داریم یعنی ادیت
+    updatedProduct.id = id;
+    this.service.saveChangedProduct(updatedProduct).subscribe({
+      next: () => {
+        console.log('✅ محصول ویرایش شد');
+        this.router.navigate([this.routes.MANAGEMENT]);
+      },
+      error: (err) => console.error('❌ خطا در ویرایش محصول:', err)
+    });
+  } else {
+    // اگر id نداریم یعنی ساخت محصول جدید
+    this.service.createProduct(updatedProduct).subscribe({
+      next: () => {
+        console.log('✅ محصول ساخته شد');
+        this.router.navigate([this.routes.MANAGEMENT]);
+      },
+      error: (err) => console.error('❌ خطا در ساخت محصول:', err)
+    });
   }
+}
+
+
+
+
+
 }

@@ -1,21 +1,102 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { routes } from '../../../../consts';
-import { ProductDetails } from '../../models/product-details';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProductDetails } from '../../models/product-details';
+import { routes } from '../../../../consts';
 
 @Component({
   selector: 'app-product-edit-form',
   templateUrl: './product-edit-form.component.html',
-  styleUrls: ['./product-edit-form.component.css'],
+  styleUrls: ['./product-edit-form.component.css']
 })
-export class ProductEditFormComponent implements OnInit {
-  @Input() product: ProductDetails;
-  @Output() editProduct: EventEmitter<ProductDetails> = new EventEmitter<ProductDetails>();
-  public router: typeof routes = routes;
-  public form: FormGroup;
+export class ProductEditFormComponent implements OnChanges {
+  @Input() product!: ProductDetails;
+  @Output() editProduct = new EventEmitter<ProductDetails>();
 
-  selected = 'option';
-  selectedFiles: { file: File; preview: string }[] = [];
+  public router = routes;
+  public form!: FormGroup;
+  public selectedFiles: { file: File | null; preview: string }[] = [];
+
+  constructor() {
+    this.initForm();
+  }
+
+  private initForm(): void {
+    this.form = new FormGroup({
+      productCode: new FormControl('', Validators.required),
+      productName: new FormControl('', Validators.required),
+      price: new FormControl(0, Validators.required),
+      quantity: new FormControl(0, Validators.required),
+      discountPercent: new FormControl(0),
+      discountAmount: new FormControl(0),
+      description: new FormControl(''),
+      image: new FormControl([]),
+      rating: new FormControl(0, Validators.required),
+      status: new FormControl('1', Validators.required),
+      features: new FormArray([])
+    });
+  }
+
+
+
+
+
+
+
+
+
+ngOnChanges(changes: SimpleChanges): void {
+    if (!this.product) {
+      this.form.reset();
+      this.features.clear();
+      this.selectedFiles = [];
+      return;
+    }
+  this.form.patchValue({
+    productCode: this.product.productCode,
+    productName: this.product.productName,
+    price: this.product.price,
+    quantity: this.product.quantity,
+    discountPercent: this.product.discountPercent,
+    discountAmount: this.product.discountAmount,
+    description: this.product.description,
+    rating: this.product.rating,
+    status: this.product.status,
+    image: this.product.image || []
+  });
+
+  this.features.clear();
+
+  // ✅ نسخه امن و بدون خطا
+  const featuresArray = (
+    (this.product.features?.length
+      ? this.product.features
+      : (this.product as any).details) || []
+  )
+    .filter((f: any) => f && (f.key || f.name || f.value))
+    .map((f: any) => ({
+      key: f.key ?? f.name ?? '',
+      value: f.value ?? ''
+    }));
+
+  featuresArray.forEach(f => {
+    this.features.push(
+      new FormGroup({
+        key: new FormControl(f.key, Validators.required),
+        value: new FormControl(f.value, Validators.required)
+      })
+    );
+  });
+
+if (this.product.image && Array.isArray(this.product.image)) {
+  Promise.resolve().then(() => {
+    this.selectedFiles = this.product.image.map((url: string) => ({
+      file: null,
+      preview: url
+    }));
+  });
+}
+
+}
 
 
 
@@ -28,27 +109,44 @@ export class ProductEditFormComponent implements OnInit {
 
 
 
-onFileChange(event: any) {
+
+  // ✅ getter برای features
+  get features(): FormArray {
+    return this.form.get('features') as FormArray;
+  }
+
+  addFeature(): void {
+    this.features.push(
+      new FormGroup({
+        key: new FormControl('', Validators.required),
+        value: new FormControl('', Validators.required)
+      })
+    );
+  }
+
+  removeFeature(index: number): void {
+    this.features.removeAt(index);
+  }
+
+  // ✅ مدیریت عکس‌ها
+  onFileChange(event: any): void {
     const files: FileList = event.target.files;
-    if (!files || files.length === 0) return;
+    if (!files?.length) return;
 
     Array.from(files).forEach((file: File) => {
       const reader = new FileReader();
-
       reader.onload = (e: any) => {
         this.selectedFiles.push({
           file: file,
-          preview: e.target.result,
+          preview: e.target.result
         });
       };
-
-      reader.readAsDataURL(file); // برای ساخت preview
+      reader.readAsDataURL(file);
     });
-
     event.target.value = '';
   }
 
-  removeFile(index: number) {
+  removeFile(index: number): void {
     this.selectedFiles.splice(index, 1);
   }
 
@@ -58,121 +156,17 @@ onFileChange(event: any) {
       : (size / 1024).toFixed(1) + ' KB';
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  constructor() {
-    this.form = new FormGroup({
-      productCode: new FormControl('', Validators.required),
-      productName: new FormControl('', Validators.required),
-      price: new FormControl('', Validators.required),
-      quantity: new FormControl('', Validators.required),
-      discountPercent: new FormControl(''),
-      discountAmount: new FormControl(''),
-      description: new FormControl(''),
-      image: new FormControl([]),
-      rating: new FormControl('', Validators.required),
-      status: new FormControl('', Validators.required),
-      features: new FormArray([this.createFeature()])
-
-    });
-  }
-
-  ngOnInit(): void {
-    if (this.product) {
-      this.productCode.setValue(this.product.productCode);
-      this.productName.setValue(this.product.productName);
-      this.price.setValue(this.product.price);
-      this.quantity.setValue(this.product.quantity);
-      this.discountPercent.setValue(this.product.discountPercent);
-      this.discountAmount.setValue(this.product.discountAmount);
-      this.description.setValue(this.product.description);
-      this.image.setValue(this.product.image || []);
-      this.rating.setValue(this.product.rating);
-      this.status.setValue(this.product.status);
-    }
-  }
-
-
-
-
-
-  createFeature(): FormGroup {
-    return new FormGroup({
-      name: new FormControl('', Validators.required),
-      value: new FormControl('', Validators.required)
-    });
-  }
-
-  // گرفتن لیست ویژگی‌ها
-  get features(): FormArray {
-    return this.form.get('features') as FormArray;
-  }
-
-  // افزودن ویژگی جدید
-  addFeature() {
-    this.features.push(this.createFeature());
-  }
-
-  // حذف ویژگی بر اساس ایندکس
-  removeFeature(index: number) {
-    this.features.removeAt(index);
-  }
-
-
-
-
-
   public save(): void {
-    this.editProduct.emit({
-      id: this.product?.id ?? undefined,
-      productCode: this.productCode.value,
-      productName: this.productName.value,
-      price: this.price.value,
-      quantity: this.quantity.value,
-      discountPercent: this.discountPercent.value,
-      discountAmount: this.discountAmount.value,
-      description: this.description.value,
-      image: this.selectedFiles.map(f => f.file),
-      rating: this.rating.value,
-      status: this.status.value,
+    if (this.form.invalid) return;
+
+    const productData: ProductDetails = {
+      id: this.product?.id, // در حالت create این undefined میشه
+      ...this.form.value,
+      image: this.selectedFiles.map(f => f.file || f.preview),
       features: this.features.value
-    });
+    };
+
+    console.log('🟢 ارسال محصول:', productData);
+    this.editProduct.emit(productData);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  get productCode() { return this.form.get('productCode') as FormControl; }
-  get productName() { return this.form.get('productName') as FormControl; }
-  get price() { return this.form.get('price') as FormControl; }
-  get quantity() { return this.form.get('quantity') as FormControl; }
-  get discountPercent() { return this.form.get('discountPercent') as FormControl; }
-  get discountAmount() { return this.form.get('discountAmount') as FormControl; }
-  get description() { return this.form.get('description') as FormControl; }
-  get image() { return this.form.get('image') as FormControl; }
-  get rating() { return this.form.get('rating') as FormControl; }
-  get status() { return this.form.get('status') as FormControl; }
 }

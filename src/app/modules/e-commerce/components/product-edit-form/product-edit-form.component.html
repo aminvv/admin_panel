@@ -19,8 +19,8 @@
             <div class="preview-item" *ngFor="let file of selectedFiles; let i = index">
                 <img [src]="file.preview" class="preview-thumb" alt="preview" />
                 <div class="preview-info">
-                    <span>{{ file.file.name }}</span>
-                    <span>({{ getFileSize(file.file.size) }})</span>
+                     <span>{{ file.file ? file.file.name : 'عکس موجود' }}</span>
+                    <!-- <span>({{ getFileSize(file.file.size) }})</span> -->
                 </div>
                 <button type="button" class="btn btn--remove" (click)="removeFile(i)">
                     ×
@@ -81,14 +81,13 @@
 
         <label class="form-label">ویژگی‌ها</label>
         <div class="form-section form-section--features" formArrayName="features">
-
-            <div *ngFor="let feature of features.controls; let i = index" [formGroupName]="i" class="feature-item">
-                <input type="text" class="form-input" formControlName="name" placeholder="نام ویژگی" />
-                <input type="text" class="form-input" formControlName="value" placeholder="مقدار ویژگی" />
-                <button type="button" class="btn btn--remove-feature" (click)="removeFeature(i)">
-                    ×
-                </button>
-            </div>
+<div *ngFor="let feature of features.controls; let i = index" [formGroupName]="i" class="feature-item">
+  <input type="text" class="form-input" formControlName="key" placeholder="نام ویژگی" />
+  <input type="text" class="form-input" formControlName="value" placeholder="مقدار ویژگی" />
+  <button type="button" class="btn btn--remove-feature" (click)="removeFeature(i)">
+    ×
+  </button>
+</div>
 
             <button type="button" class="btn btn--add" (click)="addFeature()">
                 افزودن ویژگی
