@@ -5,7 +5,12 @@
 export const environment = {
   production: false,
   hmr: false,
-  backend: true
+  backend: true,
+  cloudinary: {
+    cloudName: 'dxzacddiw',
+    uploadPreset: 'unsignedPreset',
+    folder: 'product',
+  },
 };
 
 /*
@@ -16,3 +21,6 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+
+
+

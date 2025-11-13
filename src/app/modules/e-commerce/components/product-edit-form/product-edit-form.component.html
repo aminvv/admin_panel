@@ -80,8 +80,8 @@
         </div>
 
         <label class="form-label">ویژگی‌ها</label>
-        <div class="form-section form-section--features" formArrayName="features">
-<div *ngFor="let feature of features.controls; let i = index" [formGroupName]="i" class="feature-item">
+        <div class="form-section form-section--features" formArrayName="details">
+<div *ngFor="let feature of details.controls; let i = index" [formGroupName]="i" class="feature-item">
   <input type="text" class="form-input" formControlName="key" placeholder="نام ویژگی" />
   <input type="text" class="form-input" formControlName="value" placeholder="مقدار ویژگی" />
   <button type="button" class="btn btn--remove-feature" (click)="removeFeature(i)">

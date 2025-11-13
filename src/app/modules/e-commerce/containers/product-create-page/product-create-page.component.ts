@@ -24,12 +24,10 @@ export class ProductCreatePageComponent {
   public createProduct(product: ProductDetails): void {
     this.service.createProduct(product).subscribe({
       next: (res) => {
-        console.log('✅ Product created:', res);
         this.toastr.success(res.message || 'محصول با موفقیت ساخته شد');
         this.router.navigate([this.routes.MANAGEMENT]).then();
       },
       error: (err) => {
-        console.error('❌ Error creating product:', err);
         alert(err.error?.message || 'خطا در ساخت محصول');
       },
     })

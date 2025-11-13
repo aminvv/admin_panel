@@ -32,7 +32,7 @@ export class ProductEditFormComponent implements OnChanges {
       image: new FormControl([]),
       rating: new FormControl(0, Validators.required),
       status: new FormControl('1', Validators.required),
-      features: new FormArray([])
+      details: new FormArray([])
     });
   }
 
@@ -45,9 +45,10 @@ export class ProductEditFormComponent implements OnChanges {
 
 
 ngOnChanges(changes: SimpleChanges): void {
+  console.log(' this product', this.product);
     if (!this.product) {
       this.form.reset();
-      this.features.clear();
+      this.details.clear();
       this.selectedFiles = [];
       return;
     }
@@ -64,12 +65,11 @@ ngOnChanges(changes: SimpleChanges): void {
     image: this.product.image || []
   });
 
-  this.features.clear();
+  this.details.clear();
 
-  // ✅ نسخه امن و بدون خطا
-  const featuresArray = (
-    (this.product.features?.length
-      ? this.product.features
+  const detailsArray = (
+    (this.product.details?.length
+      ? this.product.details
       : (this.product as any).details) || []
   )
     .filter((f: any) => f && (f.key || f.name || f.value))
@@ -78,8 +78,8 @@ ngOnChanges(changes: SimpleChanges): void {
       value: f.value ?? ''
     }));
 
-  featuresArray.forEach(f => {
-    this.features.push(
+  detailsArray.forEach(f => {
+    this.details.push(
       new FormGroup({
         key: new FormControl(f.key, Validators.required),
         value: new FormControl(f.value, Validators.required)
@@ -110,13 +110,16 @@ if (this.product.image && Array.isArray(this.product.image)) {
 
 
 
-  // ✅ getter برای features
-  get features(): FormArray {
-    return this.form.get('features') as FormArray;
+
+  get details(): FormArray {
+    return this.form.get('details') as FormArray;
   }
 
+
+
+
   addFeature(): void {
-    this.features.push(
+    this.details.push(
       new FormGroup({
         key: new FormControl('', Validators.required),
         value: new FormControl('', Validators.required)
@@ -125,7 +128,7 @@ if (this.product.image && Array.isArray(this.product.image)) {
   }
 
   removeFeature(index: number): void {
-    this.features.removeAt(index);
+    this.details.removeAt(index);
   }
 
   // ✅ مدیریت عکس‌ها
@@ -156,17 +159,46 @@ if (this.product.image && Array.isArray(this.product.image)) {
       : (size / 1024).toFixed(1) + ' KB';
   }
 
-  public save(): void {
-    if (this.form.invalid) return;
 
-    const productData: ProductDetails = {
-      id: this.product?.id, // در حالت create این undefined میشه
-      ...this.form.value,
-      image: this.selectedFiles.map(f => f.file || f.preview),
-      features: this.features.value
-    };
 
-    console.log('🟢 ارسال محصول:', productData);
-    this.editProduct.emit(productData);
+
+
+
+
+
+
+
+
+  //=============================SAVE======================
+public save(): void {
+  console.log('🟣 دکمه ذخیره کلیک شد');
+
+  if (this.form.invalid) {
+    console.log('⚠️ فرم نامعتبر است. وضعیت کنترل‌ها:', this.form.controls);
+    Object.keys(this.form.controls).forEach(key => {
+      const control = this.form.get(key);
+      if (control?.invalid) {
+        console.warn(`❌ فیلد '${key}' نامعتبر است:`, control.errors);
+      }
+    });
+    return;
   }
+
+
+  const imagesArray = this.selectedFiles.map(f => {
+    return f.file ? f.file : f.preview; 
+  });
+
+  const productData: ProductDetails = {
+    id: this.product?.id,
+    ...this.form.value,
+    image: imagesArray,
+    details: this.details.value
+  };
+
+  console.log('🟢 ارسال محصول به والد:', productData);
+  console.log('🟢 تصاویر ارسالی:', imagesArray);
+  this.editProduct.emit(productData);
+}
+
 }

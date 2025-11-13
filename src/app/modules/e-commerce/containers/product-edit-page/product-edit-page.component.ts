@@ -15,13 +15,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ProductEditPageComponent implements OnInit {
   public routes: typeof routes = routes;
-  public product: ProductDetails; // محصول واقعی که به فرم میدیم
+  public product: ProductDetails
 
   constructor(
     private route: ActivatedRoute,
     private service: ProductService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     const id = +this.route.snapshot.params['id'];
@@ -45,31 +45,53 @@ export class ProductEditPageComponent implements OnInit {
 
 
 
-public saveEditProduct(updatedProduct: ProductDetails) {
-  const id = +this.route.snapshot.params['id'];
+  // public saveEditProduct(updatedProduct: ProductDetails) {
+  //   const id = +this.route.snapshot.params['id'];
 
+  //   if (id) {
+  //     // اگر id داریم یعنی ادیت
+  //     updatedProduct.id = id;
+  //     this.service.saveChangedProduct(updatedProduct).subscribe({
+  //       next: () => {
+  //         console.log('✅ محصول ویرایش شد');
+  //         this.router.navigate([this.routes.MANAGEMENT]);
+  //       },
+  //       error: (err) => console.error('❌ خطا در ویرایش محصول:', err)
+  //     });
+  //   } else {
+  //     // اگر id نداریم یعنی ساخت محصول جدید
+  //     this.service.createProduct(updatedProduct).subscribe({
+  //       next: () => {
+  //         console.log('✅ محصول ساخته شد');
+  //         this.router.navigate([this.routes.MANAGEMENT]);
+  //       },
+  //       error: (err) => console.error('❌ خطا در ساخت محصول:', err)
+  //     });
+  //   }
+  // }
+
+
+public saveEditProduct(updatedProduct: ProductDetails) {
+  console.log('🟢 رویداد از فرزند رسید:', updatedProduct);
+
+  const id = +this.route.snapshot.params['id'];
   if (id) {
-    // اگر id داریم یعنی ادیت
     updatedProduct.id = id;
+    console.log('🟡 آماده ارسال به سرور:', updatedProduct);
+    console.log('🟡 تصاویر محصول:', updatedProduct.image);
+    
     this.service.saveChangedProduct(updatedProduct).subscribe({
-      next: () => {
-        console.log('✅ محصول ویرایش شد');
+      next: (response) => {
+        console.log('✅ محصول ویرایش شد:', response);
         this.router.navigate([this.routes.MANAGEMENT]);
       },
-      error: (err) => console.error('❌ خطا در ویرایش محصول:', err)
-    });
-  } else {
-    // اگر id نداریم یعنی ساخت محصول جدید
-    this.service.createProduct(updatedProduct).subscribe({
-      next: () => {
-        console.log('✅ محصول ساخته شد');
-        this.router.navigate([this.routes.MANAGEMENT]);
-      },
-      error: (err) => console.error('❌ خطا در ساخت محصول:', err)
+      error: (err) => {
+        console.error('❌ خطا در ویرایش محصول:', err);
+        console.error('❌ جزئیات خطا:', err.error);
+      }
     });
   }
 }
-
 
 
 
