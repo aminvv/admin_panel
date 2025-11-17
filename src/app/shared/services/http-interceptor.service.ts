@@ -19,15 +19,18 @@ export class HttpInterceptorService implements HttpInterceptor {
     this.config = appConfig.getConfig();
   }
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler,
-  ): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler,): Observable<HttpEvent<any>> {
+
+    
+    if (req.url.includes('cloudinary.com') || req.url.includes('res.cloudinary.com')) {
+      return next.handle(req);
+    }
+
     req = req.clone({ url: this.config.baseURLApi + req.url });
 
     const token: string = localStorage.getItem('token');
 
- 
+
 
     if (token) {
       req = req.clone({

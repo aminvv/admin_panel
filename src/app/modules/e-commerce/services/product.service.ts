@@ -7,6 +7,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { BaseService } from 'src/app/shared/services/base.service';
 import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
 import { array } from '@amcharts/amcharts4/core';
+import { environment } from 'src/environments/environment';
 
 export const products: ProductDetails[] = [
   {
@@ -263,6 +264,7 @@ export class ProductService {
     if (product.image && product.image.length > 0) {
       const files = product.image.filter((file) => file instanceof File) as File[]
       if (files.length === 0) return;
+      console.log('image url', files);
       return this.CloudinaryService.upload(files)
     }
   }
@@ -270,65 +272,64 @@ export class ProductService {
 
 
 
-  public saveChangedProduct(product: ProductDetails) {
-    console.log('🔴 Data before FormData creation:', product);
+ public saveChangedProduct(product: ProductDetails) {
+  console.log('Data before sending:', product);
 
-    const formData = new FormData();
-    formData.append('productCode', product.productCode);
-    formData.append('productName', product.productName);
-    formData.append('price', product.price.toString());
-    formData.append('quantity', product.quantity.toString());
-    formData.append('discountAmount', product.discountAmount?.toString() || '0');
-    formData.append('discountPercent', product.discountPercent?.toString() || '0');
-    formData.append('description', product.description || '');
-    formData.append('rating', product.rating?.toString() || '0');
-    formData.append('status', product.status);
+  const formData = new FormData();
+  formData.append('productCode', product.productCode);
+  formData.append('productName', product.productName);
+  formData.append('price', product.price.toString());
+  formData.append('quantity', product.quantity.toString());
+  formData.append('discountAmount', product.discountAmount?.toString() || '0');
+  formData.append('discountPercent', product.discountPercent?.toString() || '0');
+  formData.append('description', product.description || '');
+  formData.append('rating', product.rating?.toString() || '0');
+  formData.append('status', product.status);
 
-    if (product.details && product.details.length > 0) {
-      const details = product.details.map(f => ({ key: f.key, value: f.value }));
-      formData.append('details', JSON.stringify(details));
-    }
+  if (product.details && product.details.length > 0) {
+    const details = product.details.map(f => ({ key: f.key, value: f.value }));
+    formData.append('details', JSON.stringify(details));
+  }
 
-    if (product.image && product.image.length > 0) {
-      const existingImages = product.image.filter(item => typeof item === 'string');
-      if (existingImages.length > 0) {
-        formData.append('existImages', JSON.stringify(existingImages))
-      }
-      }
+  // جدا کردن عکس‌های قدیمی و جدید
+  const existingImageUrls = (product.image || [])
+    .filter(item => typeof item === 'string') as string[];
+  const newImageFiles = (product.image || [])
+    .filter(item => item instanceof File) as File[];
 
+  const headers = this.baseServe.getAuthHeader();
+  headers.delete('Content-Type'); // برای FormData لازمه
 
-      let headers = this.baseServe.getAuthHeader();
-      headers = headers.delete('Content-Type');
-      
-      
-  const newFiles = product.image?.filter(item => item instanceof File) as File[] | undefined;
-  if (newFiles && newFiles.length > 0) {
-    return this.CloudinaryService.upload(newFiles).pipe(
-      switchMap((urls) => {
-        formData.append('image', JSON.stringify(urls));
+  // اگه عکس جدید داریم → آپلود کن
+  if (newImageFiles.length > 0) {
+    return this.CloudinaryService.upload(newImageFiles).pipe(
+      switchMap((uploadedUrls: any) => {
+        // uploadedUrls ممکنه string یا string[] باشه
+        const urlsArray = Array.isArray(uploadedUrls) ? uploadedUrls : [uploadedUrls];
+        const finalImages = [...existingImageUrls, ...urlsArray];
+
+        formData.append('existingImages', JSON.stringify(finalImages));
+
         return this.http.patch(`${this.productEditUrl}/${product.id}`, formData, { headers });
       })
     );
   } else {
-    // هیچ فایل جدیدی نیست، فقط PATCH بزن
+    // فقط عکس‌های قدیمی داریم
+    formData.append('existingImages', JSON.stringify(existingImageUrls));
+
     return this.http.patch(`${this.productEditUrl}/${product.id}`, formData, { headers });
   }
-      
-      
-      
+}
 
-      // for (const item of product.image) {
-      //   if (item instanceof File) {
-      //     formData.append('image', item);
-      //   }
-      // }
 
-   
+
+
+
+
+
 
 
   
-
-  }
 
 
 

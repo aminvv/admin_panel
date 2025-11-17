@@ -35,23 +35,25 @@ export class CloudinaryService {
     const formData = new FormData()
 
     formData.append('file', file)
-    formData.append('uploadPreset', CLOUDINARY_CONFIG.uploadPreset)
+    formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset)
     formData.append('folder', CLOUDINARY_CONFIG.folder)
 
 
-    const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/upload`;
+const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/upload`;
 
-    return new Observable<string>((observer) => {
-      this.http.post<any>(url, formData).subscribe({
-        next: (res) => {
-          observer.next(res.secure_url);
-          observer.complete();
-        },
-        error: (err) => observer.error(err),
-      });
-    });
-  }
-
+  return new Observable<string>(observer => {
+    fetch(url, {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      observer.next(data.secure_url);
+      observer.complete();
+    })
+    .catch(err => observer.error(err));
+  });
+}
 
 
 
