@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductDetails } from '../../models/product-details';
 import { routes } from '../../../../consts';
+import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
 
 @Component({
   selector: 'app-product-edit-form',
@@ -14,9 +15,9 @@ export class ProductEditFormComponent implements OnChanges {
 
   public router = routes;
   public form!: FormGroup;
-  public selectedFiles: { file: File | null; preview: string }[] = [];
+  public selectedFiles: { file: File | null; preview: string, isUploading: boolean, uploadError: boolean }[] = [];
 
-  constructor() {
+  constructor(private cloudinaryService: CloudinaryService) {
     this.initForm();
   }
 
@@ -44,59 +45,61 @@ export class ProductEditFormComponent implements OnChanges {
 
 
 
-ngOnChanges(changes: SimpleChanges): void {
-  console.log(' this product', this.product);
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(' this product', this.product);
     if (!this.product) {
       this.form.reset();
       this.details.clear();
       this.selectedFiles = [];
       return;
     }
-  this.form.patchValue({
-    productCode: this.product.productCode,
-    productName: this.product.productName,
-    price: this.product.price,
-    quantity: this.product.quantity,
-    discountPercent: this.product.discountPercent,
-    discountAmount: this.product.discountAmount,
-    description: this.product.description,
-    rating: this.product.rating,
-    status: this.product.status,
-    image: this.product.image || []
-  });
+    this.form.patchValue({
+      productCode: this.product.productCode,
+      productName: this.product.productName,
+      price: this.product.price,
+      quantity: this.product.quantity,
+      discountPercent: this.product.discountPercent,
+      discountAmount: this.product.discountAmount,
+      description: this.product.description,
+      rating: this.product.rating,
+      status: this.product.status,
+      image: this.product.image || []
+    });
 
-  this.details.clear();
+    this.details.clear();
 
-  const detailsArray = (
-    (this.product.details?.length
-      ? this.product.details
-      : (this.product as any).details) || []
-  )
-    .filter((f: any) => f && (f.key || f.name || f.value))
-    .map((f: any) => ({
-      key: f.key ?? f.name ?? '',
-      value: f.value ?? ''
-    }));
+    const detailsArray = (
+      (this.product.details?.length
+        ? this.product.details
+        : (this.product as any).details) || []
+    )
+      .filter((f: any) => f && (f.key || f.name || f.value))
+      .map((f: any) => ({
+        key: f.key ?? f.name ?? '',
+        value: f.value ?? ''
+      }));
 
-  detailsArray.forEach(f => {
-    this.details.push(
-      new FormGroup({
-        key: new FormControl(f.key, Validators.required),
-        value: new FormControl(f.value, Validators.required)
-      })
-    );
-  });
+    detailsArray.forEach(f => {
+      this.details.push(
+        new FormGroup({
+          key: new FormControl(f.key, Validators.required),
+          value: new FormControl(f.value, Validators.required)
+        })
+      );
+    });
 
-if (this.product.image && Array.isArray(this.product.image)) {
-  Promise.resolve().then(() => {
-    this.selectedFiles = this.product.image.map((url: string) => ({
-      file: null,
-      preview: url
-    }));
-  });
-}
+    if (this.product.image && Array.isArray(this.product.image)) {
+      Promise.resolve().then(() => {
+        this.selectedFiles = (this.product.image || []).map((url: string) => ({
+          file: null,
+          preview: url,
+          isUploading: false,
+          uploadError: false,
+        }));
+      });
+    }
 
-}
+  }
 
 
 
@@ -131,20 +134,44 @@ if (this.product.image && Array.isArray(this.product.image)) {
     this.details.removeAt(index);
   }
 
-  // ✅ مدیریت عکس‌ها
   onFileChange(event: any): void {
     const files: FileList = event.target.files;
     if (!files?.length) return;
 
-    Array.from(files).forEach((file: File) => {
+    const fileArray = Array.from(files);
+
+    fileArray.forEach(file => {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.selectedFiles.push({
           file: file,
-          preview: e.target.result
+          preview: e.target.result,
+          isUploading: true,
+          uploadError: false,
         });
       };
       reader.readAsDataURL(file);
+    });
+
+    this.cloudinaryService.upload(fileArray).subscribe({
+      next: (uploadedUrls: any) => {
+        const urls = Array.isArray(uploadedUrls) ? uploadedUrls : [uploadedUrls];
+
+        urls.forEach((url, index) => {
+          const item = this.selectedFiles[this.selectedFiles.length - fileArray.length + index];
+          if (item) {
+            item.preview = url;
+            item.file = null;
+            item.isUploading= false
+              item.uploadError= false
+          }
+          console.log('آپلود شد و اضافه شد:', urls);
+        });
+      },
+      error: (err) => {
+        alert('آپلود نشد!');
+        console.error(err);
+      }
     });
     event.target.value = '';
   }
@@ -163,42 +190,30 @@ if (this.product.image && Array.isArray(this.product.image)) {
 
 
 
-
+  
 
 
 
 
 
   //=============================SAVE======================
-public save(): void {
-  console.log('🟣 دکمه ذخیره کلیک شد');
+  // این بخش رو جایگزین کن (ساده و تمیز!)
+  public save(): void {
+    if (this.form.invalid) return;
 
-  if (this.form.invalid) {
-    console.log('⚠️ فرم نامعتبر است. وضعیت کنترل‌ها:', this.form.controls);
-    Object.keys(this.form.controls).forEach(key => {
-      const control = this.form.get(key);
-      if (control?.invalid) {
-        console.warn(`❌ فیلد '${key}' نامعتبر است:`, control.errors);
-      }
-    });
-    return;
+    // دیگه هیچ File نداریم! فقط preview که همیشه string هست
+    const finalImageUrls: string[] = this.selectedFiles
+      .map(item => item.preview)
+      .filter((url): url is string => typeof url === 'string' && url.trim() !== '');
+
+    const productData: ProductDetails = {
+      id: this.product?.id,
+      ...this.form.value,
+      image: finalImageUrls,  // فقط URLهای خالص
+      details: this.details.value
+    };
+
+    console.log('ارسال نهایی به والد (فقط URL):', finalImageUrls);
+    this.editProduct.emit(productData);
   }
-
-
-  const imagesArray = this.selectedFiles.map(f => {
-    return f.file ? f.file : f.preview; 
-  });
-
-  const productData: ProductDetails = {
-    id: this.product?.id,
-    ...this.form.value,
-    image: imagesArray,
-    details: this.details.value
-  };
-
-  console.log('🟢 ارسال محصول به والد:', productData);
-  console.log('🟢 تصاویر ارسالی:', imagesArray);
-  this.editProduct.emit(productData);
-}
-
 }

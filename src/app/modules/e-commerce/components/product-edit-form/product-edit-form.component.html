@@ -14,14 +14,31 @@
                 (change)="onFileChange($event)" />
         </div>
 
+
         <!-- ✅ پیش‌نمایش عکس‌ها -->
         <div class="preview-list" *ngIf="selectedFiles.length > 0">
             <div class="preview-item" *ngFor="let file of selectedFiles; let i = index">
-                <img [src]="file.preview" class="preview-thumb" alt="preview" />
-                <div class="preview-info">
-                     <span>{{ file.file ? file.file.name : 'عکس موجود' }}</span>
-                    <!-- <span>({{ getFileSize(file.file.size) }})</span> -->
+                <!-- عکس با بلور -->
+                <img [src]="file.preview" class="preview-thumb" [class.blur]="file.isUploading" alt="preview" />
+
+                <!-- لودر در مرکز تصویر -->
+                <div *ngIf="file.isUploading" class="loading-overlay">
+                    <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" width="40px" height="40px"
+                        viewBox="0 0 50 50">
+                        <path fill="#000"
+                            d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                            <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25"
+                                dur="0.6s" repeatCount="indefinite" />
+                        </path>
+                    </svg>
                 </div>
+
+                <!-- خطا -->
+                <div *ngIf="file.uploadError" class="status error">
+                    ❌ خطا در آپلود
+                </div>
+
+
                 <button type="button" class="btn btn--remove" (click)="removeFile(i)">
                     ×
                 </button>
@@ -81,13 +98,13 @@
 
         <label class="form-label">ویژگی‌ها</label>
         <div class="form-section form-section--features" formArrayName="details">
-<div *ngFor="let feature of details.controls; let i = index" [formGroupName]="i" class="feature-item">
-  <input type="text" class="form-input" formControlName="key" placeholder="نام ویژگی" />
-  <input type="text" class="form-input" formControlName="value" placeholder="مقدار ویژگی" />
-  <button type="button" class="btn btn--remove-feature" (click)="removeFeature(i)">
-    ×
-  </button>
-</div>
+            <div *ngFor="let feature of details.controls; let i = index" [formGroupName]="i" class="feature-item">
+                <input type="text" class="form-input" formControlName="key" placeholder="نام ویژگی" />
+                <input type="text" class="form-input" formControlName="value" placeholder="مقدار ویژگی" />
+                <button type="button" class="btn btn--remove-feature" (click)="removeFeature(i)">
+                    ×
+                </button>
+            </div>
 
             <button type="button" class="btn btn--add" (click)="addFeature()">
                 افزودن ویژگی
@@ -95,7 +112,7 @@
         </div>
 
         <div class="form-actions">
-            <button type="submit"  class="btn btn--primary">ذخیره</button>
+            <button type="submit" class="btn btn--primary">ذخیره</button>
             <button type="button " routerLink="{{router.MANAGEMENT}}" class="btn btn--secondary">انصراف</button>
         </div>
 
