@@ -100,23 +100,26 @@ export class ProductService {
 
 
 
-  public getProduct(id: number): Observable<ProductDetails> {
-    const headers = this.baseServe.getAuthHeader()
-    return this.http.get<any>(`${this.productGetUrl}/${id}`, { headers }).pipe(
-      map(response => {
-        // 🔥 تبدیل details به features برای استفاده در فرانت
-        const details = response.details ? response.details.map((detail: any) => ({
-          key: detail.key,
-          value: detail.value
-        })) : [];
+public getProduct(id: number): Observable<ProductDetails> {
+  const headers = this.baseServe.getAuthHeader()
+  return this.http.get<any>(`${this.productGetUrl}/${id}`, { headers }).pipe(
+    map(response => {
+      const details = response.details
+        ? response.details.map((detail: any) => ({
+            id: detail.id,      // 👈 خیلی مهم
+            key: detail.key,
+            value: detail.value
+          }))
+        : [];
 
-        return {
-          ...response,
-          details: details // حالا در فرانت با نام features استفاده می‌شود
-        };
-      })
-    );
-  }
+      return {
+        ...response,
+        details: details,
+        _initialDetailIds: details.map((d: any) => d.id)  // 👈 ارسال اولیه‌ها
+      };
+    })
+  );
+}
 
 
 
@@ -272,57 +275,93 @@ export class ProductService {
 
 
 
- public saveChangedProduct(product: ProductDetails) {
-  console.log('Data before sending:', product);
 
-  const formData = new FormData();
-  formData.append('productCode', product.productCode);
-  formData.append('productName', product.productName);
-  formData.append('price', product.price.toString());
-  formData.append('quantity', product.quantity.toString());
-  formData.append('discountAmount', product.discountAmount?.toString() || '0');
-  formData.append('discountPercent', product.discountPercent?.toString() || '0');
-  formData.append('description', product.description || '');
-  formData.append('rating', product.rating?.toString() || '0');
-  formData.append('status', product.status);
 
-  if (product.details && product.details.length > 0) {
-    const details = product.details.map(f => ({ key: f.key, value: f.value }));
-    formData.append('details', JSON.stringify(details));
-  }
 
-  // جدا کردن عکس‌های قدیمی و جدید
-  const existingImageUrls = (product.image || [])
-    .filter(item => typeof item === 'string') as string[];
-  const newImageFiles = (product.image || [])
-    .filter(item => item instanceof File) as File[];
 
+saveChangedProduct(product: any): Observable<any> {
+  const productId = product.id;
   const headers = this.baseServe.getAuthHeader();
-  headers.delete('Content-Type'); // برای FormData لازمه
 
-  // اگه عکس جدید داریم → آپلود کن
-  if (newImageFiles.length > 0) {
-    return this.CloudinaryService.upload(newImageFiles).pipe(
-      switchMap((uploadedUrls: any) => {
-        // uploadedUrls ممکنه string یا string[] باشه
-        const urlsArray = Array.isArray(uploadedUrls) ? uploadedUrls : [uploadedUrls];
-        const finalImages = [...existingImageUrls, ...urlsArray];
+  const uploadedUrls = product.image || [];
 
-        formData.append('existingImages', JSON.stringify(finalImages));
+  // payload اصلی برای آپدیت محصول
+  const productPayload = {
+    productCode: product.productCode,
+    productName: product.productName,
+    price: product.price,
+    quantity: product.quantity,
+    discountPercent: product.discountPercent,
+    discountAmount: product.discountAmount,
+    description: product.description,
+    rating: product.rating,
+    status: product.status,
+    image: uploadedUrls
+  };
 
-        return this.http.patch(`${this.productEditUrl}/${product.id}`, formData, { headers });
-      })
-    );
-  } else {
-    // فقط عکس‌های قدیمی داریم
-    formData.append('existingImages', JSON.stringify(existingImageUrls));
+  return this.http.patch(`${this.productEditUrl}/${productId}`, productPayload, { headers }).pipe(
+    switchMap((patchRes: any) => {
 
-    return this.http.patch(`${this.productEditUrl}/${product.id}`, formData, { headers });
-  }
+      const currentDetails = (product.details || []).map((d: any) => ({ ...d }));
+      const currentIds = currentDetails.filter((d: any) => d.id).map((d: any) => d.id);
+
+      // 👇 از کامپوننت میاد — بسیار مهم
+      const initialIds: number[] = product._initialDetailIds || [];
+
+      const toCreate = currentDetails.filter((d: any) => !d.id);
+      const toUpdate = currentDetails.filter((d: any) => d.id);
+      const toDelete = initialIds.filter(id => !currentIds.includes(id));
+
+      const detailRequests: Observable<any>[] = [];
+
+      // ایجاد
+      toCreate.forEach(d => {
+        detailRequests.push(
+          this.http.post(`${this.detailBaseUrl}`, {
+            productId,
+            key: d.key,
+            value: d.value
+          }, { headers })
+        );
+      });
+
+      // بروزرسانی
+      toUpdate.forEach(d => {
+        detailRequests.push(
+this.http.put('/product-detail/update-product/' + d.id, {
+            key: d.key,
+            value: d.value,
+            productId
+          }, { headers })
+        );
+      });
+
+      // حذف
+      toDelete.forEach(id => {
+        detailRequests.push(
+this.http.delete('/product-detail/delete-product/' + id, { headers })
+        );
+      });
+
+      if (detailRequests.length === 0) {
+        return of(patchRes);
+      }
+
+      return forkJoin(detailRequests).pipe(
+        map(() => patchRes)
+      );
+    })
+  );
 }
 
 
 
+
+
+}
+
+
+ 
 
 
 
@@ -337,4 +376,3 @@ export class ProductService {
 
 
 
-}

@@ -26,9 +26,10 @@ export interface ProductDetails {
   quantity: number;
   discountPercent?: number;
   discountAmount?: number;
-  description?: string;  
+  description?: string;
   image?: (string | File)[];
   details?: { key: string; value: string }[]
-  rating:number
-  status:string
+  rating: number
+  status: string
+  _initialDetailIds?: number[];
 }
