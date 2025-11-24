@@ -29,6 +29,7 @@ export class ProductCreatePageComponent {
       },
       error: (err) => {
         alert(err.error?.message || 'خطا در ساخت محصول');
+        console.log(err.error);
       },
     })
 
