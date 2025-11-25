@@ -3,10 +3,10 @@
 
 <mat-card class="card">
   <mat-card-title class="card-title-wrapper">
-    <p class="card-title">Products <span class="card-subtitle">{{(products$ | async).length}} total</span></p>
+    <p class="card-title">محصولات <span class="card-subtitle">{{(products$ | async).length}} محصول</span></p>
 
     <mat-form-field appearance="outline" class="search-field mat-form-field-should-float">
-      <mat-label>Search</mat-label>
+      <mat-label>جست وجو</mat-label>
       <input matInput (keyup)="applyFilter($event)" #input class="search-title">
       <mat-icon matPrefix class="search-icon">search</mat-icon>
     </mat-form-field>
@@ -54,48 +54,48 @@
 
         <!-- Image Column -->
         <ng-container matColumnDef="image">
-          <th mat-header-cell *matHeaderCellDef class="table-header"> Image </th>
+          <th mat-header-cell *matHeaderCellDef class="table-header"> تصویر </th>
           <td mat-cell *matCellDef="let element" class="table-body">
-            <img class="image" src="{{element.imageSmall}}" alt="logo">
+            <img class="image" [src]="getFirstImage(element.image)" alt="logo">
           </td>
         </ng-container>
 
         <!-- Title Column -->
         <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> Title </th>
-          <td mat-cell *matCellDef="let element" class="table-body product-title" [routerLink]="[routes.PRODUCT, element.id]"> {{element.title}} </td>
+          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> نام محصول </th>
+          <td mat-cell *matCellDef="let element" class="table-body product-title" [routerLink]="[routes.PRODUCT, element.id]"> {{element.productName}} </td>
         </ng-container>
 
         <!-- Subtitle Column -->
         <ng-container matColumnDef="subtitle">
-          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> Subtitle </th>
-          <td mat-cell *matCellDef="let element" class="table-body"> {{element.subtitle}} </td>
+          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> کد محصول</th>
+          <td mat-cell *matCellDef="let element" class="table-body"> {{element.productCode}} </td>
         </ng-container>
 
         <!-- Price Column -->
         <ng-container matColumnDef="price">
-          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> Price </th>
+          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> قیمت </th>
           <td mat-cell *matCellDef="let element" class="table-body">{{element.price}}</td>
         </ng-container>
-
+  
         <!-- Rating Column -->
         <ng-container matColumnDef="rating">
-          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> Rating </th>
+          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> امتیاز </th>
           <td mat-cell *matCellDef="let element" class="table-body">
             <div class="rating-wrapper">
               <p class="product-pop">{{element.rating}}</p>
-              <mat-icon color="accent" class="product-pop-icon">star</mat-icon>
+              <mat-icon color="accent" class="product-pop-icon">ستاره</mat-icon>
             </div>
           </td>
         </ng-container>
 
         <!-- Action Column -->
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="table-header"> Actions </th>
+          <th mat-header-cell *matHeaderCellDef class="table-header"> وضیعت </th>
           <td mat-cell *matCellDef="let element" class="table-body">
             <div class="table-buttons-wrapper">
-              <button mat-flat-button color="success" class="table-button" [routerLink]="[routes.PRODUCT_EDIT, element.id]">edit</button>
-              <button mat-flat-button color="warn" class="table-button" (click)="openDeleteModal(element.id)">delete</button>
+              <button mat-flat-button color="success" class="table-button" [routerLink]="[routes.PRODUCT_EDIT, element.id]">ویرایش</button>
+              <button mat-flat-button color="warn" class="table-button" (click)="openDeleteModal(element.id)">حذف</button>
             </div>
           </td>
         </ng-container>
@@ -110,6 +110,7 @@
       </table>
     </div>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> 
   </mat-card-content>
 </mat-card>
+  

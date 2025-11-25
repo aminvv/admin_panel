@@ -74,6 +74,7 @@ export class ProductService {
   private productEditUrl = '/product/edit-product';
   private productsGetUrl = '/product/get-products';
   private productGetUrl = '/product/get-product';
+  private productDeleteUrl = '/product/delete-product';
   private detailBaseUrl = '/product-detail/create-detail';
 
 
@@ -122,13 +123,6 @@ export class ProductService {
 
 
 
-  public deleteProduct(id: number): void {
-    products.map((product: ProductDetails, i: number) => {
-      if (product.id === id) {
-        products.splice(i, 1);
-      }
-    });
-  }
 
 
 
@@ -146,46 +140,47 @@ export class ProductService {
 
 
 
-//===================== CREATE ======================
-public createProduct(product: ProductDetails) {
-  const payload = {
-    productCode: product.productCode,
-    productName: product.productName,
-    price: product.price,
-    quantity: product.quantity,
-    discountAmount: product.discountAmount || 0,
-    discountPercent: product.discountPercent || 0,
-    description: product.description || '',
-    rating: product.rating || 0,
-    status: product.status,
-    image: product.image || [], 
-  };
 
-  const headers = this.baseServe.getAuthHeader();
+  //===================== CREATE ======================
+  public createProduct(product: ProductDetails) {
+    const payload = {
+      productCode: product.productCode,
+      productName: product.productName,
+      price: product.price,
+      quantity: product.quantity,
+      discountAmount: product.discountAmount || 0,
+      discountPercent: product.discountPercent || 0,
+      description: product.description || '',
+      rating: product.rating || 0,
+      status: product.status,
+      image: product.image || [],
+    };
 
-  return this.http.post<{ message: string; product: { id: number } }>(
-    this.productCreateUrl,
-    payload,  
-    { headers }
-  ).pipe(
-    switchMap((res) => {
-      const productId = res.product?.id;
-      const features = product.details || [];
+    const headers = this.baseServe.getAuthHeader();
 
-      if (!features.length) return of(res);
+    return this.http.post<{ message: string; product: { id: number } }>(
+      this.productCreateUrl,
+      payload,
+      { headers }
+    ).pipe(
+      switchMap((res) => {
+        const productId = res.product?.id;
+        const features = product.details || [];
 
-      const featureRequests = features.map((feature) => {
-        return this.http.post(`${this.detailBaseUrl}`, {
-          key: feature.key,
-          value: feature.value,
-          productId,
+        if (!features.length) return of(res);
+
+        const featureRequests = features.map((feature) => {
+          return this.http.post(`${this.detailBaseUrl}`, {
+            key: feature.key,
+            value: feature.value,
+            productId,
+          });
         });
-      });
 
-      return forkJoin(featureRequests).pipe(map(() => res));
-    })
-  );
-}
+        return forkJoin(featureRequests).pipe(map(() => res));
+      })
+    );
+  }
 
 
 
@@ -246,7 +241,7 @@ public createProduct(product: ProductDetails) {
 
 
 
-
+  //===================== UPDATE ======================
   saveChangedProduct(product: any): Observable<any> {
     const productId = product.id;
     const headers = this.baseServe.getAuthHeader();
@@ -313,7 +308,7 @@ public createProduct(product: ProductDetails) {
         return forkJoin(detailRequests).pipe(
           map(() => ({
             patchRes,
-            message:patchRes.message
+            message: patchRes.message
           }))
         );
       })
@@ -321,6 +316,22 @@ public createProduct(product: ProductDetails) {
   }
 
 
+
+
+
+
+  //===================== DELETE ======================
+
+  public deleteProduct(id: number) {
+
+    const headers = this.baseServe.getAuthHeader();
+    return this.http.delete(`${this.productDeleteUrl}/${id}`, { headers }).pipe(
+      map((res) => ({
+        message: res
+      }))
+    )
+
+  }
 
 
 

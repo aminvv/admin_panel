@@ -1,13 +1,13 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {routes} from '../../../../consts';
-import {MatTableDataSource} from '@angular/material/table';
-import {SelectionModel} from '@angular/cdk/collections';
-import {MatSort} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
-import {ProductService} from '../../services';
-import {Observable} from 'rxjs';
-import {ProductDetails} from '../../models/product-details';
-import {take} from 'rxjs/operators';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { routes } from '../../../../consts';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { ProductService } from '../../services';
+import { Observable } from 'rxjs';
+import { ProductDetails } from '../../models/product-details';
+import { switchMap, take } from 'rxjs/operators';
 import { DeletePopupComponent } from '../../../../shared/popups/delete-popup/delete-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -17,8 +17,8 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./management-page.component.scss']
 })
 export class ManagementPageComponent implements OnInit {
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   public routes: typeof routes = routes;
   public products$: Observable<ProductDetails[]>;
   public displayedColumns: string[] = ['select', 'id', 'image', 'title', 'subtitle', 'price', 'rating', 'actions'];
@@ -56,7 +56,7 @@ export class ManagementPageComponent implements OnInit {
   }
 
   constructor(private service: ProductService,
-              public dialog: MatDialog) {
+    public dialog: MatDialog) {
     this.products$ = this.service.getProducts();
 
     this.products$.pipe(
@@ -82,15 +82,36 @@ export class ManagementPageComponent implements OnInit {
     });
   }
 
-  public delete(id: number) {
-    this.service.deleteProduct(id);
+  // public delete(id: number) {
+  //   this.service.deleteProduct(id);
 
-    this.products$ = this.service.getProducts();
+  //   this.products$ = this.service.getProducts();
 
-    this.products$.pipe(
-      take(1)
-    ).subscribe((products: ProductDetails[]) => {
-      this.dataSource = new MatTableDataSource(products);
-    });
+  //   this.products$.pipe(
+  //     take(1)
+  //   ).subscribe((products: ProductDetails[]) => {
+  //     this.dataSource = new MatTableDataSource(products);
+  //   });
+  // }
+
+
+
+
+public delete(id: number) {
+  this.service.deleteProduct(id).pipe(
+    switchMap(() => this.service.getProducts()),
+    take(1)
+  ).subscribe((products) => {
+    this.dataSource = new MatTableDataSource(products);
+  });
+}
+
+
+
+  public getFirstImage(images: string[]) {
+    return images && images.length > 0 ? images[0] : ['']
+
   }
+ 
+
 }

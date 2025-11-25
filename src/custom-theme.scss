@@ -34,36 +34,29 @@ $ama-warn: mat-palette($ama-pink);
 $ama-success: mat-palette($ama-green);
 $ama-info: mat-palette($ama-violet);
 
-@function ama-light-theme(
-  $primary,
+@function ama-light-theme($primary,
   $accent,
   $warn,
   $success,
   $info,
-  $primary-light
-) {
-  @return map-merge(
-    mat-light-theme($primary, $accent, $warn),
-    (
-      success: $success,
+  $primary-light) {
+  @return map-merge(mat-light-theme($primary, $accent, $warn),
+    (success: $success,
       info: $info,
       primary-light: $primary-light,
-    )
-  );
+    ));
 }
 
 /***********************************/
 /** Angular Material Admin THEME **/
 /**********************************/
 
-$ama-theme: ama-light-theme(
-  $ama-primary,
-  $ama-accent,
-  $ama-warn,
-  $ama-success,
-  $ama-info,
-  $ama-primary-light
-);
+$ama-theme: ama-light-theme($ama-primary,
+    $ama-accent,
+    $ama-warn,
+    $ama-success,
+    $ama-info,
+    $ama-primary-light);
 
 @include angular-material-theme($ama-theme);
 
@@ -71,14 +64,12 @@ $ama-theme: ama-light-theme(
 /**            Badge             **/
 /**********************************/
 
-$ama-badge-theme: ama-light-theme(
-  $ama-primary,
-  $ama-accent,
-  $ama-warn,
-  $ama-success,
-  $ama-info,
-  $ama-primary-light
-);
+$ama-badge-theme: ama-light-theme($ama-primary,
+    $ama-accent,
+    $ama-warn,
+    $ama-success,
+    $ama-info,
+    $ama-primary-light);
 
 @mixin mat-badge-theme($theme) {
   $accent: map-get($theme, accent);
@@ -155,16 +146,14 @@ $ama-badge-theme: ama-light-theme(
       // we convert it into a solid color by taking the opacity from the rgba value and using
       // the value to determine the percentage of the background to put into foreground when
       // mixing the colors together.
-      @if (
-        type-of($badge-color) == color and type-of($app-background) == color
-      ) {
+      @if (type-of($badge-color)==color and type-of($app-background)==color) {
         $badge-opacity: opacity($badge-color);
-        background: mix(
-          $app-background,
-          rgba($badge-color, 1),
-          (1 - $badge-opacity) * 100%
-        );
-      } @else {
+        background: mix($app-background,
+            rgba($badge-color, 1),
+            (1 - $badge-opacity) * 100%);
+      }
+
+      @else {
         background: $badge-color;
       }
 
@@ -215,14 +204,12 @@ $ama-badge-theme: ama-light-theme(
 /**          Radio Button        **/
 /**********************************/
 
-$ama-radio-button-theme: ama-light-theme(
-  $ama-primary,
-  $ama-accent,
-  $ama-warn,
-  $ama-success,
-  $ama-info,
-  $ama-primary-light
-);
+$ama-radio-button-theme: ama-light-theme($ama-primary,
+    $ama-accent,
+    $ama-warn,
+    $ama-success,
+    $ama-info,
+    $ama-primary-light);
 
 @mixin _mat-radio-color($palette) {
   &.mat-radio-checked .mat-radio-outer-circle {
@@ -267,6 +254,7 @@ $ama-radio-button-theme: ama-light-theme(
     // (e.g. `.mat-radio-button.mat-accent`) which increases their specificity a lot.
     // TODO: consider making the selectors into descendants (`.mat-primary .mat-radio-button`).
     &.mat-radio-disabled {
+
       &.mat-radio-checked .mat-radio-outer-circle,
       .mat-radio-outer-circle {
         border-color: mat-color($foreground, disabled);
@@ -309,34 +297,28 @@ $ama-radio-button-theme: ama-light-theme(
 @mixin _mat-theme-elevation($zValue, $theme, $opacity: $mat-elevation-opacity) {
   $foreground: map-get($theme, foreground);
   $elevation-color: map-get($foreground, elevation);
-  $elevation-color-or-default: if(
-    $elevation-color == null,
-    $mat-elevation-color,
-    $elevation-color
-  );
+  $elevation-color-or-default: if($elevation-color ==null,
+      $mat-elevation-color,
+      $elevation-color );
 
   @include mat-elevation($zValue, $elevation-color-or-default, $opacity);
 }
 
 @mixin mat-chips-theme-color($palette) {
-  @include custom-mat-chips-color(
-    mat-color($palette, default-contrast),
-    mat-color($palette)
-  );
+  @include custom-mat-chips-color(mat-color($palette, default-contrast),
+    mat-color($palette));
 
   //.mat-ripple-element {
   //  @include _mat-chips-ripple-background($palette, default-contrast, 0.1);
   //}
 }
 
-$ama-chip-theme: ama-light-theme(
-  $ama-primary,
-  $ama-accent,
-  $ama-warn,
-  $ama-success,
-  $ama-info,
-  $ama-primary-light
-);
+$ama-chip-theme: ama-light-theme($ama-primary,
+    $ama-accent,
+    $ama-warn,
+    $ama-success,
+    $ama-info,
+    $ama-primary-light);
 
 @mixin mat-chips-theme($theme) {
   $is-dark-theme: map-get($theme, is-dark);
@@ -352,10 +334,8 @@ $ama-chip-theme: ama-light-theme(
   $unselected-foreground: mat-color($foreground, text);
 
   .mat-chip.mat-standard-chip {
-    @include custom-mat-chips-color(
-      $unselected-foreground,
-      $unselected-background
-    );
+    @include custom-mat-chips-color($unselected-foreground,
+      $unselected-background );
 
     &:not(.mat-chip-disabled) {
       &:active {
@@ -405,14 +385,12 @@ $ama-chip-theme: ama-light-theme(
 /**           Buttons            **/
 /**********************************/
 
-$ama-button-theme: ama-light-theme(
-  $ama-primary,
-  $ama-accent,
-  $ama-warn,
-  $ama-success,
-  $ama-info,
-  $ama-primary-light
-);
+$ama-button-theme: ama-light-theme($ama-primary,
+    $ama-accent,
+    $ama-warn,
+    $ama-success,
+    $ama-info,
+    $ama-primary-light);
 
 @mixin _mat-button-theme-property($theme, $property, $hue) {
   $primary: map-get($theme, primary);
@@ -427,18 +405,22 @@ $ama-button-theme: ama-light-theme(
     #{$property}: mat-color($primary, $hue);
     border-color: mat-color($primary, $hue) !important;
   }
+
   &.mat-accent {
     #{$property}: mat-color($accent, $hue);
     border-color: mat-color($accent, $hue) !important;
   }
+
   &.mat-warn {
     #{$property}: mat-color($warn, $hue);
     border-color: mat-color($warn, $hue) !important;
   }
+
   &.mat-success {
     #{$property}: mat-color($success, $hue);
     border-color: mat-color($success, $hue) !important;
   }
+
   &.mat-info {
     #{$property}: mat-color($info, $hue);
     border-color: mat-color($info, $hue) !important;
@@ -450,7 +432,7 @@ $ama-button-theme: ama-light-theme(
   &.mat-success,
   &[disabled] {
     &[disabled] {
-      $palette: if($property == 'color', $foreground, $background);
+      $palette: if($property =='color', $foreground, $background);
       #{$property}: mat-color($palette, disabled-button);
     }
   }
@@ -462,10 +444,13 @@ html,
 body {
   height: 100%;
 }
+
 body {
-  margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: 'irabYekan', sans-serif !important;
 }
+
+
 
 @include notification;
 @include typography;
@@ -499,4 +484,4 @@ body {
 .ng-select .ng-select-container {
   min-width: 150px;
   min-height: 40.5px;
-}
+} 
