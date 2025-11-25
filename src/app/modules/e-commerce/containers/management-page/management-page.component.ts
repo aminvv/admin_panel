@@ -10,6 +10,7 @@ import { ProductDetails } from '../../models/product-details';
 import { switchMap, take } from 'rxjs/operators';
 import { DeletePopupComponent } from '../../../../shared/popups/delete-popup/delete-popup.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-management-page',
@@ -56,6 +57,7 @@ export class ManagementPageComponent implements OnInit {
   }
 
   constructor(private service: ProductService,
+    private toastr: ToastrService,
     public dialog: MatDialog) {
     this.products$ = this.service.getProducts();
 
@@ -96,22 +98,30 @@ export class ManagementPageComponent implements OnInit {
 
 
 
+  public delete(id: number) {
+    this.service.deleteProduct(id).pipe(
+      switchMap((response: any) => {
 
-public delete(id: number) {
-  this.service.deleteProduct(id).pipe(
-    switchMap(() => this.service.getProducts()),
-    take(1)
-  ).subscribe((products) => {
-    this.dataSource = new MatTableDataSource(products);
-  });
-}
-
+        const message = response && response.message? String(response.message): 'محصول با موفقیت حذف شد';
+        this.toastr.success(message);
+        return this.service.getProducts();
+      }),
+      take(1)
+    ).subscribe({
+      next: (products) => {
+        this.dataSource = new MatTableDataSource(products);
+      },
+      error: (err) => {
+        this.toastr.error(err?.message || 'خطا در حذف محصول');
+      }
+    });
+  }
 
 
   public getFirstImage(images: string[]) {
     return images && images.length > 0 ? images[0] : ['']
 
   }
- 
+
 
 }

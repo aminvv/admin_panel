@@ -1,19 +1,29 @@
 @import "./src/app/styles/font";
 @import "./src/app/styles/colors";
 
+
+
+* {
+  font-family: Vazir, Tahoma, Arial, sans-serif !important;
+  
+}
+
+
 .title {
   font-size: $fs-large;
   color: $dark-grey;
+  direction: rtl;
 }
 
 .text {
   font-size: $fs-normal;
   color: $grey;
+  direction: rtl;
 }
 
 .button-wrapper {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .button + .button {

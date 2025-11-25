@@ -325,11 +325,7 @@ export class ProductService {
   public deleteProduct(id: number) {
 
     const headers = this.baseServe.getAuthHeader();
-    return this.http.delete(`${this.productDeleteUrl}/${id}`, { headers }).pipe(
-      map((res) => ({
-        message: res
-      }))
-    )
+    return this.http.delete(`${this.productDeleteUrl}/${id}`, { headers })
 
   }
 
