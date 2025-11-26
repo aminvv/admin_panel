@@ -6,8 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { BaseService } from 'src/app/shared/services/base.service';
 import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
-import { array } from '@amcharts/amcharts4/core';
-import { environment } from 'src/environments/environment';
+
 
 export const products: ProductDetails[] = [
   {
@@ -19,7 +18,9 @@ export const products: ProductDetails[] = [
     discountPercent: 20,
     discountAmount: 16, // 20% از 80
     description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
-    image: ['./assets/e-commerce/products/1.png'],
+    image: [
+      { url: './assets/e-commerce/products/3.png', publicId: null }
+    ],
     rating: 4.6,
     status: 'New'
   },
@@ -32,7 +33,9 @@ export const products: ProductDetails[] = [
     discountPercent: 20,
     discountAmount: 7.4,
     description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
-    image: ['./assets/e-commerce/products/2.png'],
+     image: [
+      { url: './assets/e-commerce/products/3.png', publicId: null }
+    ],
     rating: 4.6,
     status: 'Sale'
   },
@@ -45,7 +48,9 @@ export const products: ProductDetails[] = [
     discountPercent: 20,
     discountAmount: 14,
     description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
-    image: ['./assets/e-commerce/products/3.png'],
+    image: [
+      { url: './assets/e-commerce/products/3.png', publicId: null }
+    ],
     rating: 4.6,
     status: 'New'
   }
@@ -153,8 +158,9 @@ export class ProductService {
       description: product.description || '',
       rating: product.rating || 0,
       status: product.status,
-      image: product.image || [],
+      image: product.image 
     };
+    console.log("img---------",product.image);
 
     const headers = this.baseServe.getAuthHeader();
 

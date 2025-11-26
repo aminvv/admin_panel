@@ -14,7 +14,7 @@ export class CloudinaryService {
 
 
 
-  upload(fileOrFiles: File | File[]): Observable<string | string[]> {
+  upload(fileOrFiles: File | File[]): Observable<{ url: string; publicId: string } | { url: string; publicId: string }[]> {
     if (!fileOrFiles) throw new Error("فایل برای آپلود ارسال نشده")
 
     if (Array.isArray(fileOrFiles)) {
@@ -39,21 +39,24 @@ export class CloudinaryService {
     formData.append('folder', CLOUDINARY_CONFIG.folder)
 
 
-const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/upload`;
-
-  return new Observable<string>(observer => {
-    fetch(url, {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-      observer.next(data.secure_url);
-      observer.complete();
-    })
-    .catch(err => observer.error(err));
-  });
-}
+    const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/upload`;
+    
+    return new Observable<{ url: string; publicId: string }>(observer => {
+      fetch(url, {
+        method: 'POST',
+        body: formData,
+      })
+        .then(res => res.json())
+        .then(data => {
+          observer.next({
+            url: data.secure_url,
+            publicId: data.public_id,
+          });
+          observer.complete();
+        })
+        .catch(err => observer.error(err));
+    });
+  }
 
 
 

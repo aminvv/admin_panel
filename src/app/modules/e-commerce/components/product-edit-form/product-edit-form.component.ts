@@ -17,7 +17,7 @@ export class ProductEditFormComponent implements OnChanges {
 
   public router = routes;
   public form!: FormGroup;
-  public selectedFiles: {file: File | null;preview: string;isUploading: boolean;uploadError: boolean;}[] = [];
+  public selectedFiles: {file: File | null;preview: string; publicId:string;isUploading: boolean;uploadError: boolean;}[] = [];
 
   constructor(private cloudinaryService: CloudinaryService) {
     this.initForm();
@@ -107,9 +107,10 @@ export class ProductEditFormComponent implements OnChanges {
 
 
     if (Array.isArray(this.product.image)) {
-      this.selectedFiles = this.product.image.map((url: string) => ({
+      this.selectedFiles = this.product.image.map((img: {url:string ,publicId:string}) => ({
         file: null,
-        preview: url,
+        preview: img.url,
+        publicId:img.publicId,
         isUploading: false,
         uploadError: false,
       }));
@@ -164,6 +165,7 @@ export class ProductEditFormComponent implements OnChanges {
         this.selectedFiles.push({
           file,
           preview: e.target.result,
+          publicId:null,
           isUploading: true,
           uploadError: false,
         });
@@ -172,16 +174,17 @@ export class ProductEditFormComponent implements OnChanges {
     });
 
     this.cloudinaryService.upload(fileArray).subscribe({
-      next: (uploadedUrls: string[]) => {
-        uploadedUrls.forEach((url, index) => {
-          const item =
-            this.selectedFiles[this.selectedFiles.length - fileArray.length + index];
-
+      next: (uploadedUrls: { url: string; publicId: string }[]) => {
+        uploadedUrls.forEach((fileData, index) => {
+          const item = this.selectedFiles[this.selectedFiles.length - fileArray.length + index];
           if (item) {
-            item.preview = url;
+            item.preview = fileData.url
+            item.publicId = fileData.publicId 
             item.file = null;
             item.isUploading = false;
             item.uploadError = false;
+            console.log("pubicId", fileData.publicId);
+            console.log("url",  fileData.url);
           }
         });
       },
@@ -225,9 +228,9 @@ public save(): void {
     return;
   }
 
-  const finalImageUrls: string[] = this.selectedFiles
-    .map(item => item.preview)
-    .filter(url => typeof url === 'string' && url.trim() !== '');
+  const finalImageUrls: {url:string,publicId:string}[] = this.selectedFiles
+  .filter(item=>item.preview&&item.publicId)
+    .map(item => ({url:item.preview ,publicId: item.publicId}))
 
   const productData: ProductDetails = {
     id: this.product?.id,

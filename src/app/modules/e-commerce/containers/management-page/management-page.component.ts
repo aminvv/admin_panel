@@ -118,10 +118,9 @@ export class ManagementPageComponent implements OnInit {
   }
 
 
-  public getFirstImage(images: string[]) {
-    return images && images.length > 0 ? images[0] : ['']
-
-  }
+public getFirstImage(images: { url: string; publicId: string }[]) {
+  return images && images.length > 0 ? images[0].url : '';
+}
 
 
 }
