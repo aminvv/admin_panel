@@ -5,6 +5,7 @@ import { ProductDetails } from '../../models/product-details';
 import { routes } from '../../../../consts';
 import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
 import { ProductService } from '../../services';
+import { SelectedFile } from '../../models/selectedFile';
 
 @Component({
   selector: 'app-product-edit-form',
@@ -18,7 +19,7 @@ export class ProductEditFormComponent implements OnChanges {
 
   public router = routes;
   public form!: FormGroup;
-  public selectedFiles: { file: File | null; preview: string; publicId: string; isUploading: boolean; uploadError: boolean; }[] = [];
+  public selectedFiles: SelectedFile[] = [];
 
   constructor(
     private cloudinaryService: CloudinaryService,
@@ -164,6 +165,7 @@ export class ProductEditFormComponent implements OnChanges {
     const fileArray = Array.from(files);
 
     fileArray.forEach(file => {
+      const controller = new AbortController()
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.selectedFiles.push({
@@ -172,6 +174,7 @@ export class ProductEditFormComponent implements OnChanges {
           publicId: null,
           isUploading: true,
           uploadError: false,
+          controller
         });
       };
       reader.readAsDataURL(file);
@@ -204,8 +207,10 @@ export class ProductEditFormComponent implements OnChanges {
 
   // ================= REMOVE FILE =================
   removeFile(index: number): void {
-    console.log( "remove is run");
     const img = this.selectedFiles[index]
+    if (img.isUploading && img.controller) {
+      img.controller.abort();
+    }
     this.selectedFiles.splice(index, 1)
 
     if (img.publicId) {
@@ -235,6 +240,12 @@ export class ProductEditFormComponent implements OnChanges {
   public save(): void {
     if (this.form.invalid) {
       alert('لطفاً همه فیلدها را پر کنید');
+      return;
+    }
+
+    const uploadingFiles = this.selectedFiles.filter(f => f.isUploading);
+    if (uploadingFiles.length > 0) {
+      alert('لطفاً صبر کنید تا همه عکس‌ها آپلود شوند.');
       return;
     }
 
