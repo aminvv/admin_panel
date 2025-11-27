@@ -337,6 +337,12 @@ export class ProductService {
 
 
 
+  public removeUploadedImage(publicId: string) {
+  const headers = this.baseServe.getAuthHeader();
+  return this.http.delete(`/product/removeImage/${encodeURIComponent(publicId)}`, { headers });
+}
+
+
 }
 
 

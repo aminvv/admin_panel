@@ -4,6 +4,7 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProductDetails } from '../../models/product-details';
 import { routes } from '../../../../consts';
 import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
+import { ProductService } from '../../services';
 
 @Component({
   selector: 'app-product-edit-form',
@@ -17,9 +18,12 @@ export class ProductEditFormComponent implements OnChanges {
 
   public router = routes;
   public form!: FormGroup;
-  public selectedFiles: {file: File | null;preview: string; publicId:string;isUploading: boolean;uploadError: boolean;}[] = [];
+  public selectedFiles: { file: File | null; preview: string; publicId: string; isUploading: boolean; uploadError: boolean; }[] = [];
 
-  constructor(private cloudinaryService: CloudinaryService) {
+  constructor(
+    private cloudinaryService: CloudinaryService,
+    private productService: ProductService,
+  ) {
     this.initForm();
   }
 
@@ -107,10 +111,10 @@ export class ProductEditFormComponent implements OnChanges {
 
 
     if (Array.isArray(this.product.image)) {
-      this.selectedFiles = this.product.image.map((img: {url:string ,publicId:string}) => ({
+      this.selectedFiles = this.product.image.map((img: { url: string, publicId: string }) => ({
         file: null,
         preview: img.url,
-        publicId:img.publicId,
+        publicId: img.publicId,
         isUploading: false,
         uploadError: false,
       }));
@@ -126,7 +130,7 @@ export class ProductEditFormComponent implements OnChanges {
 
 
 
-  
+
   // ================= ADD FEATURE =================
   addFeature(): void {
     this.details.push(
@@ -165,7 +169,7 @@ export class ProductEditFormComponent implements OnChanges {
         this.selectedFiles.push({
           file,
           preview: e.target.result,
-          publicId:null,
+          publicId: null,
           isUploading: true,
           uploadError: false,
         });
@@ -179,12 +183,12 @@ export class ProductEditFormComponent implements OnChanges {
           const item = this.selectedFiles[this.selectedFiles.length - fileArray.length + index];
           if (item) {
             item.preview = fileData.url
-            item.publicId = fileData.publicId 
+            item.publicId = fileData.publicId
             item.file = null;
             item.isUploading = false;
             item.uploadError = false;
             console.log("pubicId", fileData.publicId);
-            console.log("url",  fileData.url);
+            console.log("url", fileData.url);
           }
         });
       },
@@ -193,14 +197,20 @@ export class ProductEditFormComponent implements OnChanges {
 
     event.target.value = '';
   }
-  
+
 
 
 
 
   // ================= REMOVE FILE =================
   removeFile(index: number): void {
-    this.selectedFiles.splice(index, 1);
+    console.log( "remove is run");
+    const img = this.selectedFiles[index]
+    this.selectedFiles.splice(index, 1)
+
+    if (img.publicId) {
+      this.productService.removeUploadedImage(img.publicId).subscribe()
+    }
   }
 
 
@@ -222,25 +232,25 @@ export class ProductEditFormComponent implements OnChanges {
 
 
   // ================= SAVE =================
-public save(): void {
-  if (this.form.invalid) {
-    alert('لطفاً همه فیلدها را پر کنید');
-    return;
+  public save(): void {
+    if (this.form.invalid) {
+      alert('لطفاً همه فیلدها را پر کنید');
+      return;
+    }
+
+    const finalImageUrls: { url: string, publicId: string }[] = this.selectedFiles
+      .filter(item => item.preview && item.publicId)
+      .map(item => ({ url: item.preview, publicId: item.publicId }))
+
+    const productData: ProductDetails = {
+      id: this.product?.id,
+      ...this.form.value,
+      image: finalImageUrls,
+      details: this.details.value
+    };
+
+    this.editProduct.emit(productData);
   }
-
-  const finalImageUrls: {url:string,publicId:string}[] = this.selectedFiles
-  .filter(item=>item.preview&&item.publicId)
-    .map(item => ({url:item.preview ,publicId: item.publicId}))
-
-  const productData: ProductDetails = {
-    id: this.product?.id,
-    ...this.form.value,
-    image: finalImageUrls,
-    details: this.details.value
-  };
-
-  this.editProduct.emit(productData); 
-}
 
 
 }
