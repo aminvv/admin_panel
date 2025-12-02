@@ -57,4 +57,4 @@ import { HttpInterceptorService } from './shared/services/http-interceptor.servi
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

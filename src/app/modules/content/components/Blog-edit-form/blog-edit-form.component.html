@@ -1,53 +1,55 @@
 <form [formGroup]="blogForm" (ngSubmit)="onSubmit()" class="blog-form">
   <div>
-    <label>Title</label>
-    <input type="text" formControlName="title" placeholder="Blog Title" />
+    <label>عنوان</label>
+    <input type="text" formControlName="title" placeholder="عنوان مقاله" />
   </div>
 
   <div>
-    <label>Slug (optional)</label>
-    <input type="text" formControlName="slug" placeholder="Slug" />
+    <label>اسلاگ (اختیاری)</label>
+    <input type="text" formControlName="slug" placeholder="اسلاگ" />
   </div>
 
   <div>
-    <label>Category</label>
+    <label>دسته‌بندی</label>
     <select formControlName="category">
-      <option value="">Select Category</option>
-      <option value="tech">Tech</option>
-      <option value="news">News</option>
+      <option value="">انتخاب دسته‌بندی</option>
+      <option value="tech">تکنولوژی</option>
+      <option value="news">اخبار</option>
     </select>
   </div>
 
   <div>
-    <label>Description</label>
-    <textarea formControlName="description" placeholder="Short description"></textarea>
+    <label>توضیحات کوتاه</label>
+    <textarea formControlName="description" placeholder="توضیحات کوتاه"></textarea>
   </div>
 
-  <div>
-    <label>Content</label>
-    <textarea formControlName="content" placeholder="Blog content"></textarea>
-  </div>
+<div>
+  <label>محتوای مقاله</label>
+  <ckeditong serve[editor]="Editor" formControlName="content"></ckeditor>
+
+</div>
+
 
   <div>
-    <label>Images (max 5)</label>
+    <label>تصاویر (حداکثر ۵ تصویر)</label>
     <input type="file" (change)="onImageChange($event)" multiple />
     <div class="preview">
       <div *ngFor="let img of imagePreviews; let i = index">
-        <img [src]="img" alt="Preview" width="100" />
-        <button type="button" (click)="removeImage(i)">Remove</button>
+        <img [src]="img" alt="پیش‌نمایش" width="100" />
+        <button type="button" (click)="removeImage(i)">حذف</button>
       </div>
     </div>
   </div>
 
   <div>
-    <label>Status</label>
+    <label>وضعیت</label>
     <select formControlName="status">
-      <option value="draft">Draft</option>
-      <option value="published">Published</option>
+      <option value="draft">پیش‌نویس</option>
+      <option value="published">منتشر شده</option>
     </select>
   </div>
 
   <button type="submit" [disabled]="blogForm.invalid">
-    {{ blog ? 'Update Blog' : 'Create Blog' }}
+    {{ blog ? 'ویرایش مقاله' : 'ایجاد مقاله' }}
   </button>
 </form>

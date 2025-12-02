@@ -21,6 +21,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { BlogEditFormComponent, BlogCardComponent  } from './components';
 import { ManagementPageComponent ,  BlogPageComponent, BlogsPageComponent, BlogEditPageComponent, BlogCreatePageComponent } from './containers';
 import { BaseService } from 'src/app/shared/services/base.service';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { BaseService } from 'src/app/shared/services/base.service';
     BlogCardComponent,
     BlogEditPageComponent,
     BlogEditFormComponent,
-    BlogCreatePageComponent
+    BlogCreatePageComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -50,6 +53,7 @@ import { BaseService } from 'src/app/shared/services/base.service';
     MatSortModule,
     MatPaginatorModule,
     ReactiveFormsModule,
+    CKEditorModule,
   ],
   providers: [
     

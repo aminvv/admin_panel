@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { BlogService } from '../../services';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'app-blog-edit-form',
@@ -14,7 +15,7 @@ export class BlogEditFormComponent implements OnInit {
   blogForm!: FormGroup;
   imagePreviews: string[] = [];
 
-  constructor(private fb: FormBuilder, private blogService: BlogService) {}
+  constructor(private fb: FormBuilder, private blogService: BlogService) { }
 
   ngOnInit(): void {
     this.blogForm = this.fb.group({
@@ -53,6 +54,15 @@ export class BlogEditFormComponent implements OnInit {
     this.images.removeAt(index);
     this.imagePreviews.splice(index, 1);
   }
+
+
+
+
+  public Editor = ClassicEditor;
+
+  content = ''; // این رو می‌تونی به FormControl وصل کنی
+
+
 
   onSubmit() {
     if (this.blogForm.invalid) return;
