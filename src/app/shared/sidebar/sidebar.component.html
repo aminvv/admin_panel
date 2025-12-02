@@ -28,6 +28,16 @@
         </mat-icon>
       </div>
 
+      <div *ngIf="node.name === 'Content'" class="mat-tree-item" matTreeNodeToggle>
+        <div>
+          <mat-icon>article</mat-icon>
+          <p>{{node.name}}</p>
+        </div>
+        <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
+          keyboard_arrow_down
+        </mat-icon>
+      </div>
+
       <div *ngIf="node.name === 'User'" class="mat-tree-item" matTreeNodeToggle>
         <div>
           <mat-icon>person</mat-icon>
@@ -136,5 +146,3 @@
 
 
 <div class="space"></div>
-
- 

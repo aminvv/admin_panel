@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { BaseService } from 'src/app/shared/services/base.service';
 import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
+import { BlogCard } from '../../content/models';
 
 
 export const products: ProductDetails[] = [
@@ -198,49 +199,49 @@ export class ProductService {
 
 
 
-  public getSimilarProducts(): Observable<ProductCard[]> {
-    return of([
-      {
-        id: 1,
-        productCode: '135234',
-        productName: 'Trainers',
-        price: 80,
-        quantity: 10,
-        discountPercent: 20,
-        discountAmount: 16, // 20% از 80
-        description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
-        image: ['./assets/e-commerce/products/1.png'],
-        rating: 4.6,
-        status: 'New'
-      },
-      {
-        id: 2,
-        productCode: '135264',
-        productName: 'Boots',
-        price: 37,
-        quantity: 5,
-        discountPercent: 20,
-        discountAmount: 7.4,
-        description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
-        image: ['./assets/e-commerce/products/2.png'],
-        rating: 4.6,
-        status: 'Sale'
-      },
-      {
-        id: 3,
-        productCode: '125234',
-        productName: 'Flat sandals',
-        price: 70,
-        quantity: 15,
-        discountPercent: 20,
-        discountAmount: 14,
-        description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
-        image: ['./assets/e-commerce/products/3.png'],
-        rating: 4.6,
-        status: 'New'
-      }
-    ]);
-  }
+  // public getSimilarProducts(): Observable<BlogCard[]> {
+  //   return of([
+  //     {
+  //       id: 1,
+  //       productCode: '135234',
+  //       productName: 'Trainers',
+  //       price: 80,
+  //       quantity: 10,
+  //       discountPercent: 20,
+  //       discountAmount: 16, // 20% از 80
+  //       description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
+  //       image: ['./assets/e-commerce/products/1.png'],
+  //       rating: 4.6,
+  //       status: 'New'
+  //     },
+  //     {
+  //       id: 2,
+  //       productCode: '135264',
+  //       productName: 'Boots',
+  //       price: 37,
+  //       quantity: 5,
+  //       discountPercent: 20,
+  //       discountAmount: 7.4,
+  //       description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
+  //       image: ['./assets/e-commerce/products/2.png'],
+  //       rating: 4.6,
+  //       status: 'Sale'
+  //     },
+  //     {
+  //       id: 3,
+  //       productCode: '125234',
+  //       productName: 'Flat sandals',
+  //       price: 70,
+  //       quantity: 15,
+  //       discountPercent: 20,
+  //       discountAmount: 14,
+  //       description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
+  //       image: ['./assets/e-commerce/products/3.png'],
+  //       rating: 4.6,
+  //       status: 'New'
+  //     }
+  //   ]);
+  // }
 
 
 

@@ -44,6 +44,11 @@ const route: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () => import('./modules/e-commerce/e-commerce.module').then(m => m.ECommerceModule)
       },
+      {
+        path: 'content',
+        canActivate: [AuthGuard],
+        loadChildren: () => import('./modules/content/content.module').then(m => m.ContentModule)
+      },
 
       {
         path: 'forms',

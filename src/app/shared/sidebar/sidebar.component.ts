@@ -15,6 +15,16 @@ const TREE_DATA: any = [
       {name: 'Product Page', route: routes.PRODUCT, active: 'active'},
     ]
   },
+
+    {
+    name: 'Content',
+    children: [
+      {name: 'Blog Manage', route: routes.MANAGEMENT_BLOG, active: 'active'},
+      {name: 'Blogs Grid', route: routes.BLOGS, active: 'active'},
+      {name: 'Blog Page', route: routes.BLOG, active: 'active'},
+    ]
+  },
+
   {
     name: 'User',
     children: [

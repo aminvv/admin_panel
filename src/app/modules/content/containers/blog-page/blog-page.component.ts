@@ -1,28 +1,28 @@
 import {Component, OnInit} from '@angular/core';
 import {routes} from '../../../../consts';
 import {FormControl, FormGroup} from '@angular/forms';
-import {ProductService,} from '../../services';
 import {Observable} from 'rxjs';
-import {ProductCard} from '../../models';
-import {ProductDetails} from '../../models/product-details';
+import {BlogCard} from '../../models';
+import {BlogDetails} from '../../models/product-details';
 import {ActivatedRoute} from '@angular/router';
+import { BlogService } from '../../services';
 
 @Component({
-  selector: 'app-product-page',
-  templateUrl: './product-page.component.html',
-  styleUrls: ['./product-page.component.scss']
+  selector: 'app-Blog-page',
+  templateUrl: './Blog-page.component.html',
+  styleUrls: ['./Blog-page.component.scss']
 })
-export class ProductPageComponent implements OnInit {
+export class BlogPageComponent implements OnInit {
   public routes: typeof routes = routes;
   public form: FormGroup;
-  public products$: Observable<ProductCard[]>
-  public product$: Observable<ProductDetails>
+  public blogs$: Observable<BlogCard[]>
+  public blog$: Observable<BlogDetails>
 
   constructor(
-    private service: ProductService,
+    private service: BlogService,
     private route: ActivatedRoute
   ) {
-    // this.products$ = this.service.getSimilarProducts();
+    this.blogs$ = this.service.getSimilarProducts();
   }
 
   public ngOnInit() {
@@ -33,9 +33,9 @@ export class ProductPageComponent implements OnInit {
 
     this.route.paramMap.subscribe((params: any) => {
       if (params.params.id) {
-        this.product$ = this.service.getProduct(params.params.id);
+        this.blog$ = this.service.getBlog(params.params.id);
       } else {
-        this.product$ = this.service.getProduct(1);
+        this.blog$ = this.service.getBlog(1);
       }
     });
   }

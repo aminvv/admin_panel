@@ -18,6 +18,15 @@ export enum routes {
   PRODUCTS = '/e-commerce/products',
   PRODUCT = '/e-commerce/product',
 
+
+  // --- Content ---//
+
+  MANAGEMENT_BLOG = '/content/management',
+  BLOG_EDIT = '/content/edit',
+  BLOG_CREATE = '/content/create',
+  BLOGS = '/content/blogs',
+  BLOG = '/content/blog',
+
   // --- Documentation ---//
 
   LIBS = '/documentation/libs',

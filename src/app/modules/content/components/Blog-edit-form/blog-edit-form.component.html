@@ -1,0 +1,53 @@
+<form [formGroup]="blogForm" (ngSubmit)="onSubmit()" class="blog-form">
+  <div>
+    <label>Title</label>
+    <input type="text" formControlName="title" placeholder="Blog Title" />
+  </div>
+
+  <div>
+    <label>Slug (optional)</label>
+    <input type="text" formControlName="slug" placeholder="Slug" />
+  </div>
+
+  <div>
+    <label>Category</label>
+    <select formControlName="category">
+      <option value="">Select Category</option>
+      <option value="tech">Tech</option>
+      <option value="news">News</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Description</label>
+    <textarea formControlName="description" placeholder="Short description"></textarea>
+  </div>
+
+  <div>
+    <label>Content</label>
+    <textarea formControlName="content" placeholder="Blog content"></textarea>
+  </div>
+
+  <div>
+    <label>Images (max 5)</label>
+    <input type="file" (change)="onImageChange($event)" multiple />
+    <div class="preview">
+      <div *ngFor="let img of imagePreviews; let i = index">
+        <img [src]="img" alt="Preview" width="100" />
+        <button type="button" (click)="removeImage(i)">Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <label>Status</label>
+    <select formControlName="status">
+      <option value="draft">Draft</option>
+      <option value="published">Published</option>
+    </select>
+  </div>
+
+  <button type="submit" [disabled]="blogForm.invalid">
+    {{ blog ? 'Update Blog' : 'Create Blog' }}
+  </button>
+</form>
