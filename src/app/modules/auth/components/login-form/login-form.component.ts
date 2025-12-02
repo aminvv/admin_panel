@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AppConfig } from '../../../../app.config';
 
 @Component({
@@ -9,7 +9,7 @@ import { AppConfig } from '../../../../app.config';
 })
 export class LoginFormComponent implements OnInit {
   @Output() sendLoginForm = new EventEmitter<any>();
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public email: string;
   public password: string;
 
@@ -21,12 +21,12 @@ export class LoginFormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.form = new FormGroup({
-      email: new FormControl(this.email, [
+    this.form = new UntypedFormGroup({
+      email: new UntypedFormControl(this.email, [
         Validators.required,
         Validators.email,
       ]),
-      password: new FormControl(this.password, [Validators.required]),
+      password: new UntypedFormControl(this.password, [Validators.required]),
     });
   }
 

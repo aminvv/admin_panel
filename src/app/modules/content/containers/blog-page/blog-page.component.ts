@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {routes} from '../../../../consts';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {BlogCard} from '../../models';
 import {BlogDetails} from '../../models/product-details';
@@ -14,7 +14,7 @@ import { BlogService } from '../../services';
 })
 export class BlogPageComponent implements OnInit {
   public routes: typeof routes = routes;
-  public form: FormGroup;
+  public form: UntypedFormGroup;
   public blogs$: Observable<BlogCard[]>
   public blog$: Observable<BlogDetails>
 
@@ -26,9 +26,9 @@ export class BlogPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.form = new FormGroup({
-      size: new FormControl('2'),
-      value: new FormControl('2'),
+    this.form = new UntypedFormGroup({
+      size: new UntypedFormControl('2'),
+      value: new UntypedFormControl('2'),
     });
 
     this.route.paramMap.subscribe((params: any) => {
@@ -41,11 +41,11 @@ export class BlogPageComponent implements OnInit {
   }
 
   get size() {
-    return this.form.get('size') as FormControl;
+    return this.form.get('size') as UntypedFormControl;
   }
 
   get value() {
-    return this.form.get('value') as FormControl;
+    return this.form.get('value') as UntypedFormControl;
   }
 
 }

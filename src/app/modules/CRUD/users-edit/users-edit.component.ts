@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  FormBuilder,
+  UntypedFormBuilder,
   FormControl,
-  FormGroup,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -21,7 +21,7 @@ export class UsersEditComponent implements OnInit {
   selectedUsers;
   loading = false;
   public routes: typeof routes = routes;
-  form: FormGroup;
+  form: UntypedFormGroup;
   AUTO_COMPLETE_LIMIT = AUTO_COMPLETE_LIMIT;
   selectedId = this.route.snapshot.params.id;
 
@@ -30,7 +30,7 @@ export class UsersEditComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private toastr: ToastrService,
     private dataFormatterService: DataFormatterService,
 

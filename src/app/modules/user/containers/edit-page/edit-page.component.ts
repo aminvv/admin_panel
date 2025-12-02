@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {routes} from '../../../../consts';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-edit-page',
@@ -9,7 +9,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 })
 export class EditPageComponent implements OnInit {
   public routes: typeof routes = routes;
-  public selectedTab = new FormControl(0);
+  public selectedTab = new UntypedFormControl(0);
 
   ngOnInit(): void {
   }

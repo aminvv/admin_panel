@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  FormBuilder,
+  UntypedFormBuilder,
   FormControl,
-  FormGroup,
+  UntypedFormGroup,
   Validators,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -20,7 +20,7 @@ import { UsersService } from '../../../shared/services/users.service';
 export class UsersCreateComponent implements OnInit {
   loading = false;
   public routes: typeof routes = routes;
-  form: FormGroup;
+  form: UntypedFormGroup;
   AUTO_COMPLETE_LIMIT = AUTO_COMPLETE_LIMIT;
 
   imgFile: string;
@@ -28,7 +28,7 @@ export class UsersCreateComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private toastr: ToastrService,
     private dataFormatterService: DataFormatterService,
 

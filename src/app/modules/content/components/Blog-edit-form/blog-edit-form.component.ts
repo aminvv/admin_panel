@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormArray } from '@angular/forms';
 import { BlogService } from '../../services';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
@@ -12,10 +12,10 @@ export class BlogEditFormComponent implements OnInit {
   @Input() blog: any = null
   @Output() editBlog = new EventEmitter<FormData>();
 
-  blogForm!: FormGroup;
+  blogForm!: UntypedFormGroup;
   imagePreviews: string[] = [];
 
-  constructor(private fb: FormBuilder, private blogService: BlogService) { }
+  constructor(private fb: UntypedFormBuilder, private blogService: BlogService) { }
 
   ngOnInit(): void {
     this.blogForm = this.fb.group({
@@ -33,8 +33,8 @@ export class BlogEditFormComponent implements OnInit {
     }
   }
 
-  get images(): FormArray {
-    return this.blogForm.get('images') as FormArray;
+  get images(): UntypedFormArray {
+    return this.blogForm.get('images') as UntypedFormArray;
   }
 
   onImageChange(event: any) {
@@ -58,9 +58,9 @@ export class BlogEditFormComponent implements OnInit {
 
 
 
-  public Editor = ClassicEditor;
+  // public Editor = ClassicEditor;
 
-  content = ''; // این رو می‌تونی به FormControl وصل کنی
+  // content = ''; // این رو می‌تونی به FormControl وصل کنی
 
 
 

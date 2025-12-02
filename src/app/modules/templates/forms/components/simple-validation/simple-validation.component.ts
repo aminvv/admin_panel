@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-simple-validation',
@@ -7,12 +7,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./simple-validation.component.scss']
 })
 export class SimpleValidationComponent implements OnInit {
-  public form: FormGroup;
+  public form: UntypedFormGroup;
 
   ngOnInit(): void {
-    this.form = new FormGroup({
-      optionA: new FormControl(''),
-      optionB: new FormControl('')
+    this.form = new UntypedFormGroup({
+      optionA: new UntypedFormControl(''),
+      optionB: new UntypedFormControl('')
     });
   }
 
@@ -22,10 +22,10 @@ export class SimpleValidationComponent implements OnInit {
   }
 
   get optionA() {
-    return this.form.get('optionA') as FormControl;
+    return this.form.get('optionA') as UntypedFormControl;
   }
 
   get optionB() {
-    return this.form.get('optionB') as FormControl;
+    return this.form.get('optionB') as UntypedFormControl;
   }
 }

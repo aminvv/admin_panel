@@ -1,6 +1,6 @@
 
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ProductDetails } from '../../models/product-details';
 import { routes } from '../../../../consts';
 import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
@@ -18,7 +18,7 @@ export class ProductEditFormComponent implements OnChanges {
   @Output() createProduct = new EventEmitter<ProductDetails>();
 
   public router = routes;
-  public form!: FormGroup;
+  public form!: UntypedFormGroup;
   public selectedFiles: SelectedFile[] = [];
 
   constructor(
@@ -32,18 +32,18 @@ export class ProductEditFormComponent implements OnChanges {
 
 
   private initForm(): void {
-    this.form = new FormGroup({
-      productCode: new FormControl('', Validators.required),
-      productName: new FormControl('', Validators.required),
-      price: new FormControl(0, Validators.required),
-      quantity: new FormControl(0, Validators.required),
-      discountPercent: new FormControl(0),
-      discountAmount: new FormControl(0),
-      description: new FormControl(''),
-      image: new FormControl([]),
-      rating: new FormControl(0, Validators.required),
-      status: new FormControl('1', Validators.required),
-      details: new FormArray([])
+    this.form = new UntypedFormGroup({
+      productCode: new UntypedFormControl('', Validators.required),
+      productName: new UntypedFormControl('', Validators.required),
+      price: new UntypedFormControl(0, Validators.required),
+      quantity: new UntypedFormControl(0, Validators.required),
+      discountPercent: new UntypedFormControl(0),
+      discountAmount: new UntypedFormControl(0),
+      description: new UntypedFormControl(''),
+      image: new UntypedFormControl([]),
+      rating: new UntypedFormControl(0, Validators.required),
+      status: new UntypedFormControl('1', Validators.required),
+      details: new UntypedFormArray([])
     });
   }
 
@@ -98,9 +98,9 @@ export class ProductEditFormComponent implements OnChanges {
 
     fixedDetails.forEach(f =>
       this.details.push(
-        new FormGroup({
-          key: new FormControl(f.key, Validators.required),
-          value: new FormControl(f.value, Validators.required)
+        new UntypedFormGroup({
+          key: new UntypedFormControl(f.key, Validators.required),
+          value: new UntypedFormControl(f.value, Validators.required)
         })
       )
     );
@@ -122,8 +122,8 @@ export class ProductEditFormComponent implements OnChanges {
     }
   }
 
-  get details(): FormArray {
-    return this.form.get('details') as FormArray;
+  get details(): UntypedFormArray {
+    return this.form.get('details') as UntypedFormArray;
   }
 
 
@@ -135,9 +135,9 @@ export class ProductEditFormComponent implements OnChanges {
   // ================= ADD FEATURE =================
   addFeature(): void {
     this.details.push(
-      new FormGroup({
-        key: new FormControl('', Validators.required),
-        value: new FormControl('', Validators.required)
+      new UntypedFormGroup({
+        key: new UntypedFormControl('', Validators.required),
+        value: new UntypedFormControl('', Validators.required)
       })
     );
   }

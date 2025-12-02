@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AppConfig } from '../../../app.config';
 import { v4 as uuidv4 } from 'uuid';
 import { ImageUploaderService } from '../../services/image-uploader.service';
@@ -20,10 +20,10 @@ export class ImageUploaderComponent implements OnInit {
   config: any;
   imgFile: string;
 
-  uploadForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    file: new FormControl('', [Validators.required]),
-    imgSrc: new FormControl('', [Validators.required]),
+  uploadForm = new UntypedFormGroup({
+    name: new UntypedFormControl('', [Validators.required]),
+    file: new UntypedFormControl('', [Validators.required]),
+    imgSrc: new UntypedFormControl('', [Validators.required]),
   });
 
   constructor(

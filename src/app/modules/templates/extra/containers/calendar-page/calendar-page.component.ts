@@ -3,7 +3,7 @@ import dayGridPlugin, {DayGridView} from '@fullcalendar/daygrid';
 import {PluginDef} from '@fullcalendar/core/plugin-system';
 import {colors, routes} from '../../../../../consts';
 import {Calendar, EventApi, View} from '@fullcalendar/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {DayInfoComponent} from '../../components/day-info/day-info.component';
 import {FullCalendarComponent} from '@fullcalendar/angular';
@@ -38,7 +38,7 @@ export class CalendarPageComponent implements OnInit, AfterViewInit {
   public colors: typeof colors = colors;
   public calendarPlugins: PluginDef[] = [dayGridPlugin, timeGridPlugin, interactionPlugin];
   public currentEvent: EventApi;
-  public eventForm: FormGroup;
+  public eventForm: UntypedFormGroup;
   public currentDate: Date = new Date();
   public d = this.currentDate.getDate();
   public m = this.currentDate.getMonth();
@@ -117,7 +117,7 @@ export class CalendarPageComponent implements OnInit, AfterViewInit {
     }];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public dialog: MatDialog
   ) { }
 

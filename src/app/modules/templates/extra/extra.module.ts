@@ -26,16 +26,13 @@ import {MatChipsModule} from '@angular/material/chips';
 
 
 @NgModule({
-  declarations: [
-    CalendarPageComponent,
-    InvoicePageComponent,
-    DayInfoComponent,
-    ResultFilteringComponent,
-    InvoiceCardComponent,
-  ],
-  entryComponents: [
-    DayInfoComponent,
-  ],
+    declarations: [
+        CalendarPageComponent,
+        InvoicePageComponent,
+        DayInfoComponent,
+        ResultFilteringComponent,
+        InvoiceCardComponent,
+    ],
     imports: [
         CommonModule,
         ExtraRoutingModule,
@@ -57,8 +54,8 @@ import {MatChipsModule} from '@angular/material/chips';
         MatInputModule,
         MatChipsModule,
     ],
-  providers: [
-    InvoiceService,
-  ]
+    providers: [
+        InvoiceService,
+    ]
 })
 export class ExtraModule { }
