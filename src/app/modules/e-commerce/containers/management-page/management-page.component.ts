@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { routes } from '../../../../consts';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { ProductService } from '../../services';
 import { Observable } from 'rxjs';
 import { ProductDetails } from '../../models/product-details';
 import { switchMap, take } from 'rxjs/operators';
 import { DeletePopupComponent } from '../../../../shared/popups/delete-popup/delete-popup.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

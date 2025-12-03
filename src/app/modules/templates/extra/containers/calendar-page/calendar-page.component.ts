@@ -4,7 +4,7 @@ import {PluginDef} from '@fullcalendar/core/plugin-system';
 import {colors, routes} from '../../../../../consts';
 import {Calendar, EventApi, View} from '@fullcalendar/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
+import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
 import {DayInfoComponent} from '../../components/day-info/day-info.component';
 import {FullCalendarComponent} from '@fullcalendar/angular';
 

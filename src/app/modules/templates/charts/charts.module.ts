@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule} from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule} from '@angular/material/legacy-card';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatGridListModule } from '@angular/material/grid-list';
 

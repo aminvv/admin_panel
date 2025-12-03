@@ -4,11 +4,11 @@ import { ToastrService } from 'ngx-toastr';
 import { DataFormatterService } from '../../../shared/services/data-formatter.service';
 import { UsersService } from '../../../shared/services/users.service';
 import { routes } from '../../../consts';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DeletePopupComponent } from '../../../shared/popups/delete-popup/delete-popup.component';
 import { Users } from '../../../shared/models/users.model';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { FilterConfig, FilterItems } from '../../../shared/models/common';
 
 @Component({

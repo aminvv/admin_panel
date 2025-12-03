@@ -2,7 +2,7 @@ import {Component, Input, ViewChild} from '@angular/core';
 
 import { SupportRequestData } from '../../models/support-request-data';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
 
 @Component({
