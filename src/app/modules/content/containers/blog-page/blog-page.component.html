@@ -1,7 +1,7 @@
 <app-breadcrumb [path]="routes.BLOG"></app-breadcrumb>
 
 <mat-card class="product-info-wrapper">
-  <img class="product-image" [src]="(blog$ | async).image" alt="product-image">
+  <img class="product-image" [src]="(blog$ | async).thumbnail" alt="product-image">
 
   <div class="info-wrapper">
     <div class="info-title-wrapper">

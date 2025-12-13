@@ -112,9 +112,9 @@ export class BlogService {
       description: blog.description || '',
       rating: blog.content || 0,
       status: blog.content,
-      image: blog.image
+      image: blog.thumbnail
     };
-    console.log("img---------", blog.image);
+    console.log("img---------", blog.thumbnail);
 
     const headers = this.baseServe.getAuthHeader();
 

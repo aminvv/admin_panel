@@ -38,13 +38,17 @@ export class BlogEditFormComponent implements OnInit {
   ngOnInit(): void {
     this.blogForm = this.fb.group({
       title: [this.blog?.title || '', Validators.required],
+      category: [this.blog?.category || '', Validators.required],
       slug: [this.blog?.slug || ''],
       description: [this.blog?.description || '', Validators.required],
       content: [this.blog?.content || '', Validators.required],
-      thumbnail: [this.blog?.image || ''],
       status: [this.blog?.status || 'draft', Validators.required],
-      images: this.fb.array([])
+      thumbnail: this.fb.group({
+        url: [''],
+        publicId: [''],
+      }),
     });
+
 
     this.editorConfig = {
       language: 'fa',
@@ -103,10 +107,9 @@ export class BlogEditFormComponent implements OnInit {
     const file: File = event.target.files?.[0];
     if (!file) return;
 
-    const controller = new AbortController();
     const reader = new FileReader();
-
     reader.onload = (e: any) => {
+      const controller = new AbortController();
       this.selectedFiles = [{
         file,
         preview: e.target.result,
@@ -115,45 +118,62 @@ export class BlogEditFormComponent implements OnInit {
         uploadError: false,
         controller
       }];
+
+      const { observable, controller: ctrl } = this.cloudinaryService.uploadWithAbort(file);
+      this.selectedFiles[0].controller = ctrl;
+
+      observable.subscribe({
+        next: (res) => {
+          const item = this.selectedFiles[0];
+          if (!item) return;
+          item.preview = res.url;
+          item.publicId = res.publicId;
+          item.file = null;
+          item.isUploading = false;
+          item.uploadError = false;
+          this.blogForm.patchValue({
+            thumbnail: {
+              url: res.url,
+              publicId: res.publicId
+            }
+          })
+        },
+        error: (err) => {
+          console.error("Upload error", err);
+          const item = this.selectedFiles[0];
+          if (item) {
+            item.isUploading = false;
+            item.uploadError = true;
+          }
+        }
+      });
     };
     reader.readAsDataURL(file);
-
-    const { observable, controller: ctrl } = this.cloudinaryService.uploadWithAbort(file);
-    this.selectedFiles[0].controller = ctrl;
-
-    observable.subscribe({
-      next: (res) => {
-        const item = this.selectedFiles[0];
-        if (!item) return;
-        item.preview = res.url;
-        item.publicId = res.publicId;
-        item.file = null;
-        item.isUploading = false;
-        item.uploadError = false;
-      },
-      error: () => {
-        const item = this.selectedFiles[0];
-        if (item) {
-          item.isUploading = false;
-          item.uploadError = true;
-        }
-      }
-    });
 
     event.target.value = '';
   }
 
+
   // ================= REMOVE FILE =================
   removeFile(): void {
     const img = this.selectedFiles[0];
+    if (!img) return;
+
+    // فقط اگر در حال آپلود است → abort
     if (img.isUploading && img.controller) {
       img.controller.abort();
+      console.log('Upload aborted');
     }
 
-    if (img.publicId) {
-      this.blogService.removeUploadedImage(img.publicId).subscribe();
+    // اگر آپلود کامل شده → حذف از سرور
+    if (!img.isUploading && img.publicId) {
+      this.blogService.removeUploadedImage(img.publicId).subscribe({
+        next: () => console.log('Deleted on server'),
+        error: (err) => console.error('Error deleting:', err)
+      });
     }
 
+    // حذف از آرایه و پاک کردن input
     this.selectedFiles = [];
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
@@ -161,12 +181,26 @@ export class BlogEditFormComponent implements OnInit {
   }
 
 
+
+  // onSubmit() {
+  //   if (this.blogForm.invalid) return;
+
+  //   console.log("Final CKEditor content:", this.blogForm.value.content);
+  //   console.log("Form full payload:", this.blogForm.value);
+
+  //   this.editBlog.emit(this.blogForm);
+  // }
+
   onSubmit() {
     if (this.blogForm.invalid) return;
 
-    console.log("Final CKEditor content:", this.blogForm.value.content);
-    console.log("Form full payload:", this.blogForm.value);
+    const payload = {
+      form: this.blogForm.value,}
 
-    this.editBlog.emit(this.blogForm);
+    console.log('=== FULL BLOG PAYLOAD ===');
+    console.log('aaa',payload);
+
+    // this.editBlog.emit(payload);
   }
+
 }
