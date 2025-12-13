@@ -1,0 +1,80 @@
+<form [formGroup]="blogForm" (ngSubmit)="onSubmit()" class="blog-form">
+  <div>
+    <label>عنوان</label>
+    <input type="text" formControlName="title" placeholder="عنوان مقاله" />
+  </div>
+
+  <div>
+    <label>اسلاگ (اختیاری)</label>
+    <input type="text" formControlName="slug" placeholder="اسلاگ" />
+  </div>
+
+  <div>
+    <label>دسته‌بندی</label>
+    <select formControlName="category">
+      <option value="">انتخاب دسته‌بندی</option>
+      <option value="tech">تکنولوژی</option>
+      <option value="news">اخبار</option>
+    </select>
+  </div>
+
+  <div>
+    <label>توضیحات کوتاه</label>
+    <textarea formControlName="description" placeholder="توضیحات کوتاه"></textarea>
+  </div>
+
+
+
+
+  <div>
+    <label>محتوای مقاله</label>
+    <ckeditor [editor]="Editor" [config]="editorConfig" formControlName="content" (ready)="onReady($event)">
+    </ckeditor>
+  </div>
+
+
+<div class="form-group">
+  <label class="form-label">آپلود تصویر</label>
+  <input #fileInput id="imageUpload" type="file" accept="image/*" class="form-input" (change)="onFileChange($event)" />
+</div>
+
+<div class="preview-list" *ngIf="selectedFiles.length === 1">
+  <div class="preview-item">
+
+    <img [src]="selectedFiles[0].preview" class="preview-thumb" [class.blur]="selectedFiles[0].isUploading" alt="preview" />
+
+    <div *ngIf="selectedFiles[0].isUploading" class="loading-overlay">
+      <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" width="40px" height="40px"
+           viewBox="0 0 50 50">
+        <path fill="#000"
+              d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+          <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25"
+                            dur="0.6s" repeatCount="indefinite" />
+        </path>
+      </svg>
+    </div>
+
+    <div *ngIf="selectedFiles[0].uploadError" class="status error">
+      ❌ خطا در آپلود
+    </div>
+
+    <button type="button" class="btn btn--remove" (click)="removeFile()">×</button>
+  </div>
+</div>
+
+
+
+
+  <div>
+    <label>وضعیت</label>
+    <select formControlName="status">
+      <option value="draft">پیش‌نویس</option>
+      <option value="published">منتشر شده</option>
+    </select>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn--primary">ذخیره</button>
+    <button type="button " routerLink="{{router.MANAGEMENT_BLOG}}" class="btn btn--secondary">انصراف</button>
+  </div>
+</form>

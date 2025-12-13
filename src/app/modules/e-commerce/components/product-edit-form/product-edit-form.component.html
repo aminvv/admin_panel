@@ -1,0 +1,115 @@
+<section class="add-product">
+    <h2 class="add-product__title">افزودن محصول جدید</h2>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="product__form">
+
+
+
+
+
+        <div class="form-group">
+            <label class="form-label">آپلود تصاویر</label>
+            <input id="imageUpload" type="file" multiple accept="image/*" class="form-input"
+                (change)="onFileChange($event)" />
+        </div>
+
+
+        <div class="preview-list" *ngIf="selectedFiles.length > 0">
+            <div class="preview-item" *ngFor="let file of selectedFiles; let i = index">
+                <img [src]="file.preview" class="preview-thumb" [class.blur]="file.isUploading" alt="preview" />
+
+                <div *ngIf="file.isUploading" class="loading-overlay">
+                    <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" width="40px" height="40px"
+                        viewBox="0 0 50 50">
+                        <path fill="#000"
+                            d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                            <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25"
+                                dur="0.6s" repeatCount="indefinite" />
+                        </path>
+                    </svg>
+                </div>
+
+                <div *ngIf="file.uploadError" class="status error">
+                    ❌ خطا در آپلود
+                </div>
+
+
+                <button type="button" class="btn btn--remove" (click)="removeFile(i)">
+                    ×
+                </button>
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group">
+            <label class="form-label">نام محصول</label>
+            <input class="form-input" formControlName="productName" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">کد محصول</label>
+            <input class="form-input" formControlName="productCode" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">قیمت</label>
+            <input type="number" class="form-input" formControlName="price" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">تعداد</label>
+            <input type="number" class="form-input" formControlName="quantity" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">درصد تخفیف</label>
+            <input type="number" class="form-input" formControlName="discountPercent" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">مبلغ تخفیف</label>
+            <input type="number" class="form-input" formControlName="discountAmount" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">توضیحات</label>
+            <textarea class="form-textarea" formControlName="description"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">امتیاز</label>
+            <input type="number" min="0" max="5" class="form-input" formControlName="rating" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">وضعیت</label>
+            <select class="form-input" formControlName="status">
+                <option value="1">فعال</option>
+                <option value="0">غیرفعال</option>
+            </select>
+        </div>
+
+        <label class="form-label">ویژگی‌ها</label>
+        <div class="form-section form-section--features" formArrayName="details">
+            <div *ngFor="let feature of details.controls; let i = index" [formGroupName]="i" class="feature-item">
+                <input type="text" class="form-input" formControlName="key" placeholder="نام ویژگی" />
+                <input type="text" class="form-input" formControlName="value" placeholder="مقدار ویژگی" />
+                <button type="button" class="btn btn--remove-feature" (click)="removeFeature(i)">
+                    ×
+                </button>
+            </div>
+
+            <button type="button" class="btn btn--add" (click)="addFeature()">
+                افزودن ویژگی
+            </button>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary">ذخیره</button>
+            <button type="button " routerLink="{{router.MANAGEMENT}}" class="btn btn--secondary">انصراف</button>
+        </div>
+
+    </form>
+</section>
