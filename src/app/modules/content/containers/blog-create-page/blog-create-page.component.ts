@@ -24,11 +24,11 @@ export class BlogCreatePageComponent {
   public createBlog(blog: BlogDetails): void {
     this.service.createBlog(blog).subscribe({
       next: (res) => {
-        this.toastr.success(res.message || 'محصول با موفقیت ساخته شد');
+        this.toastr.success(res.message || 'وبلاگ با موفقیت ساخته شد');
         this.router.navigate([this.routes.MANAGEMENT_BLOG]).then();
       },
       error: (err) => {
-        alert(err.error?.message || 'خطا در ساخت محصول');
+        alert(err.error?.message || 'خطا در ساخت وبلاگ');
         console.log(err.error);
       },
     })

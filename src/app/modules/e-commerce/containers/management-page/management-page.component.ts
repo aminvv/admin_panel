@@ -84,17 +84,6 @@ export class ManagementPageComponent implements OnInit {
     });
   }
 
-  // public delete(id: number) {
-  //   this.service.deleteProduct(id);
-
-  //   this.products$ = this.service.getProducts();
-
-  //   this.products$.pipe(
-  //     take(1)
-  //   ).subscribe((products: ProductDetails[]) => {
-  //     this.dataSource = new MatTableDataSource(products);
-  //   });
-  // }
 
 
 
@@ -118,9 +107,6 @@ export class ManagementPageComponent implements OnInit {
   }
 
 
-// public getFirstImage(images: { url: string; publicId: string }[]) {
-//   return images && images.length > 0 ? images[0].url : '';
-// }
 
 
 

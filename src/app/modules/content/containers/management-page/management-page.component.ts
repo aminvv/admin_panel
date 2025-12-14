@@ -22,7 +22,7 @@ export class ManagementPageComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   public routes: typeof routes = routes;
   public blogs$: Observable<BlogDetails[]>;
-  public displayedColumns: string[] = ['select', 'id', 'image', 'title', 'subtitle', 'price', 'rating', 'actions'];
+  public displayedColumns: string[] = ['id', 'thumbnail',  'title','description', 'content', 'slug', 'category', 'status'];
   public dataSource: MatTableDataSource<BlogDetails>;
   deleteConfirmSubscription;
   selectedId: number;
@@ -90,7 +90,7 @@ export class ManagementPageComponent implements OnInit {
     this.service.deleteBlog(id).pipe(
       switchMap((response: any) => {
 
-        const message = response && response.message? String(response.message): 'محصول با موفقیت حذف شد';
+        const message = response && response.message? String(response.message): 'وبلاگ با موفقیت حذف شد';
         this.toastr.success(message);
         return this.service.getBlogs();
       }),
@@ -100,7 +100,7 @@ export class ManagementPageComponent implements OnInit {
         this.dataSource = new MatTableDataSource(products);
       },
       error: (err) => {
-        this.toastr.error(err?.message || 'خطا در حذف محصول');
+        this.toastr.error(err?.message || 'خطا در حذف وبلاگ');
       }
     });
   }

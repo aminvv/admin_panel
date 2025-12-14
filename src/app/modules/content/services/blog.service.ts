@@ -14,7 +14,7 @@ import { BlogDetails } from '../models/blog-details';
 
 export interface blogResponse {
   pagination: any;
-  blogs: BlogDetails[];
+  blog: BlogDetails[];
 }
 
 
@@ -47,9 +47,10 @@ export class BlogService {
 
   public getBlogs(): Observable<BlogDetails[]> {
     const headers = this.baseServe.getAuthHeader()
-    return this.http.get<blogResponse>(this.blogsGetUrl, { headers }).pipe(
-      map(response => response.blogs)
-    )
+return this.http.get<blogResponse>(this.blogsGetUrl, { headers }).pipe(
+  tap(res => console.log('API response getBlogs:', res)),
+  map(response => response.blog)
+);
   }
 
 
@@ -62,24 +63,11 @@ export class BlogService {
     return this.http.get<any>(`${this.blogGetUrl}/${id}`, { headers }).pipe(
       map(response => {
         return {
-          ...response,
+          ...response,          
         };
       })
     );
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -101,10 +89,7 @@ export class BlogService {
       status: blog.status,
       description: blog.description,
     };
-
-
     const headers = this.baseServe.getAuthHeader();
-
     return this.http.post<{ message: string; blog: string }>(
       this.blogCreateUrl,payload,{ headers })
   }
