@@ -7,9 +7,7 @@ description: string
 content: string
 slug: string
 category: string
+status: string
 thumbnail?: string[]
-create_at?: string 
-update_at?: string
-comments?: Comment[]
 }  
  

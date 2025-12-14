@@ -157,7 +157,6 @@ export class ProductService {
       status: product.status,
       image: product.image 
     };
-    console.log("img---------",product.image);
 
     const headers = this.baseServe.getAuthHeader();
 

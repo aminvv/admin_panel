@@ -23,7 +23,7 @@ export class MyUploadAdapter {
 
       return new Promise((resolve, reject) => {
         observable.subscribe({
-          next: res => resolve({ default: res.url }),
+          next: res => resolve({ default: res.url, publicId:res.publicId }),
           error: err => reject(err),
         });
       });

@@ -8,6 +8,7 @@ import { routes } from 'src/app/consts';
 import { MyUploadAdapter } from './upload-adapter';
 import { SelectedFile } from '../../models/selectedFile';
 import { ProductService } from 'src/app/modules/e-commerce/services';
+import { BlogDetails } from '../../models/blog-details';
 
 @Component({
   selector: 'app-blog-edit-form',
@@ -15,8 +16,8 @@ import { ProductService } from 'src/app/modules/e-commerce/services';
   styleUrls: ['./blog-edit-form.component.scss'],
 })
 export class BlogEditFormComponent implements OnInit {
-  @Input() blog: any = null;
-  @Output() editBlog = new EventEmitter<UntypedFormGroup>();
+  @Input() blog!: BlogDetails
+  @Output() editBlog = new EventEmitter<BlogDetails>();
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   blogForm!: UntypedFormGroup;
@@ -43,58 +44,32 @@ export class BlogEditFormComponent implements OnInit {
       description: [this.blog?.description || '', Validators.required],
       content: [this.blog?.content || '', Validators.required],
       status: [this.blog?.status || 'draft', Validators.required],
-      thumbnail: this.fb.group({
-        url: [''],
-        publicId: [''],
-      }),
-    });
-
-
+      thumbnail: this.fb.group([{ url: [''], publicId: [''], }, Validators.required]),
+    })
     this.editorConfig = {
       language: 'fa',
       cloudinaryService: this.cloudinaryService,
       extraPlugins: [MyCustomUploadAdapterPlugin],
-    };
+    }
   }
 
 
 
 
-
+  //==============  CKEDITOR =================
   onReady(editor: any) {
     const editable = editor.ui.getEditableElement();
     editable.parentElement.insertBefore(
       editor.ui.view.toolbar.element,
       editable
     );
-
     editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
       return new MyUploadAdapter(loader, this.cloudinaryService);
     };
   }
 
 
-  get image(): UntypedFormArray {
-    return this.blogForm.get('images') as UntypedFormArray;
-  }
 
-  onImageChange(event: any) {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      for (let file of files) {
-        if (this.image.length >= 5) break;
-        const reader = new FileReader();
-        reader.onload = (e: any) => this.imagePreviews.push(e.target.result);
-        reader.readAsDataURL(file);
-        this.image.push(this.fb.control(file));
-      }
-    }
-  }
-
-  removeImage(index: number) {
-    this.image.removeAt(index);
-    this.imagePreviews.splice(index, 1);
-  }
 
 
 
@@ -159,13 +134,11 @@ export class BlogEditFormComponent implements OnInit {
     const img = this.selectedFiles[0];
     if (!img) return;
 
-    // فقط اگر در حال آپلود است → abort
     if (img.isUploading && img.controller) {
       img.controller.abort();
       console.log('Upload aborted');
     }
 
-    // اگر آپلود کامل شده → حذف از سرور
     if (!img.isUploading && img.publicId) {
       this.blogService.removeUploadedImage(img.publicId).subscribe({
         next: () => console.log('Deleted on server'),
@@ -173,7 +146,6 @@ export class BlogEditFormComponent implements OnInit {
       });
     }
 
-    // حذف از آرایه و پاک کردن input
     this.selectedFiles = [];
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
@@ -182,25 +154,35 @@ export class BlogEditFormComponent implements OnInit {
 
 
 
-  // onSubmit() {
-  //   if (this.blogForm.invalid) return;
 
-  //   console.log("Final CKEditor content:", this.blogForm.value.content);
-  //   console.log("Form full payload:", this.blogForm.value);
-
-  //   this.editBlog.emit(this.blogForm);
-  // }
 
   onSubmit() {
-    if (this.blogForm.invalid) return;
+    if (this.blogForm.invalid) {
+      alert('لطفاً همه فیلدها را پر کنید');
+      return;
+    }
 
-    const payload = {
-      form: this.blogForm.value,}
+    const uploadingFiles = this.selectedFiles.filter(f => f.isUploading);
+    if (uploadingFiles.length > 0) {
+      alert('لطفاً صبر کنید تا همه عکس‌ها آپلود شوند.');
+      return;
+    }
+
+
+    const finalImageUrls: { url: string, publicId: string }[] = this.selectedFiles
+      .filter(item => item.preview && item.publicId)
+      .map(item => ({ url: item.preview, publicId: item.publicId }))
+
+
+    const blogData: BlogDetails = {
+      ...this.blogForm.value,
+      thumbnail:finalImageUrls
+    }
 
     console.log('=== FULL BLOG PAYLOAD ===');
-    console.log('aaa',payload);
+    console.log(blogData);
 
-    // this.editBlog.emit(payload);
+    this.editBlog.emit(blogData);
   }
 
 }

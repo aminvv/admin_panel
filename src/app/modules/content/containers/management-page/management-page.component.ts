@@ -84,18 +84,6 @@ export class ManagementPageComponent implements OnInit {
     });
   }
 
-  // public delete(id: number) {
-  //   this.service.deleteProduct(id);
-
-  //   this.products$ = this.service.getProducts();
-
-  //   this.products$.pipe(
-  //     take(1)
-  //   ).subscribe((products: ProductDetails[]) => {
-  //     this.dataSource = new MatTableDataSource(products);
-  //   });
-  // }
-
 
 
   public delete(id: number) {
@@ -118,8 +106,18 @@ export class ManagementPageComponent implements OnInit {
   }
 
 
-public getFirstImage(images: { url: string; publicId: string }[]) {
-  return images && images.length > 0 ? images[0].url : '';
+public getFirstImage(thumbnail: any): string {
+  if (!thumbnail) return '';
+
+  if (Array.isArray(thumbnail) && typeof thumbnail[0] === 'string') {
+    return thumbnail[0];
+  }
+
+  if (Array.isArray(thumbnail) && thumbnail[0]?.url) {
+    return thumbnail[0].url;
+  }
+
+  return '';
 }
 
 

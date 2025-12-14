@@ -29,10 +29,10 @@ export interface blogResponse {
 export class BlogService {
 
 
-  private productCreateUrl = '/blog/create-blog';
+  private blogCreateUrl = '/blog/create-blog';
   private productEditUrl = '/blog/edit-blog';
-  private productsGetUrl = '/blog/get-products';
-  private productGetUrl = '/blog/get-blog';
+  private blogsGetUrl = '/blog/get-blogs';
+  private blogGetUrl = '/blog/get-blog';
   private productDeleteUrl = '/blog/delete-blog';
   private detailBaseUrl = '/blog-detail/create-detail';
 
@@ -47,7 +47,7 @@ export class BlogService {
 
   public getBlogs(): Observable<BlogDetails[]> {
     const headers = this.baseServe.getAuthHeader()
-    return this.http.get<blogResponse>(this.productsGetUrl, { headers }).pipe(
+    return this.http.get<blogResponse>(this.blogsGetUrl, { headers }).pipe(
       map(response => response.blogs)
     )
   }
@@ -59,20 +59,10 @@ export class BlogService {
 
   public getBlog(id: number): Observable<BlogDetails> {
     const headers = this.baseServe.getAuthHeader()
-    return this.http.get<any>(`${this.productGetUrl}/${id}`, { headers }).pipe(
+    return this.http.get<any>(`${this.blogGetUrl}/${id}`, { headers }).pipe(
       map(response => {
-        const details = response.details
-          ? response.details.map((detail: any) => ({
-            id: detail.id,      // 👈 خیلی مهم
-            key: detail.key,
-            value: detail.value
-          }))
-          : [];
-
         return {
           ...response,
-          details: details,
-          _initialDetailIds: details.map((d: any) => d.id)  // 👈 ارسال اولیه‌ها
         };
       })
     );
@@ -101,39 +91,22 @@ export class BlogService {
 
 
   //===================== CREATE ======================
-  public createProduct(blog: BlogDetails) {
+  public createBlog(blog: BlogDetails) {
     const payload = {
-      productCode: blog.content,
-      productName: blog.content,
-      price: blog.content,
-      quantity: blog.content,
-      discountAmount: blog.content || 0,
-      discountPercent: blog.content || 0,
-      description: blog.description || '',
-      rating: blog.content || 0,
-      status: blog.content,
-      image: blog.thumbnail
+      title:blog.title,
+      category: blog.category,
+      content: blog.content,
+      slug: blog.slug,
+      thumbnail: blog.thumbnail,
+      status: blog.status,
+      description: blog.description,
     };
-    console.log("img---------", blog.thumbnail);
+
 
     const headers = this.baseServe.getAuthHeader();
 
-    return this.http.post<{ message: string; blog: { id: number } }>(
-      this.productCreateUrl,
-      payload,
-      { headers }
-    ).pipe(
-      switchMap((res) => {
-        const productId = res.blog?.id;
-        const features = blog.content || [];
-
-        if (!features.length) return of(res);
-
-
-
-        return
-      })
-    );
+    return this.http.post<{ message: string; blog: string }>(
+      this.blogCreateUrl,payload,{ headers })
   }
 
 
