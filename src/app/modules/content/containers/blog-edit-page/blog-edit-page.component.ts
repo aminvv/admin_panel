@@ -42,11 +42,11 @@ export class BlogEditPageComponent implements OnInit {
 
     this.service.saveChangedBlog(updatedProduct).subscribe({
       next: (response) => {
-        this.toastr.success(response.message || 'محصول با موفقیت ویرایش  شد');
-        this.router.navigate([this.routes.MANAGEMENT]);
+        this.toastr.success(response.message || 'وبلاگ با موفقیت ویرایش  شد');
+        this.router.navigate([this.routes.MANAGEMENT_BLOG]);
       },
       error: (err) => {
-        this.toastr.success(err.message || 'خطا در ویرایش محصول');
+        this.toastr.success(err.message || 'خطا در ویرایش وبلاگ');
       }
     });
   }

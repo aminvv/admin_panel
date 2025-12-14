@@ -115,7 +115,7 @@ export class ProductService {
         return {
           ...response,
           details: details,
-          _initialDetailIds: details.map((d: any) => d.id)  // 👈 ارسال اولیه‌ها
+          _initialDetailIds: details.map((d: any) => d.id)  
         };
       })
     );

@@ -1,5 +1,5 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators, UntypedFormArray } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, } from '@angular/forms';
 import { BlogService } from '../../services';
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { MyCustomUploadAdapterPlugin } from './upload-adapter.plugin';
@@ -7,7 +7,6 @@ import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.ser
 import { routes } from 'src/app/consts';
 import { MyUploadAdapter } from './upload-adapter';
 import { SelectedFile } from '../../models/selectedFile';
-import { ProductService } from 'src/app/modules/e-commerce/services';
 import { BlogDetails } from '../../models/blog-details';
 
 @Component({
@@ -15,7 +14,7 @@ import { BlogDetails } from '../../models/blog-details';
   templateUrl: './blog-edit-form.component.html',
   styleUrls: ['./blog-edit-form.component.scss'],
 })
-export class BlogEditFormComponent implements OnInit {
+export class BlogEditFormComponent implements OnInit, OnChanges {
   @Input() blog!: BlogDetails
   @Output() editBlog = new EventEmitter<BlogDetails>();
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -52,6 +51,52 @@ export class BlogEditFormComponent implements OnInit {
       extraPlugins: [MyCustomUploadAdapterPlugin],
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+  ngOnChanges(): void {
+    if (!this.blog || !this.blogForm) return;
+
+    const blogData = (this.blog as any).blog ?? this.blog;
+
+    this.blogForm.patchValue({
+      title: blogData.title,
+      category: blogData.category,
+      slug: blogData.slug,
+      description: blogData.description,
+      content: blogData.content,
+      status: blogData.status,
+      thumbnail: {
+        url: blogData.thumbnail?.[0] || '', publicId: ''
+      }
+    });
+
+    if (Array.isArray(blogData.thumbnail)) {
+      this.selectedFiles = blogData.thumbnail.map((img: { url: string, publicId: string }) => ({
+        file: null,
+        preview: img.url,
+        publicId: img.publicId,
+        isUploading: false,
+        uploadError: false
+      }));
+    }
+  }
+
+
+
+
+
+
+
 
 
 
@@ -176,7 +221,7 @@ export class BlogEditFormComponent implements OnInit {
 
     const blogData: BlogDetails = {
       ...this.blogForm.value,
-      thumbnail:finalImageUrls
+      thumbnail: finalImageUrls
     }
 
     console.log('=== FULL BLOG PAYLOAD ===');

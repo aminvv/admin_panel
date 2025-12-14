@@ -30,7 +30,7 @@ export class BlogService {
 
 
   private blogCreateUrl = '/blog/create-blog';
-  private productEditUrl = '/blog/edit-blog';
+  private blogEditUrl = '/blog/edit-blog';
   private blogsGetUrl = '/blog/get-blogs';
   private blogGetUrl = '/blog/get-blog';
   private productDeleteUrl = '/blog/delete-blog';
@@ -40,7 +40,6 @@ export class BlogService {
   constructor(
     private http: HttpClient,
     private baseServe: BaseService,
-    private CloudinaryService: CloudinaryService
   ) { }
 
 
@@ -151,76 +150,22 @@ return this.http.get<blogResponse>(this.blogsGetUrl, { headers }).pipe(
 
 
   //===================== UPDATE ======================
-  saveChangedBlog(blog: any): Observable<any> {
-    const productId = blog.id;
+  saveChangedBlog(blog: BlogDetails): Observable<any> {
+    const blogId = blog.id;
     const headers = this.baseServe.getAuthHeader();
 
-    const uploadedUrls = blog.image || [];
 
-    const productPayload = {
-      productCode: blog.productCode,
-      productName: blog.productName,
-      price: blog.price,
-      quantity: blog.quantity,
-      discountPercent: blog.discountPercent,
-      discountAmount: blog.discountAmount,
-      description: blog.description,
-      rating: blog.rating,
+    const blogPayload = {
+      title: blog.title,
+      category: blog.category,
+      content: blog.content,
+      slug: blog.slug,
       status: blog.status,
-      image: uploadedUrls
+      description: blog.description,
+      thumbnail: blog.thumbnail,
     };
-
-    return this.http.patch(`${this.productEditUrl}/${productId}`, productPayload, { headers }).pipe(
-      switchMap((patchRes: any) => {
-
-        const currentDetails = (blog.details || []).map((d: any) => ({ ...d }));
-        const currentIds = currentDetails.filter((d: any) => d.id).map((d: any) => d.id);
-
-        const initialIds: number[] = blog._initialDetailIds || [];
-
-        const toCreate = currentDetails.filter((d: any) => !d.id);
-        const toUpdate = currentDetails.filter((d: any) => d.id);
-        const toDelete = initialIds.filter(id => !currentIds.includes(id));
-
-        const detailRequests: Observable<any>[] = [];
-
-        toCreate.forEach(d => {
-          detailRequests.push(
-            this.http.post(`${this.detailBaseUrl}`, {
-              productId,
-              key: d.key,
-              value: d.value
-            }, { headers })
-          );
-        });
-
-        toUpdate.forEach(d => {
-          detailRequests.push(
-            this.http.put('/blog-detail/update-blog/' + d.id, {
-              key: d.key,
-              value: d.value,
-              productId
-            }, { headers })
-          );
-        });
-
-        toDelete.forEach(id => {
-          detailRequests.push(
-            this.http.delete('/blog-detail/delete-blog/' + id, { headers })
-          );
-        });
-
-        if (detailRequests.length === 0) {
-          return of(patchRes);
-        }
-
-        return forkJoin(detailRequests).pipe(
-          map(() => ({
-            patchRes,
-            message: patchRes.message
-          }))
-        );
-      })
+ console.log('Payload:', blogPayload);
+    return this.http.patch(`${this.blogEditUrl}/${blogId}`, blogPayload, { headers }).pipe(
     );
   }
 
