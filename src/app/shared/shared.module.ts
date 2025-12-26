@@ -28,6 +28,7 @@ import { ImageUploaderComponent } from './uploaders/image-uploader/image-uploade
 import { FileUploaderComponent } from './uploaders/file-uploader/file-uploader.component';
 import { DeletePopupComponent } from './popups/delete-popup/delete-popup.component';
 import { FilterComponent } from './filter/filter.component';
+import { PersianNumberPipe } from './pipes/persian-number.pipe';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { FilterComponent } from './filter/filter.component';
     DateMenuComponent,
     SettingsMenuComponent,
     ChatPopupComponent,
+    PersianNumberPipe
   ],
   imports: [
     HeaderModule,
@@ -76,7 +78,8 @@ import { FilterComponent } from './filter/filter.component';
     DeletePopupComponent,
     FilterComponent,
     DateMenuComponent,
-    SettingsMenuComponent
+    SettingsMenuComponent,
+    PersianNumberPipe
   ],
 })
 export class SharedModule {}

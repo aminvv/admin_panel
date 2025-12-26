@@ -1,0 +1,94 @@
+<div class="order-details-page">
+
+  <!-- Header -->
+  <div class="details-header">
+    <div class="right">
+      <h2>جزئیات سفارش #1023</h2>
+      <span class="badge success">تحویل شده</span>
+    </div>
+
+    <div class="left">
+      <span>تاریخ ثبت: 1403/02/20</span>
+      <button class="back-btn" [routerLink]="[routes.ORDER_LIST]">
+        بازگشت به لیست
+      </button>
+    </div>
+  </div>
+
+  <!-- Info Boxes -->
+  <div class="info-grid">
+
+    <div class="info-box">
+      <h3>اطلاعات مشتری</h3>
+      <ul>
+        <li><span>نام:</span> علی پنلی</li>
+        <li><span>موبایل:</span> 09121111111</li>
+        <li><span>آدرس:</span> تهران، خیابان آزادی، پلاک ۱۲</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h3>اطلاعات پرداخت</h3>
+      <ul>
+        <li><span>روش پرداخت:</span> آنلاین</li>
+        <li><span>وضعیت پرداخت:</span> موفق</li>
+        <li><span>کد رهگیری:</span> PAY-889122</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Order Items -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>محصول</th>
+          <th>قیمت واحد</th>
+          <th>تعداد</th>
+          <th>جمع</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>هدفون بلوتوثی</td>
+          <td>450,000</td>
+          <td>2</td>
+          <td>900,000</td>
+        </tr>
+
+        <tr>
+          <td>ماوس گیمینگ</td>
+          <td>580,000</td>
+          <td>1</td>
+          <td>580,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary">
+    <div class="row">
+      <span>جمع کل</span>
+      <strong>1,480,000 تومان</strong>
+    </div>
+
+    <div class="row">
+      <span>هزینه ارسال</span>
+      <strong>0</strong>
+    </div>
+
+    <div class="row total">
+      <span>مبلغ نهایی</span>
+      <strong>1,480,000 تومان</strong>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="status-btn">تغییر وضعیت سفارش</button>
+  </div>
+
+</div>

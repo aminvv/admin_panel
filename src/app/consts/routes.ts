@@ -27,6 +27,16 @@ export enum routes {
   BLOGS = '/content/blogs',
   BLOG = '/content/blog',
 
+
+  // --- Order ---//
+
+  PAYMENTS_MANAGE = '/order/payments-manage',
+  ORDER_LIST = '/order/list',
+  ORDER_DETAILS = '/order/detail',
+  ORDER_REPORTS = '/order/reports',
+
+
+
   // --- Documentation ---//
 
   LIBS = '/documentation/libs',

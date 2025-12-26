@@ -1,6 +1,23 @@
 
 
 
+
+*:not(mat-icon):not(.mat-icon):not(.material-icons):not([class^="mat-"]):not([class*=" mat-"]),
+body,
+h1, h2, h3, h4, h5, h6,
+p, span, div,
+a, li, ul, ol,
+button, input, textarea, select,
+td, th, label {
+  font-family: Vazir, Tahoma, Arial, sans-serif;
+}
+
+mat-icon,
+.mat-icon,
+.material-icons {
+  font-family: 'Material Icons' !important;
+}
+
 $fw-lighter: 400;
 $fw-normal: 500;
 $fw-bold: 600;

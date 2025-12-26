@@ -8,69 +8,73 @@ import { ChatPopupComponent } from '../popups/chat-popup/chat-popup.component';
 
 const TREE_DATA: any = [
   {
-    name: 'E-commerce',
+    name: 'فروشگاه',
     children: [
-      {name: 'Product Manage', route: routes.MANAGEMENT, active: 'active'},
-      {name: 'Products Grid', route: routes.PRODUCTS, active: 'active'},
-      {name: 'Product Page', route: routes.PRODUCT, active: 'active'},
-    ]
-  },
-
-    {
-    name: 'Content',
-    children: [
-      {name: 'Blog Manage', route: routes.MANAGEMENT_BLOG, active: 'active'},
-      {name: 'Blogs Grid', route: routes.BLOGS, active: 'active'},
-      {name: 'Blog Page', route: routes.BLOG, active: 'active'},
+      { name: 'مدیریت محصولات', route: routes.MANAGEMENT, active: 'active' },
+      { name: 'جدول محصولات', route: routes.PRODUCTS, active: 'active' },
+      { name: 'صفحه محصول', route: routes.PRODUCT, active: 'active' },
     ]
   },
 
   {
-    name: 'User',
+    name: 'محتوا',
     children: [
-      { name: 'User List', route: routes.Users, active: 'active' },
-      { name: 'User Add', route: routes.Users_CREATE, active: 'active' },
-      { name: 'User Edit', route: routes.Users_EDIT, active: 'active' },
+      { name: 'مدیریت بلاگ', route: routes.MANAGEMENT_BLOG, active: 'active' },
+      { name: 'جدول بلاگ‌ها', route: routes.BLOGS, active: 'active' },
+      { name: 'صفحه بلاگ', route: routes.BLOG, active: 'active' },
+    ]
+  },
+  {
+    name: 'سفارشات',
+    children: [
+      { name: 'لیست سفارشات', route: routes.ORDER_LIST, active: 'active' },
+      { name: 'جزئیات سفارش', route: routes.ORDER_DETAILS, active: 'active' },
+      { name: 'مدیریت پرداخت‌ها', route: routes.PAYMENTS_MANAGE, active: 'active' },
+      { name: 'گزارش‌ها و آمار', route: routes.ORDER_REPORTS, active: 'active' },
+    ]
+  },
+
+  {
+    name: 'کاربران',
+    children: [
+      { name: 'لیست کاربران', route: routes.Users, active: 'active' },
+      { name: 'افزودن کاربر', route: routes.Users_CREATE, active: 'active' },
+      { name: 'ویرایش کاربر', route: routes.Users_EDIT, active: 'active' },
     ]
   }
 ];
 
 const TemplateNode: any = [
-
-  
-  
   {
-    name: 'Forms',
+    name: 'فرم‌ها',
     children: [
-      { name: 'Form Elements', route: routes.FORMS_ELEMENTS, active: 'active' },
-      { name: 'Form Validation', route: routes.FORMS_VALIDATION, active: 'active' },
+      { name: 'عناصر فرم', route: routes.FORMS_ELEMENTS, active: 'active' },
+      { name: 'اعتبارسنجی فرم', route: routes.FORMS_VALIDATION, active: 'active' },
     ]
   },
   {
-    name: 'Charts',
+    name: 'نمودارها',
     children: [
-      { name: 'Charts Overview', route: routes.OVERVIEW_CHARTS, active: 'active' },
-      { name: 'Line Charts', route: routes.LINE_CHARTS, active: 'active' },
-      { name: 'Bar Charts', route: routes.BAR_CHARTS, active: 'active' },
-      { name: 'Pie Charts', route: routes.PIE_CHARTS, active: 'active' },
+      { name: 'مرور نمودارها', route: routes.OVERVIEW_CHARTS, active: 'active' },
+      { name: 'نمودار خطی', route: routes.LINE_CHARTS, active: 'active' },
+      { name: 'نمودار میله‌ای', route: routes.BAR_CHARTS, active: 'active' },
+      { name: 'نمودار دایره‌ای', route: routes.PIE_CHARTS, active: 'active' },
     ]
   },
   {
-    name: 'Maps',
+    name: 'نقشه‌ها',
     children: [
-      { name: 'Google Map', route: routes.GOOGLE_MAP, active: 'active' },
-      { name: 'Vector Map', route: routes.VECTOR_MAP, active: 'active' }
+      { name: 'نقشه گوگل', route: routes.GOOGLE_MAP, active: 'active' },
+      { name: 'نقشه برداری', route: routes.VECTOR_MAP, active: 'active' }
     ]
   },
   {
-    name: 'Extra',
+    name: 'اضافی',
     children: [
-      { name: 'Calendar', route: routes.CALENDAR, active: 'active' },
-      { name: 'Invoice', route: routes.INVOICE, active: 'active' },
-
+      { name: 'تقویم', route: routes.CALENDAR, active: 'active' },
+      { name: 'فاکتور', route: routes.INVOICE, active: 'active' },
     ]
   },
-
 ];
 
 
