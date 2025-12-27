@@ -15,44 +15,40 @@ export const products: ProductDetails[] = [
     productName: 'Trainers',
     price: 80,
     quantity: 10,
-    discountPercent: 20,
-    discountAmount: 16, // 20% از 80
+    active_discount: false,
+    slug: "isogam",
     description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
     image: [
       { url: './assets/e-commerce/products/3.png', publicId: null }
     ],
-    rating: 4.6,
-    status: 'New'
-  },
+status: false  },
   {
     id: 2,
     productCode: '135264',
     productName: 'Boots',
     price: 37,
     quantity: 5,
-    discountPercent: 20,
-    discountAmount: 7.4,
+    slug: "isogam",
+    active_discount: false,
     description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
-     image: [
+    image: [
       { url: './assets/e-commerce/products/3.png', publicId: null }
     ],
-    rating: 4.6,
-    status: 'Sale'
-  },
+status: false  },
   {
     id: 3,
     productCode: '125234',
     productName: 'Flat sandals',
     price: 70,
     quantity: 15,
-    discountPercent: 20,
-    discountAmount: 14,
+    active_discount: false,
+
+    slug: "isogam",
     description: 'Sneakers (also known as athletic shoes, tennis shoes, gym shoes, runners, takkies, or trainers) are shoes primarily designed for sports or other forms of physical exercise, but which are now also often used for everyday wear. The term generally describes a type of footwear with a flexible sole made of rubber or synthetic material and an upper part made of leather or synthetic materials.',
     image: [
       { url: './assets/e-commerce/products/3.png', publicId: null }
     ],
-    rating: 4.6,
-    status: 'New'
+    status: false
   }
 ];
 
@@ -106,7 +102,7 @@ export class ProductService {
       map(response => {
         const details = response.details
           ? response.details.map((detail: any) => ({
-            id: detail.id,     
+            id: detail.id,
             key: detail.key,
             value: detail.value
           }))
@@ -115,7 +111,7 @@ export class ProductService {
         return {
           ...response,
           details: details,
-          _initialDetailIds: details.map((d: any) => d.id)  
+          _initialDetailIds: details.map((d: any) => d.id)
         };
       })
     );
@@ -147,15 +143,14 @@ export class ProductService {
   public createProduct(product: ProductDetails) {
     const payload = {
       productCode: product.productCode,
+      slug: product.slug,
       productName: product.productName,
       price: product.price,
+      active_discount: product.active_discount,
       quantity: product.quantity,
-      discountAmount: product.discountAmount || 0,
-      discountPercent: product.discountPercent || 0,
       description: product.description || '',
-      rating: product.rating || 0,
       status: product.status,
-      image: product.image 
+      image: product.image
     };
 
     const headers = this.baseServe.getAuthHeader();
@@ -209,11 +204,11 @@ export class ProductService {
 
     const productPayload = {
       productCode: product.productCode,
+      slug: product.slug,
       productName: product.productName,
+      active_discount: product.active_discount,
       price: product.price,
       quantity: product.quantity,
-      discountPercent: product.discountPercent,
-      discountAmount: product.discountAmount,
       description: product.description,
       rating: product.rating,
       status: product.status,
@@ -291,9 +286,9 @@ export class ProductService {
 
 
   public removeUploadedImage(publicId: string) {
-  const headers = this.baseServe.getAuthHeader();
-  return this.http.delete(`/product/removeImage/${encodeURIComponent(publicId)}`, { headers });
-}
+    const headers = this.baseServe.getAuthHeader();
+    return this.http.delete(`/product/removeImage/${encodeURIComponent(publicId)}`, { headers });
+  }
 
 
 }

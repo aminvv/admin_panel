@@ -34,15 +34,14 @@ export class ProductEditFormComponent implements OnChanges {
   private initForm(): void {
     this.form = new UntypedFormGroup({
       productCode: new UntypedFormControl('', Validators.required),
+      slug: new UntypedFormControl('', Validators.required),
+      active_discount: new UntypedFormControl(false),
       productName: new UntypedFormControl('', Validators.required),
       price: new UntypedFormControl(0, Validators.required),
       quantity: new UntypedFormControl(0, Validators.required),
-      discountPercent: new UntypedFormControl(0),
-      discountAmount: new UntypedFormControl(0),
       description: new UntypedFormControl(''),
       image: new UntypedFormControl([]),
-      rating: new UntypedFormControl(0, Validators.required),
-      status: new UntypedFormControl('1', Validators.required),
+      status: new UntypedFormControl(true),
       details: new UntypedFormArray([])
     });
   }
@@ -70,13 +69,12 @@ export class ProductEditFormComponent implements OnChanges {
 
     this.form.patchValue({
       productCode: this.product.productCode,
+      slug: this.product.slug,
       productName: this.product.productName,
       price: this.product.price,
+      active_discount: this.product.active_discount,
       quantity: this.product.quantity,
-      discountPercent: this.product.discountPercent,
-      discountAmount: this.product.discountAmount,
       description: this.product.description,
-      rating: this.product.rating,
       status: this.product.status,
       image: this.product.image || []
     });
@@ -257,7 +255,7 @@ export class ProductEditFormComponent implements OnChanges {
       ...this.form.value,
       image: finalImageUrls,
       details: this.details.value
-    }; 
+    };
 
     this.editProduct.emit(productData);
   }

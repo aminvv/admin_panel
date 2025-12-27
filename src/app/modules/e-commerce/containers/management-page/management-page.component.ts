@@ -22,7 +22,7 @@ export class ManagementPageComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   public routes: typeof routes = routes;
   public products$: Observable<ProductDetails[]>;
-  public displayedColumns: string[] = ['select', 'id', 'image', 'title', 'subtitle', 'price', 'rating', 'actions'];
+  public displayedColumns: string[] = ['select', 'id', 'image', 'title', 'subtitle', 'price',  'status','active_discount', 'actions'];
   public dataSource: MatTableDataSource<ProductDetails>;
   deleteConfirmSubscription;
   selectedId: number;

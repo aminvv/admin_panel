@@ -11,8 +11,8 @@
       </div>
 
       <div class="product-pop-wrapper">
-        <p class="product-pop">{{(product$ | async).rating}}</p>
-        <mat-icon class="product-pop-icon" color="accent">star</mat-icon>
+        <p class="product-pop">{{(product$ | async).active_discount}}</p>
+        <mat-icon class="product-pop-icon" color="accent"> وضعیت تخفیف</mat-icon>
       </div>
     </div>
 
@@ -122,8 +122,8 @@
       <p class="text-info-title">RATING & REVIEWS</p>
 
       <div class="product-pop-wrapper">
-        <p class="product-pop">{{(product$ | async).rating}}</p>
-        <mat-icon class="product-pop-icon" color="accent">star</mat-icon>
+        <p class="product-pop">{{(product$ | async).active_discount}}</p>
+        <mat-icon class="product-pop-icon" color="accent">وضعیت تخفیف</mat-icon>
       </div>
 
       <p class="product-reviews">32 Reviews</p>
@@ -137,5 +137,6 @@
 <h3 class="similar-products-title">You may also like</h3>
 
 <div class="similar-products-wrapper">
-  <app-product-card class="similar-product" *ngFor="let product of (products$ | async)" [product]="product"></app-product-card>
+  <app-product-card class="similar-product" *ngFor="let product of (products$ | async)"
+    [product]="product"></app-product-card>
 </div>

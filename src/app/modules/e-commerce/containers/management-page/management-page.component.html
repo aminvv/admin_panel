@@ -1,10 +1,9 @@
-
 <app-breadcrumb [path]="routes.MANAGEMENT"></app-breadcrumb>
 
 <mat-card class="card">
   <mat-card-title class="card-title-wrapper">
     <p class="card-title">محصولات <span class="card-subtitle">{{ (products$ | async)?.length || 0 }}
-      محصول</span></p>
+        محصول</span></p>
 
     <mat-form-field appearance="outline" class="search-field mat-form-field-should-float">
       <mat-label>جست وجو</mat-label>
@@ -28,22 +27,13 @@
         <!-- Checkbox Column -->
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox
-              (change)="$event ? masterToggle() : null"
-              [checked]="selection.hasValue() && isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()"
-              [aria-label]="checkboxLabel()"
-              color="warn"
-            ></mat-checkbox>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()"
+              color="warn"></mat-checkbox>
           </th>
           <td mat-cell *matCellDef="let row">
-            <mat-checkbox
-              (click)="$event.stopPropagation()"
-              (change)="$event ? selection.toggle(row) : null"
-              [checked]="selection.isSelected(row)"
-              [aria-label]="checkboxLabel(row)"
-              color="warn"
-            ></mat-checkbox>
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)" color="warn"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -64,7 +54,8 @@
         <!-- Title Column -->
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> نام محصول </th>
-          <td mat-cell *matCellDef="let element" class="table-body product-title" [routerLink]="[routes.PRODUCT, element.id]"> {{element.productName}} </td>
+          <td mat-cell *matCellDef="let element" class="table-body product-title"
+            [routerLink]="[routes.PRODUCT, element.id]"> {{element.productName}} </td>
         </ng-container>
 
         <!-- Subtitle Column -->
@@ -78,14 +69,23 @@
           <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> قیمت </th>
           <td mat-cell *matCellDef="let element" class="table-body">{{element.price}}</td>
         </ng-container>
-  
-        <!-- Rating Column -->
-        <ng-container matColumnDef="rating">
-          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> امتیاز </th>
+        <!-- status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> وضعیت محصول</th>
           <td mat-cell *matCellDef="let element" class="table-body">
-            <div class="rating-wrapper">
-              <p class="product-pop">{{element.rating}}</p>
-              <mat-icon color="accent" class="product-pop-icon">ستاره</mat-icon>
+            <div class="status-badge" [ngClass]="{'active': element.status == 1, 'inactive': element.status == 0}">
+              {{ element.status == 1 ? 'فعال' : 'غیرفعال' }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- active_discount Column -->
+        <ng-container matColumnDef="active_discount">
+          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> وضعیت تخفیف</th>
+          <td mat-cell *matCellDef="let element" class="table-body">
+            <div class="discount-badge"
+              [ngClass]="{'has-discount': element.active_discount, 'no-discount': !element.active_discount}">
+              {{ element.active_discount ? 'دارای تخفیف' : 'بدون تخفیف' }}
             </div>
           </td>
         </ng-container>
@@ -95,8 +95,10 @@
           <th mat-header-cell *matHeaderCellDef class="table-header"> وضیعت </th>
           <td mat-cell *matCellDef="let element" class="table-body">
             <div class="table-buttons-wrapper">
-              <button mat-flat-button color="success" class="table-button" [routerLink]="[routes.PRODUCT_EDIT, element.id]">ویرایش</button>
-              <button mat-flat-button color="warn" class="table-button" (click)="openDeleteModal(element.id)">حذف</button>
+              <button mat-flat-button color="success" class="table-button"
+                [routerLink]="[routes.PRODUCT_EDIT, element.id]">ویرایش</button>
+              <button mat-flat-button color="warn" class="table-button"
+                (click)="openDeleteModal(element.id)">حذف</button>
             </div>
           </td>
         </ng-container>
@@ -111,7 +113,6 @@
       </table>
     </div>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> 
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </mat-card-content>
 </mat-card>
-  

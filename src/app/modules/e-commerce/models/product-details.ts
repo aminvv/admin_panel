@@ -6,13 +6,12 @@ export interface ProductDetails {
   productName: string;
   productCode: string;
   price: number;
+  slug: string;
   quantity: number;
-  discountPercent?: number;
-  discountAmount?: number;
+  active_discount: boolean;
   description?: string;
   image?: { url: string; publicId: string }[];
   details?: { key: string; value: string }[]
-  rating: number
-  status: string
+  status: boolean
   _initialDetailIds?: number[];
 }
