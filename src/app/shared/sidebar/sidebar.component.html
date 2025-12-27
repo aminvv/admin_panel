@@ -47,6 +47,16 @@
           keyboard_arrow_down
         </mat-icon>
       </div>
+      
+      <div *ngIf="node.name === 'تخفیفات'" class="mat-tree-item" matTreeNodeToggle>
+        <div>
+          <mat-icon>local_offer</mat-icon>
+          <p class="nodejs-sup" matBadge="Admin" matBadgeColor="primary">{{node.name}}</p>
+        </div>
+        <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
+          keyboard_arrow_down
+        </mat-icon>
+      </div>
 
       <div *ngIf="node.name === 'کاربران'" class="mat-tree-item" matTreeNodeToggle>
         <div>

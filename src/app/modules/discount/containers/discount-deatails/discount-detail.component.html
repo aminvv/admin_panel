@@ -1,0 +1,62 @@
+<form class="discount-form">
+
+  <!-- Discount Type -->
+  <div class="form-group">
+    <label>نوع تخفیف</label>
+    <select name="type">
+      <option value="Basket">سبد خرید</option>
+      <option value="product">محصول</option>
+    </select>
+  </div>
+
+  <!-- Discount Code -->
+  <div class="form-group">
+    <label>کد تخفیف</label>
+    <input type="text" name="code" placeholder="مثلاً YALDA1403" />
+    <small>برای تخفیف سبد خرید اجباری است</small>
+  </div>
+
+  <!-- Product -->
+  <div class="form-group">
+    <label>محصول</label>
+    <select name="productId">
+      <option value="">انتخاب محصول</option>
+      <option value="1">ایزوگام شرق</option>
+      <option value="2">ایزوگام غرب</option>
+    </select>
+  </div>
+
+  <!-- Discount Value -->
+  <div class="form-group">
+    <label>مقدار تخفیف</label>
+
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="discountMode" value="percent" checked />
+        درصد
+      </label>
+      <label>
+        <input type="radio" name="discountMode" value="amount" />
+        مبلغ
+      </label>
+    </div>
+
+    <input type="number" name="percent" placeholder="درصد تخفیف" />
+    <input type="number" name="amount" placeholder="مبلغ تخفیف (تومان)" />
+  </div>
+
+  <!-- Limit -->
+  <div class="form-group">
+    <label>محدودیت استفاده</label>
+    <input type="number" name="limit" placeholder="مثلاً 100" />
+  </div>
+
+  <!-- Expire Date -->
+  <div class="form-group">
+    <label>تاریخ انقضا</label>
+    <input type="date" name="expires_in" />
+  </div>
+
+  <button type="submit">ثبت تخفیف</button>
+
+</form>

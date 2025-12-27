@@ -1,0 +1,68 @@
+.discount-form {
+  max-width: 480px;
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    small {
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    input,
+    select {
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+
+      &:focus {
+        outline: none;
+        border-color: #4f46e5;
+      }
+    }
+  }
+
+  .radio-group {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 8px;
+
+    label {
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+
+  button {
+    width: 100%;
+    height: 44px;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      background: #4338ca;
+    }
+  }
+}

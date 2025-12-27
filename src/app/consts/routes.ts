@@ -37,6 +37,13 @@ export enum routes {
 
 
 
+  // --- discount ---//
+
+  DISCOUNT_LIST = '/discount/list',
+  DISCOUNT_DETAILS = '/discount/detail',
+
+
+
   // --- Documentation ---//
 
   LIBS = '/documentation/libs',

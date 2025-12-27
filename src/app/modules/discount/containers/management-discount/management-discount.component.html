@@ -1,0 +1,126 @@
+<div class="order-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-top">
+      <h2>لیست سفارش‌ها</h2>
+      <button class="primary-btn">خروجی اکسل</button>
+    </div>
+
+    <div class="filters">
+      <input type="text" placeholder="جستجو شماره سفارش یا مشتری">
+
+      <select>
+        <option>همه وضعیت‌ها</option>
+        <option>در انتظار پرداخت</option>
+        <option>ثبت شده</option>
+        <option>در حال آماده‌سازی</option>
+        <option>ارسال شده</option>
+        <option>تحویل داده شده</option>
+        <option>لغو شده</option>
+      </select>
+
+      <select>
+        <option>همه پرداخت‌ها</option>
+        <option>آنلاین</option>
+        <option>نقدی</option>
+      </select>
+
+      <input type="date">
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat green">
+      <span>{{ 520 | number:'1.0-0' | persianNumber }}</span>
+      <p>کل سفارش‌ها</p>
+    </div>
+
+    <div class="stat yellow">
+      <span>{{ 64 | number:'1.0-0' | persianNumber }}</span>
+      <p>سفارش جدید</p>
+    </div>
+
+    <div class="stat blue">
+      <span>{{ 23300000 | number:'1.0-0' | persianNumber }}</span>
+      <p>فروش ماه (تومان)</p>
+    </div>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>شماره سفارش</th>
+          <th>مشتری</th>
+          <th>مبلغ کل</th>
+          <th>وضعیت سفارش</th>
+          <th>نوع پرداخت</th>
+          <th>تاریخ ثبت</th>
+          <th>عملیات</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>#{{ 1023 | persianNumber }}</td>
+          <td>
+            <strong>علی پنلی</strong>
+            <span>{{ '09121111111' | persianNumber }}</span>
+          </td>
+          <td>{{ 1480000 | number:'1.0-0' | persianNumber }}</td>
+          <td><span class="badge success">تحویل شده</span></td>
+          <td>Online</td>
+          <td>{{ '1403/02/20' | persianNumber }}</td>
+          <td>
+            <div class="actions">
+              <button class="action view" routerLink="/discount/detail">جزئیات</button>
+              <button class="action status">تغییر وضعیت</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>#{{ 1022 | persianNumber }}</td>
+          <td>
+            <strong>محمد احمدی</strong>
+            <span>{{ '09123333333' | persianNumber }}</span>
+          </td>
+          <td>{{ 750000 | number:'1.0-0' | persianNumber }}</td>
+          <td><span class="badge warning">در حال ارسال</span></td>
+          <td>Cash</td>
+          <td>{{ '1403/02/19' | persianNumber }}</td>
+          <td>
+            <div class="actions">
+              <button class="action view">جزئیات</button>
+              <button class="action status">تغییر وضعیت</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>#{{ 1021 | persianNumber }}</td>
+          <td>
+            <strong>سارا محمدی</strong>
+            <span>{{ '09124444444' | persianNumber }}</span>
+          </td>
+          <td>{{ 530000 | number:'1.0-0' | persianNumber }}</td>
+          <td><span class="badge pending">منتظر پرداخت</span></td>
+          <td>Online</td>
+          <td>{{ '1403/02/18' | persianNumber }}</td>
+          <td>
+            <div class="actions">
+              <button class="action view">جزئیات</button>
+              <button class="action status">تغییر وضعیت</button>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
