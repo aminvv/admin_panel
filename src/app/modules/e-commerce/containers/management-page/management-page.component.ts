@@ -11,6 +11,7 @@ import { switchMap, take } from 'rxjs/operators';
 import { DeletePopupComponent } from '../../../../shared/popups/delete-popup/delete-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-management-page',
@@ -20,9 +21,10 @@ import { ToastrService } from 'ngx-toastr';
 export class ManagementPageComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
   public routes: typeof routes = routes;
   public products$: Observable<ProductDetails[]>;
-  public displayedColumns: string[] = ['select', 'id', 'image', 'title', 'subtitle', 'price',  'status','active_discount', 'actions'];
+  public displayedColumns: string[] = ['select', 'id', 'image', 'title', 'subtitle', 'price', 'status', 'discounts', 'actions'];
   public dataSource: MatTableDataSource<ProductDetails>;
   deleteConfirmSubscription;
   selectedId: number;
@@ -56,12 +58,15 @@ export class ManagementPageComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
   }
 
-  constructor(private service: ProductService,
+  constructor(
+   private router: Router,
+    private service: ProductService,
     private toastr: ToastrService,
-    public dialog: MatDialog) {
+    public dialog: MatDialog
+    ) {
     this.products$ = this.service.getProducts();
 
-    this.products$.pipe(
+    this.products$.pipe( 
       take(1)
     ).subscribe((products: ProductDetails[]) => {
       this.dataSource = new MatTableDataSource(products);
@@ -91,7 +96,7 @@ export class ManagementPageComponent implements OnInit {
     this.service.deleteProduct(id).pipe(
       switchMap((response: any) => {
 
-        const message = response && response.message? String(response.message): 'محصول با موفقیت حذف شد';
+        const message = response && response.message ? String(response.message) : 'محصول با موفقیت حذف شد';
         this.toastr.success(message);
         return this.service.getProducts();
       }),
@@ -110,8 +115,28 @@ export class ManagementPageComponent implements OnInit {
 
 
 
-public getFirstImage(images: any): string {
-  return images?.[0]?.url || '';
-}
+  public getFirstImage(images: any): string {
+    return images?.[0]?.url || '';
+  }
+
+
+  goToCreateDiscount(product: any) {
+    this.router.navigate(['/discount/create', product.id], {
+      state: { product }
+    });
+  }
+
+  goToUpdateDiscount(product: any) {
+    this.router.navigate(['/discount/edit', product.id], {
+      state: { product }
+    });
+  }
+
+
+  removeDiscount(product: any) {
+    // تایید + حذف تخفیف
+    console.log('remove discount for', product);
+  }
+
 
 }

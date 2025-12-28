@@ -18,22 +18,7 @@ const routes: Routes = [
     path: 'detail',
     component: DiscountDetailComponent,
   },
-  // {
-  //   path: 'create',
-  //   component: BlogCreatePageComponent,
-  // },
-  // {
-  //   path: 'blogs',
-  //   component: BlogsPageComponent,
-  // },
-  // {
-  //   path: 'blog/:id',
-  //   component: BlogPageComponent,
-  // },
-  // {
-  //   path: 'blog',
-  //   component: BlogPageComponent,
-  // },
+,
 ];
 
 @NgModule({
