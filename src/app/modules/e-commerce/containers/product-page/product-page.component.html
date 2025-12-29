@@ -1,142 +1,215 @@
-<app-breadcrumb [path]="routes.PRODUCT"></app-breadcrumb>
 
+<app-breadcrumb [path]="routes.PRODUCT"></app-breadcrumb>  
 <mat-card class="product-info-wrapper">
-  <img class="product-image" [src]="(product$ | async).image" alt="product-image">
+  <!-- گالری تصاویر محصول -->
+  <div class="product-gallery">
+    <!-- تصویر اصلی -->
+    <img class="main-product-image" [src]="selectedImage || product?.image?.url" alt="product-main-image">
+    
+    <!-- لیست تصاویر کوچک -->
+    <div class="thumbnail-wrapper" *ngIf="product?.image?.length > 0">
+      <div class="thumbnail-list">
+        <img 
+          *ngFor="let img of product?.image; let i = index" 
+          [src]="img?.url" 
+          [alt]="'product-thumbnail-' + i"
+          class="thumbnail"
+          [class.active]="img?.url === selectedImage"
+          (click)="selectImage(img?.url)">
+      </div>
+    </div>
+    
+    <!-- دکمه‌های مدیریت تصاویر -->
+    <div class="admin-image-actions">
+      <button mat-raised-button color="primary" (click)="addImage()">
+        <mat-icon>add_photo_alternate</mat-icon>
+        افزودن تصویر
+      </button>
+      <button mat-raised-button color="warn" (click)="removeImage(selectedImage)" [disabled]="!selectedImage">
+        <mat-icon>delete</mat-icon>
+        حذف تصویر انتخابی
+      </button>
+    </div>
+  </div>
 
   <div class="info-wrapper">
-    <div class="info-title-wrapper">
+    <!-- هدر اطلاعات محصول -->
+    <div class="info-header">
       <div class="info-inner-wrapper">
-        <p class="product-title">{{(product$ | async).productName}}</p>
-        <p class="product-subtitle">{{(product$ | async).productName}}</p>
+        <h1 class="product-title">{{product?.productName}}</h1>
+        <p class="product-id">شناسه محصول: {{product?.id}}</p>
       </div>
 
-      <div class="product-pop-wrapper">
-        <p class="product-pop">{{(product$ | async).active_discount}}</p>
-        <mat-icon class="product-pop-icon" color="accent"> وضعیت تخفیف</mat-icon>
+      <div class="admin-status-badge">
+        <mat-chip [color]="product?.status ? 'primary' : 'warn'" selected>
+          {{product?.status ? 'فعال' : 'غیرفعال'}}
+        </mat-chip>
+        <mat-chip *ngIf="product?.active_discount" color="accent" selected>
+          تخفیف فعال
+        </mat-chip>
       </div>
     </div>
 
-    <p class="product-price">{{(product$ | async).price}}</p>
-
-    <p class="product-size-title">Size Guide</p>
-
-    <div class="product-selects-wrapper">
-      <mat-form-field appearance="outline" class="product-select-field">
-        <mat-label>Select size</mat-label>
-        <mat-select class="product-select" [formControl]="size">
-          <mat-option value="1">1</mat-option>
-          <mat-option value="2">2</mat-option>
-          <mat-option value="3">3</mat-option>
-          <mat-option value="4">4</mat-option>
-          <mat-option value="5">5</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field class="product-select-field">
-        <mat-select class="product-select" [formControl]="value">
-          <mat-option value="1">1</mat-option>
-          <mat-option value="2">2</mat-option>
-          <mat-option value="3">3</mat-option>
-          <mat-option value="4">4</mat-option>
-          <mat-option value="5">5</mat-option>
-          <mat-option value="6">6</mat-option>
-          <mat-option value="7">7</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div class="action-wrapper">
-      <button mat-flat-button color="primary" class="action-button">
-        <div class="inner-button-wrapper">
-          <p class="text-button">Add to bag</p>
-          <mat-icon>shopping_cart</mat-icon>
+    <!-- اطلاعات قیمت و موجودی -->
+    <div class="price-stock-info">
+      <div class="info-card">
+        <h3>قیمت‌گذاری</h3>
+        <div class="info-row">
+          <span>کد محصول:</span>
+          <strong>{{product?.productCode}}</strong>
         </div>
-      </button>
-
-      <button mat-flat-button color="warn" class="action-button">
-        <div class="inner-button-wrapper">
-          <p class="text-button">Add to wishlist</p>
-          <mat-icon>favorite</mat-icon>
+        <div class="info-row">
+          <span>قیمت:</span>
+          <strong class="final-price">{{product?.price | currency:'تومان'}}</strong>
         </div>
+        <div class="info-row">
+          <span>تخفیف:</span>
+          <span>{{product?.active_discount ? 'دارد' : 'ندارد'}}</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h3>موجودی</h3>
+        <div class="info-row">
+          <span>موجودی انبار:</span>
+          <strong [class.low-stock]="(product?.quantity || 0) < 10">{{product?.quantity || 0}} عدد</strong>
+        </div>
+        <div class="info-row">
+          <span>اسلاگ:</span>
+          <span>{{product?.slug}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- دکمه‌های مدیریت -->
+    <div class="admin-actions">
+      <button mat-raised-button color="primary" (click)="editProduct()">
+        <mat-icon>edit</mat-icon>
+        ویرایش محصول
+      </button>
+      
+      <button mat-raised-button color="accent" (click)="updateStock()">
+        <mat-icon>inventory</mat-icon>
+        بروزرسانی موجودی
+      </button>
+      
+      <button mat-raised-button color="warn" (click)="toggleProductStatus()">
+        <mat-icon>{{product?.status ? 'visibility_off' : 'visibility'}}</mat-icon>
+        {{product?.status ? 'غیرفعال کردن' : 'فعال کردن'}}
+      </button>
+      
+      <button mat-raised-button class="delete-btn" (click)="deleteProduct()">
+        <mat-icon>delete_forever</mat-icon>
+        حذف محصول
       </button>
     </div>
 
-    <div class="card-wrapper">
-      <img class="card" src="./assets/e-commerce/product/mastercard.png" alt="mastercard">
-      <img class="card" src="./assets/e-commerce/product/visa.png" alt="visa">
-      <img class="card" src="./assets/e-commerce/product/paypal.png" alt="paypal">
-    </div>
+    <!-- اطلاعات فنی -->
+    <div class="technical-info">
+      <div class="info-card">
+        <h3>اطلاعات فنی</h3>
+        <div class="info-row">
+          <span>وضعیت:</span>
+          <span>{{product?.status ? 'فعال' : 'غیرفعال'}}</span>
+        </div>
+        <div class="info-row">
+          <span>تعداد تصاویر:</span>
+          <span>{{product?.image?.length || 0}}</span>
+        </div>
+        <div class="info-row">
+          <span>تعداد جزئیات:</span>
+          <span>{{product?.details?.length || 0}}</span>
+        </div>
+      </div>
 
-    <p class="product-benefit">FREE Delivery & Returns</p>
+      <div class="info-card">
+        <h3>آخرین تغییرات</h3>
+        <div class="info-row">
+          <span>آخرین ویرایش:</span>
+          <span>سیستم مدیریتی</span>
+        </div>
+      </div>
+    </div>
   </div>
 </mat-card>
 
-<mat-card class="product-text-info-wrapper">
-  <mat-card-title>
-    <p>Product Info</p>
-  </mat-card-title>
-
-  <mat-card-content class="product-text-info-content">
-    <div class="text-info-item-wrapper">
-      <p class="text-info-title">PRODUCT DESCRIPTION</p>
-
-      <ul>
-        <li>{{(product$ | async).description}}</li>
-        <li>{{(product$ | async).description}}</li>
-      </ul>
-    </div>
-
-    <div class="text-info-item-wrapper middle-block">
-      <div>
-        <p class="text-info-title">PRODUCT CODE</p>
-        <p>{{(product$ | async).quantity}}</p>
-      </div>
-
-      <div>
-        <p class="text-info-title">TECHNOLOGY</p>
-        <ul>
-          <li *ngFor="let technology of (product$ | async).productName">{{technology}}</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="text-info-item-wrapper">
-      <p class="text-info-title">SHARE</p>
-
-      <p>Share photo with a tag <span class="tag">{{(product$ | async).productName}}</span></p>
-
-      <div class="icons-wrapper">
-        <div class="icon-wrapper">
-          <mat-icon fontSet="fa fa-fs" fontIcon="fa-facebook-square" class="icon"></mat-icon>
+<!-- تب‌های اطلاعات تکمیلی -->
+<mat-card class="product-details-tabs">
+  <mat-tab-group>
+    <!-- تب توضیحات -->
+    <mat-tab label="توضیحات">
+      <div class="tab-content">
+        <h3>توضیحات کامل محصول</h3>
+        <div class="description-editor">
+          {{product?.description || 'توضیحی برای این محصول ثبت نشده است.'}}
         </div>
-
-        <div class="icon-wrapper">
-          <mat-icon fontSet="fa fa-fs" fontIcon="fa-instagram" class="icon"></mat-icon>
-        </div>
-
-        <div class="icon-wrapper">
-          <mat-icon fontSet="fa fa-fs" fontIcon="fa-twitter" class="icon"></mat-icon>
+        
+        <div class="features-section" *ngIf="product?.details && product.details.length > 0">
+          <h4>جزئیات محصول</h4>
+          <ul>
+            <li *ngFor="let detail of product?.details">
+              <strong>{{detail.key}}:</strong> {{detail.value}}
+            </li>
+          </ul>
         </div>
       </div>
+    </mat-tab>
 
-      <p class="text-info-title">RATING & REVIEWS</p>
-
-      <div class="product-pop-wrapper">
-        <p class="product-pop">{{(product$ | async).active_discount}}</p>
-        <mat-icon class="product-pop-icon" color="accent">وضعیت تخفیف</mat-icon>
+    <!-- تب تصاویر -->
+    <mat-tab label="تصاویر محصول">
+      <div class="tab-content">
+        <div class="image-management">
+          <div class="upload-section">
+            <h4>آپلود تصاویر جدید</h4>
+            <input type="file" #fileInput multiple (change)="onFileSelected($event)" accept="image/*" hidden>
+            <button mat-raised-button (click)="fileInput.click()">
+              <mat-icon>cloud_upload</mat-icon>
+              انتخاب فایل‌ها
+            </button>
+            <button mat-raised-button color="primary" (click)="uploadImages()" [disabled]="!selectedFiles.length">
+              آپلود تصاویر
+            </button>
+          </div>
+          
+          <div class="images-list">
+            <h4>تصاویر فعلی ({{product?.image?.length || 0}})</h4>
+            <div class="images-grid">
+              <div class="image-item" *ngFor="let img of product?.image; let i = index">
+                <img [src]="img?.url" [alt]="'image-' + i">
+                <div class="image-actions">
+                  <button mat-icon-button color="primary" (click)="selectImage(img?.url)">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="deleteImage(img?.url)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+                <span class="image-index">{{i + 1}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </mat-tab>
 
-      <p class="product-reviews">32 Reviews</p>
-
-      <a class="product-link" routerLink="{{routes.DASHBOARD}}">Read all</a>
-    </div>
-
-  </mat-card-content>
+    <!-- تب جزئیات فنی -->
+    <mat-tab label="جزئیات فنی">
+      <div class="tab-content">
+        <div class="specs-table" *ngIf="product?.details && product.details.length > 0">
+          <div class="spec-row" *ngFor="let detail of product?.details">
+            <span class="spec-title">{{detail.key}}:</span>
+            <span class="spec-value">{{detail.value}}</span>
+          </div>
+        </div>
+        <div *ngIf="!product?.details || product.details.length === 0" class="no-data">
+          <mat-icon>info</mat-icon>
+          <p>هیچ جزئیات فنی برای این محصول ثبت نشده است.</p>
+        </div>
+        
+        <button mat-raised-button color="primary" (click)="editSpecifications()">
+          ویرایش جزئیات فنی
+        </button>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </mat-card>
-
-<h3 class="similar-products-title">You may also like</h3>
-
-<div class="similar-products-wrapper">
-  <app-product-card class="similar-product" *ngFor="let product of (products$ | async)"
-    [product]="product"></app-product-card>
-</div>

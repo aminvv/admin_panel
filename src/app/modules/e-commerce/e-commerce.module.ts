@@ -13,6 +13,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
+import { MatTabsModule } from '@angular/material/tabs'; 
+import { MatDialogModule } from '@angular/material/dialog';
+
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 // import { ProductsService } from './services';
@@ -50,6 +53,8 @@ import { BaseService } from 'src/app/shared/services/base.service';
     MatSortModule,
     MatPaginatorModule,
     ReactiveFormsModule,
+    MatTabsModule, 
+    MatDialogModule,
   ],
   providers: [
     // ProductsService,

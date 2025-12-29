@@ -80,6 +80,10 @@ export class ManagementPageComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
+
+
+
+
   openDeleteModal(id: number): void {
     this.selectedId = id;
     const dialogRef = this.dialog.open(DeletePopupComponent, {
