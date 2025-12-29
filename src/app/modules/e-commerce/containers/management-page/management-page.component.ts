@@ -25,6 +25,8 @@ export class ManagementPageComponent implements OnInit {
   public routes: typeof routes = routes;
   public products$: Observable<ProductDetails[]>;
   public displayedColumns: string[] = ['select', 'id', 'image', 'title', 'subtitle', 'price', 'status', 'discounts', 'actions'];
+  public desktopColumns = this.displayedColumns;
+  public mobileColumns = ['mobileView'];
   public dataSource: MatTableDataSource<ProductDetails>;
   deleteConfirmSubscription;
   selectedId: number;
@@ -59,14 +61,14 @@ export class ManagementPageComponent implements OnInit {
   }
 
   constructor(
-   private router: Router,
+    private router: Router,
     private service: ProductService,
     private toastr: ToastrService,
     public dialog: MatDialog
-    ) {
+  ) {
     this.products$ = this.service.getProducts();
 
-    this.products$.pipe( 
+    this.products$.pipe(
       take(1)
     ).subscribe((products: ProductDetails[]) => {
       this.dataSource = new MatTableDataSource(products);

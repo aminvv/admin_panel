@@ -15,128 +15,225 @@
   </mat-card-title>
 
   <mat-card-content class="card-content">
-    <button mat-flat-button color="success" [routerLink]="routes.PRODUCT_CREATE">ایجاد محصول</button>
+    <button mat-flat-button color="success" [routerLink]="routes.PRODUCT_CREATE" class="create-btn">
+      ایجاد محصول
+    </button>
 
     <div class="table-title-wrapper">
       <p class="table-title">محصولات</p>
       <mat-icon class="table-title-icon" matTooltip="Filter list" matTooltipPosition="above">filter_list</mat-icon>
     </div>
 
-    <div class="table-wrapper">
-      <table mat-table [dataSource]="dataSource" matSort class="table">
+    <!-- نمایش جدول در دسکتاپ -->
+    <div class="desktop-view">
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="dataSource" matSort class="table">
 
-        <!-- Checkbox Column -->
-        <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox (change)="$event ? masterToggle() : null"
-                          [checked]="selection.hasValue() && isAllSelected()"
-                          [indeterminate]="selection.hasValue() && !isAllSelected()"
-                          [aria-label]="checkboxLabel()"
-                          color="warn"></mat-checkbox>
-          </th>
-          <td mat-cell *matCellDef="let row">
-            <mat-checkbox (click)="$event.stopPropagation()"
-                          (change)="$event ? selection.toggle(row) : null"
-                          [checked]="selection.isSelected(row)"
-                          [aria-label]="checkboxLabel(row)"
-                          color="warn"></mat-checkbox>
-          </td>
-        </ng-container>
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                            [aria-label]="checkboxLabel()"
+                            color="warn"></mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)"
+                            [aria-label]="checkboxLabel(row)"
+                            color="warn"></mat-checkbox>
+            </td>
+          </ng-container>
 
-        <!-- Id Column -->
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef class="table-header product-id" mat-sort-header> ID </th>
-          <td mat-cell *matCellDef="let element" class="table-body product-id">
-            {{ element.id | persianNumber }}
-          </td>
-        </ng-container>
+          <!-- بقیه ستون‌های شما دقیقاً همانطور که بودند... -->
+          <!-- Id Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef class="table-header product-id" mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let element" class="table-body product-id">
+              {{ element.id | persianNumber }}
+            </td>
+          </ng-container>
 
-        <!-- Image Column -->
-        <ng-container matColumnDef="image">
-          <th mat-header-cell *matHeaderCellDef class="table-header"> تصویر </th>
-          <td mat-cell *matCellDef="let element" class="table-body">
-            <img class="image" [src]="getFirstImage(element.image)" alt="logo">
-          </td>
-        </ng-container>
+          <!-- Image Column -->
+          <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef class="table-header"> تصویر </th>
+            <td mat-cell *matCellDef="let element" class="table-body">
+              <img class="image" [src]="getFirstImage(element.image)" alt="logo">
+            </td>
+          </ng-container>
 
-        <!-- Title Column -->
-        <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> نام محصول </th>
-          <td mat-cell *matCellDef="let element" class="table-body product-title"
-              [routerLink]="[routes.PRODUCT, element.id]">
+          <!-- Title Column -->
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> نام محصول </th>
+            <td mat-cell *matCellDef="let element" class="table-body product-title"
+                [routerLink]="[routes.PRODUCT, element.id]">
+              {{ element.productName }}
+            </td>
+          </ng-container>
+
+          <!-- Subtitle Column -->
+          <ng-container matColumnDef="subtitle">
+            <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> کد محصول</th>
+            <td mat-cell *matCellDef="let element" class="table-body">
+              {{ element.productCode | persianNumber }}
+            </td>
+          </ng-container>
+
+          <!-- Price Column -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> قیمت </th>
+            <td mat-cell *matCellDef="let element" class="table-body">
+              {{ element.price | number:'1.0-0' | persianNumber }}
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> وضعیت محصول</th>
+            <td mat-cell *matCellDef="let element" class="table-body">
+              <div class="status-badge" [ngClass]="{'active': element.status == 1, 'inactive': element.status == 0}">
+                {{ element.status == 1 ? 'فعال' : 'غیرفعال' }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Discounts Column -->
+          <ng-container matColumnDef="discounts">
+            <th mat-header-cell *matHeaderCellDef class="table-header"> تخفیف </th>
+            <td mat-cell *matCellDef="let element" class="table-body discount-cell">
+              <ng-container *ngIf="!element.discounts?.length; else hasDiscount">
+                <button mat-raised-button class="discount-btn discount-create" (click)="goToCreateDiscount(element)">
+                  افزودن تخفیف
+                </button>
+              </ng-container>
+              <ng-template #hasDiscount>
+                <button mat-stroked-button class="discount-btn discount-edit" (click)="goToUpdateDiscount(element)">
+                  ویرایش
+                </button>
+                <button mat-stroked-button class="discount-btn discount-remove" (click)="removeDiscount(element)">
+                  حذف
+                </button>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="table-header"> وضیعت </th>
+            <td mat-cell *matCellDef="let element" class="table-body">
+              <div class="table-buttons-wrapper">
+                <button mat-flat-button color="success" class="table-button"
+                        [routerLink]="[routes.PRODUCT_EDIT, element.id]">ویرایش</button>
+                <button mat-flat-button color="warn" class="table-button"
+                        (click)="openDeleteModal(element.id)">حذف</button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- Row shown when there is no matching data -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value | persianNumber }}"</td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+
+<!-- نمایش کارت‌ها در موبایل -->
+<div class="mobile-view">
+  <div class="mobile-cards-container" *ngIf="dataSource">
+    <div class="mobile-card" *ngFor="let element of dataSource.filteredData">
+      
+      <!-- قسمت بالای کارت -->
+      <div class="mobile-card-top">
+        <div class="mobile-image-id">
+          <img class="mobile-image" [src]="getFirstImage(element.image)" alt="product">
+          <span class="mobile-id">ID: {{ element.id | persianNumber }}</span>
+        </div>
+        
+        <div class="mobile-main-info">
+          <h3 class="mobile-product-name">
             {{ element.productName }}
-          </td>
-        </ng-container>
-
-        <!-- Subtitle Column -->
-        <ng-container matColumnDef="subtitle">
-          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> کد محصول</th>
-          <td mat-cell *matCellDef="let element" class="table-body">
-            {{ element.productCode | persianNumber }}
-          </td>
-        </ng-container>
-
-        <!-- Price Column -->
-        <ng-container matColumnDef="price">
-          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> قیمت </th>
-          <td mat-cell *matCellDef="let element" class="table-body">
-            {{ element.price | number:'1.0-0' | persianNumber }}
-          </td>
-        </ng-container>
-
-        <!-- Status Column -->
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef class="table-header" mat-sort-header> وضعیت محصول</th>
-          <td mat-cell *matCellDef="let element" class="table-body">
-            <div class="status-badge" [ngClass]="{'active': element.status == 1, 'inactive': element.status == 0}">
-              {{ element.status == 1 ? 'فعال' : 'غیرفعال' }}
+          </h3>
+          
+          <div class="mobile-meta-info">
+            <div class="meta-item">
+              <mat-icon>code</mat-icon>
+              <span>کد محصول: {{ element.productCode | persianNumber }}</span>
             </div>
-          </td>
-        </ng-container>
-
-        <!-- Discounts Column -->
-        <ng-container matColumnDef="discounts">
-          <th mat-header-cell *matHeaderCellDef class="table-header"> تخفیف </th>
-          <td mat-cell *matCellDef="let element" class="table-body discount-cell">
-            <ng-container *ngIf="!element.discounts?.length; else hasDiscount">
-              <button mat-raised-button class="discount-btn discount-create" (click)="goToCreateDiscount(element)">
-                افزودن تخفیف
+            <div class="meta-item">
+              <mat-icon>attach_money</mat-icon>
+              <span>قیمت: {{ element.price | number:'1.0-0' | persianNumber }} تومان</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- قسمت وسط کارت -->
+      <div class="mobile-card-middle">
+        <div class="info-row">
+          <span class="info-label">وضعیت:</span>
+          <span class="status-badge" [ngClass]="{'active': element.status == 1, 'inactive': element.status == 0}">
+            {{ element.status == 1 ? 'فعال' : 'غیرفعال' }}
+          </span>
+        </div>
+        
+        <div class="info-row">
+          <span class="info-label">تخفیف:</span>
+          <div class="discount-actions">
+            <ng-container *ngIf="element.discounts?.length; else noDiscount">
+              <span class="has-discount">دارای تخفیف</span>
+              <button mat-mini-fab color="primary" (click)="goToUpdateDiscount(element)" matTooltip="ویرایش">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-mini-fab color="warn" (click)="removeDiscount(element)" matTooltip="حذف">
+                <mat-icon>delete</mat-icon>
               </button>
             </ng-container>
-            <ng-template #hasDiscount>
-              <button mat-stroked-button class="discount-btn discount-edit" (click)="goToUpdateDiscount(element)">
-                ویرایش
-              </button>
-              <button mat-stroked-button class="discount-btn discount-remove" (click)="removeDiscount(element)">
-                حذف
+            <ng-template #noDiscount>
+              <button mat-raised-button color="accent" (click)="goToCreateDiscount(element)">
+                <mat-icon>add</mat-icon>
+                افزودن تخفیف
               </button>
             </ng-template>
-          </td>
-        </ng-container>
-
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="table-header"> وضیعت </th>
-          <td mat-cell *matCellDef="let element" class="table-body">
-            <div class="table-buttons-wrapper">
-              <button mat-flat-button color="success" class="table-button"
-                      [routerLink]="[routes.PRODUCT_EDIT, element.id]">ویرایش</button>
-              <button mat-flat-button color="warn" class="table-button"
-                      (click)="openDeleteModal(element.id)">حذف</button>
-            </div>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-        <!-- Row shown when there is no matching data -->
-        <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value | persianNumber }}"</td>
-        </tr>
-
-      </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- قسمت پایین کارت (دکمه‌ها) -->
+      <div class="mobile-card-bottom">
+        <div class="action-buttons">
+          <button mat-flat-button color="primary" class="action-btn"
+                  [routerLink]="[routes.PRODUCT_EDIT, element.id]">
+            ویرایش محصول
+          </button>
+          <button mat-flat-button color="warn" class="action-btn"
+                  (click)="openDeleteModal(element.id)">
+            حذف محصول
+          </button>
+        </div>
+        
+        <!-- دکمه مشاهده جزئیات -->
+        <button mat-stroked-button color="primary" class="details-btn"
+                [routerLink]="[routes.PRODUCT, element.id]">
+          <mat-icon>visibility</mat-icon>
+          مشاهده جزئیات
+        </button>
+      </div>
+      
     </div>
+    
+    <div *ngIf="dataSource.filteredData.length === 0" class="no-data-mobile">
+      <mat-icon>search_off</mat-icon>
+      <p>محصولی یافت نشد</p>
+    </div>
+  </div>
+</div>
 
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </mat-card-content>

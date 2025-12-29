@@ -509,3 +509,323 @@ mat-paginator {
     margin: 0 8px 0 0 !important;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============ MOBILE CARD STYLES ============ */
+.mobile-view {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-view {
+    display: none !important;
+  }
+  
+  .mobile-view {
+    display: block !important;
+  }
+  
+  .mobile-cards-container {
+    padding: 16px;
+  }
+  
+  .mobile-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+  }
+  
+  /* قسمت بالای کارت */
+  .mobile-card-top {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .mobile-image-id {
+    flex-shrink: 0;
+    text-align: center;
+    
+    .mobile-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 3px solid #f9fafb;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 8px;
+    }
+    
+    .mobile-id {
+      display: block;
+      font-size: 11px;
+      color: #6b7280;
+      background: #f3f4f6;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+  }
+  
+  .mobile-main-info {
+    flex: 1;
+    
+    .mobile-product-name {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+      line-height: 1.4;
+    }
+    
+    .mobile-meta-info {
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #4b5563;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          color: #9ca3af;
+        }
+        
+        &:last-child {
+          color: #059669;
+          font-weight: 600;
+          
+          mat-icon {
+            color: #059669;
+          }
+        }
+      }
+    }
+  }
+  
+  /* قسمت وسط کارت */
+  .mobile-card-middle {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f3f4f6;
+    
+    .info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+      
+      .info-label {
+        font-size: 14px;
+        color: #6b7280;
+        font-weight: 500;
+      }
+      
+      .status-badge {
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 20px;
+        
+        &.active {
+          background: #d1fae5;
+          color: #065f46;
+        }
+        
+        &.inactive {
+          background: #fee2e2;
+          color: #991b1b;
+        }
+      }
+      
+      .discount-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        
+        .has-discount {
+          font-size: 13px;
+          color: #7c3aed;
+          font-weight: 500;
+        }
+        
+        button[mat-mini-fab] {
+          width: 36px;
+          height: 36px;
+          
+          mat-icon {
+            font-size: 18px;
+          }
+        }
+        
+        button[mat-raised-button] {
+          height: 36px;
+          font-size: 13px;
+          border-radius: 8px;
+          background: linear-gradient(135deg, #8b5cf6, #6366f1);
+          color: white;
+          
+          mat-icon {
+            font-size: 18px;
+            margin-left: 4px;
+          }
+        }
+      }
+    }
+  }
+  
+  /* قسمت پایین کارت */
+  .mobile-card-bottom {
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      
+      .action-btn {
+        flex: 1;
+        height: 44px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        
+        mat-icon {
+          font-size: 20px;
+        }
+        
+/* رنگ‌های مدرن و جذاب */
+&[color="primary"] {
+  /* ترکیب بنفش و آبی */
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: white;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  
+  &:hover {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+  }
+}
+
+&[color="warn"] {
+  /* ترکیب صورتی و قرمز */
+  background: linear-gradient(135deg, #ec4899, #ef4444);
+  color: white;
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+  
+  &:hover {
+    background: linear-gradient(135deg, #db2777, #dc2626);
+    box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
+  }
+}
+      }
+    }
+    
+    .details-btn {
+      width: 100%;
+      height: 44px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 2px solid #3b82f6;
+      color: #3b82f6;
+      
+      mat-icon {
+        font-size: 20px;
+      }
+      
+      &:hover {
+        background: #eff6ff;
+      }
+    }
+  }
+  
+  .no-data-mobile {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    
+    mat-icon {
+      font-size: 56px;
+      width: 56px;
+      height: 56px;
+      color: #d1d5db;
+      margin-bottom: 20px;
+    }
+    
+    p {
+      color: #6b7280;
+      font-size: 18px;
+      margin: 0;
+    }
+  }
+  
+  /* استایل‌های ریسپانسیو برای بقیه بخش‌ها */
+  .card-title-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px !important;
+  }
+  
+  .search-field {
+    width: 100% !important;
+    margin-top: 12px;
+  }
+  
+  .create-btn {
+    width: calc(100% - 32px);
+    margin: 0 16px 16px !important;
+    border-radius: 12px;
+    height: 52px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .table-title-wrapper {
+    margin: 0 16px;
+    padding: 16px 0;
+  }
+}
+
+
