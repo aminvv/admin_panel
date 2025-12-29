@@ -1,81 +1,360 @@
-@import "src/app/styles/font";
-@import "src/app/styles/colors";
-@import "src/app/styles/variables";
+@import "../../../../styles/font";
+@import "../../../../styles/colors";
+@import "../../../../styles/variables";
 
-.card {
-  margin-top: 24px;
-  box-shadow: 0 3px 11px 0 $shadow-white, 0 3px 3px -2px $shadow-grey, 0 1px 8px 0 $shadow-dark-grey;
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-.input-wrapper {
-  width: 80%;
+.add-product {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 30px;
+  direction: rtl;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+    margin: 20px;
+  }
+}
+
+.add-product__title {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+}
+
+.product__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+
+
+
+
+/* ============ بخش آپلود تصاویر ============ */
+.form-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+/* استایل label آپلود */
+.form-group:first-child .form-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* مخفی کردن input اصلی */
+.file-input {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.upload-wrapper {
+  display: block;
+  cursor: pointer;
+  position: relative;
+}
+
+/* کادر آپلود */
+.upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  background: #fafafa;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: #4a90e2;
+    background: #f5f9ff;
+  }
+    &.drag-over { 
+    border-color: #4a90e2;
+    background: #e8f4ff;
+    border-width: 3px;
+    
+    .upload-content {
+      transform: scale(1.02);
+    }
+  }
+}
+
+// پیش‌نمایش تصاویر
+.preview-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.preview-item {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.preview-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  
+  &.blur {
+    filter: blur(2px);
+    opacity: 0.7;
+  }
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin: 16px 0 8px 0;
-
-  @media (max-width: $small) {
-    width: 100%;
+  justify-content: center;
+  
+  svg {
+    width: 40px;
+    height: 40px;
   }
 }
 
-.input-title {
-  font-size: $fs-regular;
-  color: $dark-grey;
-  margin: 0 16px 0 0;
+.status.error {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(244, 67, 54, 0.9);
+  color: white;
+  padding: 5px;
+  font-size: 12px;
+  text-align: center;
 }
 
-.input-field {
-  width: 500px;
-  font-size: $fs-xs;
-
-  @media (max-width: $small) {
-    width: 140px;
-  }
-}
-
-.input-text {
-  font-size: $fs-regular;
-}
-
-.mat-form-field-wrapper {
-  margin: 0;
+.btn--remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(244, 67, 54, 0.9);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
+  
+  &:hover {
+    background: #d32f2f;
+  }
 }
 
-.mat-form-field-appearance-outline .mat-form-field-infix {
-  padding: 20px 0 16px 0;
+.upload-content {
+  color: #666;
+  font-size: 14px;
+  
+  i {
+    display: block;
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #888;
+  }
+  
+  .upload-text {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  span {
+    display: block;
+    font-size: 13px;
+    color: #999;
+  }
+}
+
+
+
+
+
+/* ============ بقیه استایل‌ها ============ */
+.form-label {
+  color: #555;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  background: white;
+  transition: all 0.3s ease;
+  font-family: 'Vazir', sans-serif;
+  
+  &:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  }
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* ویژگی‌ها */
+.form-section--features {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  margin-top: 10px;
+}
+
+.feature-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+  
+  input {
+    flex: 1;
+  }
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+/* دکمه‌ها */
+.btn {
+  padding: 8px 16px;
   border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Vazir', sans-serif;
 }
 
-.input-select {
-  border: none;
-  width: 500px;
+.btn--primary {
+  background: #4a90e2;
+  color: white;
+  
+  &:hover {
+    background: #357ae8;
+  }
 }
 
-.input-panel {
-  width: auto;
-  height: auto;
+.btn--secondary {
+  background: #6c757d;
+  color: white;
+  
+  &:hover {
+    background: #5a6268;
+  }
 }
 
-.input-img {
-  width: 200px;
-  height: auto;
+.btn--remove-feature {
+  background: #ff6b6b;
+  color: white;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  
+  &:hover {
+    background: #ff5252;
+  }
 }
 
-button.mat-flat-button + button.mat-flat-button {
-  margin-left: 8px;
+.btn--add {
+  background: #28a745;
+  color: white;
+  margin-top: 10px;
+  
+  &:hover {
+    background: #218838;
+  }
 }
 
-//.option1{
-//  background:  url("https://upload.wikimedia.org/wikipedia/commons/f/f9/Phoenicopterus_ruber_in_S%C3%A3o_Paulo_Zoo.jpg")  center / contain no-repeat;
-//  white-space: nowrap;
-//  display:inline
-//}
-//
-//
-//.option2{
-//  background:  url("src/assets/e-commerce/products/1.jpg")  center / contain no-repeat;
-//  white-space: nowrap;
-//  display:inline;
-//}
+/* اکشن‌ها */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  
+  .btn {
+    flex: 1;
+    padding: 12px;
+  }
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+/* ولیدیشن */
+.ng-invalid.ng-touched {
+  border-color: #ff4757 !important;
+}
+
+/* رسپانسیو */
+@media (max-width: 768px) {
+  .preview-item {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .feature-item {
+    gap: 8px;
+  }
+}

@@ -1,18 +1,29 @@
 <section class="add-product">
-    <h2 class="add-product__title">افزودن محصول جدید</h2>
-
+<h2 class="add-product__title">
+  {{ product?.id ? 'ویرایش محصول' : 'افزودن محصول جدید' }}
+</h2>
     <form [formGroup]="form" (ngSubmit)="save()" class="product__form">
 
 
 
-
-
-        <div class="form-group">
+ <div class="form-group">
             <label class="form-label">آپلود تصاویر</label>
-            <input id="imageUpload" type="file" multiple accept="image/*" class="form-input"
-                (change)="onFileChange($event)" />
-        </div>
 
+            <label class="upload-wrapper" 
+                    (drop)="onFileDrop($event)" 
+                    (dragover)="onDragOver($event)"
+                    (dragleave)="onDragLeave($event)"> <!-- اضافه کردن dragleave -->
+                <div class="upload-area" [class.drag-over]="isDragOver">
+                    <div class="upload-content">
+                        <i>📁</i>
+                        <div class="upload-text">برای آپلود کلیک کنید یا فایل‌ها را اینجا بکشید</div>
+                        <span>فرمت‌های مجاز: JPG, PNG, GIF, WebP</span>
+                    </div>
+                </div>
+                <input id="imageUpload" type="file" multiple accept="image/*" class="file-input" 
+                       (change)="onFileChange($event)" /> <!-- اضافه کردن event change -->
+            </label>
+        </div>
 
         <div class="preview-list" *ngIf="selectedFiles.length > 0">
             <div class="preview-item" *ngFor="let file of selectedFiles; let i = index">
@@ -33,14 +44,11 @@
                     ❌ خطا در آپلود
                 </div>
 
-
                 <button type="button" class="btn btn--remove" (click)="removeFile(i)">
                     ×
                 </button>
             </div>
         </div>
-
-
 
 
         <div class="form-group">
