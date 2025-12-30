@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProductEditPageComponent implements OnInit {
   public routes: typeof routes = routes;
-  public product: ProductDetails | null = null; 
+  public product: ProductDetails | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,7 +39,7 @@ export class ProductEditPageComponent implements OnInit {
 
     const id = +this.route.snapshot.params['id'];
     updatedProduct.id = id;
-
+    updatedProduct._initialDetailIds = this.product?._initialDetailIds;
     this.service.saveChangedProduct(updatedProduct).subscribe({
       next: (response) => {
         this.toastr.success(response.message || 'محصول با موفقیت ویرایش  شد');

@@ -23,24 +23,27 @@ export class ProductPageComponent implements OnInit {
     private toastr: ToastrService,
   ) { }
 
-  ngOnInit() {
-    const id = +this.route.snapshot.params['id'];
-
+ngOnInit() {
+  this.route.params.subscribe(params => {
+    const id = +params['id'];
     if (id) {
-      this.service.getProduct(id).subscribe({
-        next: (product) => {
-          this.product = product;
-          if (product?.image && product.image.length > 0) {
-            this.selectedImage = product.image[0].url;
-          }
-        },
-        error: (err) => {
-          this.toastr.error('خطا در دریافت اطلاعات محصول');
-          console.error(err);
-        }
-      });
+      this.loadProduct(id);
     }
-  }
+  });
+}
+
+loadProduct(id: number) {
+  this.service.getProduct(id).subscribe({
+    next: product => {
+      this.product = product;
+      this.selectedImage = product?.image?.[0]?.url || '';
+    },
+    error: () => {
+      this.toastr.error('خطا در دریافت اطلاعات محصول');
+    }
+  });
+}
+
 
   selectImage(image: string): void {
     this.selectedImage = image;

@@ -1,12 +1,8 @@
-
 <app-breadcrumb [path]="routes.PRODUCT"></app-breadcrumb>  
 <mat-card class="product-info-wrapper">
-  <!-- گالری تصاویر محصول -->
   <div class="product-gallery">
-    <!-- تصویر اصلی -->
     <img class="main-product-image" [src]="selectedImage || product?.image?.url" alt="product-main-image">
     
-    <!-- لیست تصاویر کوچک -->
     <div class="thumbnail-wrapper" *ngIf="product?.image?.length > 0">
       <div class="thumbnail-list">
         <img 
@@ -19,7 +15,6 @@
       </div>
     </div>
     
-    <!-- دکمه‌های مدیریت تصاویر -->
     <div class="admin-image-actions">
       <button mat-raised-button color="primary" (click)="addImage()">
         <mat-icon>add_photo_alternate</mat-icon>
@@ -33,7 +28,6 @@
   </div>
 
   <div class="info-wrapper">
-    <!-- هدر اطلاعات محصول -->
     <div class="info-header">
       <div class="info-inner-wrapper">
         <h1 class="product-title">{{product?.productName}}</h1>
@@ -50,7 +44,6 @@
       </div>
     </div>
 
-    <!-- اطلاعات قیمت و موجودی -->
     <div class="price-stock-info">
       <div class="info-card">
         <h3>قیمت‌گذاری</h3>
@@ -81,7 +74,6 @@
       </div>
     </div>
 
-    <!-- دکمه‌های مدیریت -->
     <div class="admin-actions">
       <button mat-raised-button color="primary" (click)="editProduct()">
         <mat-icon>edit</mat-icon>
@@ -104,7 +96,6 @@
       </button>
     </div>
 
-    <!-- اطلاعات فنی -->
     <div class="technical-info">
       <div class="info-card">
         <h3>اطلاعات فنی</h3>
@@ -133,10 +124,8 @@
   </div>
 </mat-card>
 
-<!-- تب‌های اطلاعات تکمیلی -->
 <mat-card class="product-details-tabs">
   <mat-tab-group>
-    <!-- تب توضیحات -->
     <mat-tab label="توضیحات">
       <div class="tab-content">
         <h3>توضیحات کامل محصول</h3>
@@ -155,7 +144,6 @@
       </div>
     </mat-tab>
 
-    <!-- تب تصاویر -->
     <mat-tab label="تصاویر محصول">
       <div class="tab-content">
         <div class="image-management">
@@ -192,7 +180,6 @@
       </div>
     </mat-tab>
 
-    <!-- تب جزئیات فنی -->
     <mat-tab label="جزئیات فنی">
       <div class="tab-content">
         <div class="specs-table" *ngIf="product?.details && product.details.length > 0">
@@ -212,4 +199,4 @@
       </div>
     </mat-tab>
   </mat-tab-group>
-</mat-card>
+</mat-card> -->
