@@ -8,7 +8,8 @@ import { DiscountDetailComponent } from './containers/discount-deatails/discount
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'list'
+    redirectTo: 'list',
+     pathMatch: 'full', 
   },
   {
     path: 'list',
@@ -18,6 +19,8 @@ const routes: Routes = [
     path: 'detail',
     component: DiscountDetailComponent,
   },
+
+  
 ,
 ];
 

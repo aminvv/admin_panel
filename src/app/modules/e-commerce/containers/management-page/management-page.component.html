@@ -103,7 +103,7 @@
             <th mat-header-cell *matHeaderCellDef class="table-header"> تخفیف </th>
             <td mat-cell *matCellDef="let element" class="table-body discount-cell">
               <ng-container *ngIf="!element.discounts?.length; else hasDiscount">
-                <button mat-raised-button class="discount-btn discount-create" (click)="goToCreateDiscount(element)">
+                <button mat-raised-button class="discount-btn discount-create"  [routerLink]="routes.DISCOUNT_DETAILS">
                   افزودن تخفیف
                 </button>
               </ng-container>

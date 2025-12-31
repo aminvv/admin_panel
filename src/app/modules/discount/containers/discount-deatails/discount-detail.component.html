@@ -1,62 +1,269 @@
-<form class="discount-form">
-
-  <!-- Discount Type -->
-  <div class="form-group">
-    <label>نوع تخفیف</label>
-    <select name="type">
-      <option value="Basket">سبد خرید</option>
-      <option value="product">محصول</option>
-    </select>
-  </div>
-
-  <!-- Discount Code -->
-  <div class="form-group">
-    <label>کد تخفیف</label>
-    <input type="text" name="code" placeholder="مثلاً YALDA1403" />
-    <small>برای تخفیف سبد خرید اجباری است</small>
-  </div>
-
-  <!-- Product -->
-  <div class="form-group">
-    <label>محصول</label>
-    <select name="productId">
-      <option value="">انتخاب محصول</option>
-      <option value="1">ایزوگام شرق</option>
-      <option value="2">ایزوگام غرب</option>
-    </select>
-  </div>
-
-  <!-- Discount Value -->
-  <div class="form-group">
-    <label>مقدار تخفیف</label>
-
-    <div class="radio-group">
-      <label>
-        <input type="radio" name="discountMode" value="percent" checked />
-        درصد
-      </label>
-      <label>
-        <input type="radio" name="discountMode" value="amount" />
-        مبلغ
-      </label>
+<div class="discount-detail-page">
+  <!-- هدر صفحه -->
+  <div class="page-header">
+    <div class="container">
+      <div class="header-content">
+        <button mat-icon-button class="back-btn" (click)="onCancel()" [disabled]="loading">
+          <mat-icon class="back-icon">arrow_back</mat-icon>
+          <span class="back-text">بازگشت</span>
+        </button>
+        
+        <div class="header-info">
+          <h1 class="page-title">
+            <mat-icon class="title-icon">local_offer</mat-icon>
+            {{ isEditMode ? 'مدیریت تخفیف' : 'ایجاد تخفیف جدید' }}
+          </h1>
+          <p class="page-subtitle" *ngIf="productName && shouldShowProductIdField()">
+            <mat-icon>inventory_2</mat-icon>
+            <span>محصول: <strong>{{ productName }}</strong></span>
+          </p>
+        </div>
+      </div>
     </div>
-
-    <input type="number" name="percent" placeholder="درصد تخفیف" />
-    <input type="number" name="amount" placeholder="مبلغ تخفیف (تومان)" />
   </div>
 
-  <!-- Limit -->
-  <div class="form-group">
-    <label>محدودیت استفاده</label>
-    <input type="number" name="limit" placeholder="مثلاً 100" />
+  <!-- محتوای اصلی -->
+  <div class="page-content">
+    <div class="container">
+      <!-- فرم تخفیف -->
+      <mat-card class="discount-card">
+        <mat-card-header>
+          <div class="card-header-content">
+            <mat-icon class="card-icon">discount</mat-icon>
+            <div class="card-title-group">
+              <mat-card-title>{{ isEditMode ? 'ویرایش تخفیف' : 'مشخصات تخفیف' }}</mat-card-title>
+              <mat-card-subtitle>لطفا اطلاعات مورد نیاز را وارد کنید</mat-card-subtitle>
+            </div>
+          </div>
+        </mat-card-header>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-content>
+          <form [formGroup]="discountForm" (ngSubmit)="onSubmit()" class="discount-form">
+            <!-- بخش نوع تخفیف -->
+            <div class="form-section">
+              <h3 class="section-title">
+                <mat-icon>settings</mat-icon>
+                تنظیمات نوع تخفیف
+              </h3>
+              
+              <div class="type-selector">
+                <mat-button-toggle-group formControlName="type" class="type-toggle-group">
+                  <mat-button-toggle *ngFor="let type of discountTypes" [value]="type.value" class="type-toggle">
+                    <div class="toggle-content">
+                      <mat-icon>{{ type.icon }}</mat-icon>
+                      <span>{{ type.label }}</span>
+                    </div>
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+                
+                <div class="type-description">
+                  <mat-icon class="desc-icon">info</mat-icon>
+                  <span>{{ getTypeDescription(discountForm.get('type')?.value) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- بخش اطلاعات تخفیف -->
+            <div class="form-section">
+              <h3 class="section-title">
+                <mat-icon>description</mat-icon>
+                اطلاعات تخفیف
+              </h3>
+              
+              <div class="form-grid">
+                <!-- شناسه محصول (فقط برای تخفیف‌های محصولی) -->
+                <div class="form-field" *ngIf="shouldShowProductIdField()">
+                  <mat-form-field appearance="fill">
+                    <mat-label>شناسه محصول *</mat-label>
+                    <input matInput type="number" formControlName="productId" [readonly]="isProductIdReadonly()">
+                    <mat-icon matPrefix>tag</mat-icon>
+                    <mat-hint>شناسه محصول مورد نظر</mat-hint>
+                    <mat-error *ngIf="discountForm.get('productId')?.touched">
+                      {{ getFieldError('productId') }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- کد تخفیف (برای انواعی که نیاز به کد دارند) -->
+                <div class="form-field" *ngIf="shouldShowCodeField()">
+                  <mat-form-field appearance="fill">
+                    <mat-label>کد تخفیف *</mat-label>
+                    <input matInput formControlName="code" placeholder="مثال: SUMMER24" dir="ltr">
+                    <mat-icon matPrefix>qr_code</mat-icon>
+                    <mat-hint>کد منحصر به فرد تخفیف</mat-hint>
+                    <mat-error *ngIf="discountForm.get('code')?.touched">
+                      {{ getFieldError('code') }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- انتخاب نوع مقدار تخفیف -->
+                <div class="value-type-selector">
+                  <mat-button-toggle-group class="value-toggle-group">
+                    <mat-button-toggle (click)="onValueTypeChange(true)" [class.active]="showPercentField">
+                      <div class="toggle-option">
+                        <mat-icon>percent</mat-icon>
+                        <span>درصدی</span>
+                      </div>
+                    </mat-button-toggle>
+                    <mat-button-toggle (click)="onValueTypeChange(false)" [class.active]="showAmountField">
+                      <div class="toggle-option">
+                        <mat-icon>attach_money</mat-icon>
+                        <span>مبلغی</span>
+                      </div>
+                    </mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+
+                <!-- درصد تخفیف -->
+                <div class="form-field" *ngIf="showPercentField">
+                  <mat-form-field appearance="fill">
+                    <mat-label>درصد تخفیف</mat-label>
+                    <input matInput type="number" formControlName="percent" min="1" max="100" step="1">
+                    <span matSuffix>%</span>
+                    <mat-icon matPrefix>percent</mat-icon>
+                    <mat-hint>عدد بین ۱ تا ۱۰۰</mat-hint>
+                    <mat-error *ngIf="discountForm.get('percent')?.touched">
+                      {{ getFieldError('percent') }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- مبلغ تخفیف -->
+                <div class="form-field" *ngIf="showAmountField">
+                  <mat-form-field appearance="fill">
+                    <mat-label>مبلغ تخفیف</mat-label>
+                    <input matInput type="number" formControlName="amount" min="0" step="1000">
+                    <span matSuffix>تومان</span>
+                    <mat-icon matPrefix>payments</mat-icon>
+                    <mat-hint>مبلغ به تومان</mat-hint>
+                    <mat-error *ngIf="discountForm.get('amount')?.touched">
+                      {{ getFieldError('amount') }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- محدودیت تعداد -->
+                <div class="form-field">
+                  <mat-form-field appearance="fill">
+                    <mat-label>محدودیت تعداد استفاده</mat-label>
+                    <input matInput type="number" formControlName="limit" min="1">
+                    <mat-icon matPrefix>repeat_one</mat-icon>
+                    <mat-hint>خالی = نامحدود</mat-hint>
+                    <mat-error *ngIf="discountForm.get('limit')?.touched">
+                      {{ getFieldError('limit') }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- تاریخ انقضا -->
+                <div class="form-field">
+                  <mat-form-field appearance="fill">
+                    <mat-label>تاریخ انقضا *</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="expires_in" [min]="minDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-icon matPrefix>event</mat-icon>
+                    <mat-error *ngIf="discountForm.get('expires_in')?.touched">
+                      {{ getFieldError('expires_in') }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- هشدار -->
+              <div class="form-alert" *ngIf="!discountForm.get('percent')?.value && !discountForm.get('amount')?.value">
+                <mat-icon>warning</mat-icon>
+                <div class="alert-content">
+                  <strong>توجه:</strong> لطفاً یکی از گزینه‌های "درصد تخفیف" یا "مبلغ تخفیف" را پر کنید
+                </div>
+              </div>
+            </div>
+
+            <!-- دکمه‌های action -->
+            <div class="form-actions">
+              <button 
+                mat-stroked-button 
+                type="button" 
+                (click)="onCancel()" 
+                [disabled]="loading"
+                class="action-btn cancel-btn">
+                <mat-icon>close</mat-icon>
+                انصراف
+              </button>
+              
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit" 
+                [disabled]="discountForm.invalid || loading"
+                class="action-btn submit-btn">
+                <div class="btn-content">
+                  <mat-icon *ngIf="!loading">{{ isEditMode ? 'save' : 'add_circle' }}</mat-icon>
+                  <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+                  <span>{{ loading ? 'در حال پردازش...' : (isEditMode ? 'ذخیره تغییرات' : 'ایجاد تخفیف') }}</span>
+                </div>
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- کارت راهنما -->
+      <div class="help-section">
+        <mat-card class="help-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="help-icon">help_outline</mat-icon>
+            <mat-card-title>راهنمای انواع تخفیف</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="help-items">
+              <div class="help-item">
+                <div class="help-icon-wrapper">
+                  <mat-icon>inventory_2</mat-icon>
+                </div>
+                <div class="help-text">
+                  <h4>تخفیف محصول (بدون کد)</h4>
+                  <p>مستقیماً روی محصول خاص اعمال می‌شود - نیازی به کد ندارد</p>
+                </div>
+              </div>
+              
+              <div class="help-item">
+                <div class="help-icon-wrapper">
+                  <mat-icon>local_offer</mat-icon>
+                </div>
+                <div class="help-text">
+                  <h4>تخفیف محصول (با کد)</h4>
+                  <p>برای محصول خاص با کد مخصوص - مشتری باید کد را وارد کند</p>
+                </div>
+              </div>
+              
+              <div class="help-item">
+                <div class="help-icon-wrapper">
+                  <mat-icon>shopping_cart</mat-icon>
+                </div>
+                <div class="help-text">
+                  <h4>تخفیف سبد خرید</h4>
+                  <p>تخفیف عمومی برای کل سبد خرید - نیاز به کد دارد</p>
+                </div>
+              </div>
+              
+              <div class="help-item">
+                <div class="help-icon-wrapper">
+                  <mat-icon>info</mat-icon>
+                </div>
+                <div class="help-text">
+                  <h4>مهم</h4>
+                  <p>درصد و مبلغ نمی‌توانند همزمان پر شوند - فقط یکی را انتخاب کنید</p>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
   </div>
-
-  <!-- Expire Date -->
-  <div class="form-group">
-    <label>تاریخ انقضا</label>
-    <input type="date" name="expires_in" />
-  </div>
-
-  <button type="submit">ثبت تخفیف</button>
-
-</form>
+</div>

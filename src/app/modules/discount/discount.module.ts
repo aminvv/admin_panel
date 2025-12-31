@@ -13,6 +13,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 // import { ProductsService } from './services';
@@ -23,6 +25,10 @@ import { ProductService } from '../e-commerce/services';
 import { DiscountRoutingModule } from './discount-routing.module';
 import { DiscountDetailComponent } from './containers/discount-deatails/discount-detail.component';
 import { ManagementDiscountComponent } from './containers/management-discount/management-discount.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -38,18 +44,24 @@ import { ManagementDiscountComponent } from './containers/management-discount/ma
     MatCardModule,
     MatIconModule,
     MatChipsModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatInputModule,
+    MatRadioModule,
     MatTableModule,
     MatTooltipModule,
     MatCheckboxModule,
     MatSortModule,
+    MatNativeDateModule,
     MatPaginatorModule,
     ReactiveFormsModule,
     CKEditorModule,
+      MatProgressSpinnerModule,
+  MatDatepickerModule,
   ],
   providers: [
     

@@ -22,6 +22,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpInterceptorService } from './shared/services/http-interceptor.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @NgModule({
   declarations: [AppComponent, NotFoundComponent],
@@ -43,6 +45,8 @@ import { HttpInterceptorService } from './shared/services/http-interceptor.servi
     }),
     MatIconModule,
     MatMenuModule,
+    MatDialogModule,
+    MatDatepickerModule,
     MatRadioModule,
     MatSlideToggleModule,
     FormsModule,
@@ -54,6 +58,7 @@ import { HttpInterceptorService } from './shared/services/http-interceptor.servi
       useClass: HttpInterceptorService,
       multi: true,
     },
+        MatDatepickerModule
   ],
   bootstrap: [AppComponent],
 })

@@ -1,199 +1,670 @@
-@import "src/app/styles/colors";
-@import "src/app/styles/font";
-@import "src/app/styles/variables";
-
-.order-page {
-  direction: rtl;
-  padding: 24px;
-  background: #f5f7fb;
-  font-family: IRANSans, sans-serif;
+// متغیرها
+:root {
+    --primary-color: #4361ee;
+    --primary-light: #e8edff;
+    --secondary-color: #7209b7;
+    --success-color: #06d6a0;
+    --warning-color: #ffd166;
+    --danger-color: #ef476f;
+    --dark-color: #2b2d42;
+    --light-color: #f8f9fa;
+    --gray-color: #adb5bd;
+    --border-color: #dee2e6;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+    --transition: all 0.3s ease;
 }
 
-/* Header */
-.page-header {
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-  margin-bottom: 24px;
-}
-
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-
-  h2 {
+// ریست و تنظیمات اولیه
+* {
     margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-  }
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.primary-btn {
-  padding: 8px 16px;
-  border-radius: 10px;
-  border: none;
-  background: #2563eb;
-  color: white;
-  font-size: 13px;
-  cursor: pointer;
-
-  &:hover {
-    background: #1d4ed8;
-  }
+body {
+    font-family: 'Vazirmatn', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: var(--dark-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-.filters {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 12px;
+.discount-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
 
-  input,
-  select {
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    font-size: 14px;
+// استایل هدر
+.discount-header {
     background: white;
-    outline: none;
+    border-radius: var(--radius);
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
 
-    &:focus {
-      border-color: #2563eb;
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+
+        h1 {
+            color: var(--dark-color);
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            i {
+                color: var(--primary-color);
+            }
+        }
     }
-  }
+
+    .header-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+
+        .stat-card {
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: var(--transition);
+
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow);
+            }
+
+            .stat-icon {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+
+                &.active {
+                    background: rgba(6, 214, 160, 0.2);
+                    color: var(--success-color);
+                }
+
+                &.expired {
+                    background: rgba(239, 71, 111, 0.2);
+                    color: var(--danger-color);
+                }
+
+                &.usage {
+                    background: rgba(67, 97, 238, 0.2);
+                    color: var(--primary-color);
+                }
+            }
+
+            .stat-info {
+                h3 {
+                    font-size: 32px;
+                    margin-bottom: 5px;
+                }
+
+                p {
+                    color: var(--gray-color);
+                    font-size: 14px;
+                }
+            }
+        }
+    }
 }
 
-/* Stats */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.stat {
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-
-  span {
-    font-size: 22px;
-    font-weight: bold;
-    display: block;
-  }
-
-  p {
-    margin: 6px 0 0;
-    color: #666;
-    font-size: 14px;
-  }
-
-  &.green span { color: #16a34a; }
-  &.yellow span { color: #f59e0b; }
-  &.blue span { color: #2563eb; }
-}
-
-/* Table */
-.table-wrapper {
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead {
-  background: #f1f5f9;
-
-  th {
-    padding: 14px;
-    font-size: 14px;
-    text-align: right;
-    color: #555;
-  }
-}
-
-tbody tr {
-  border-bottom: 1px solid #eee;
-
-  &:hover {
-    background: #f9fafb;
-  }
-}
-
-td {
-  padding: 14px;
-  font-size: 14px;
-
-  strong {
-    display: block;
-  }
-
-  span {
-    font-size: 12px;
-    color: #888;
-  }
-}
-
-/* Badges */
-.badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-
-  &.success {
-    background: #dcfce7;
-    color: #15803d;
-  }
-
-  &.warning {
-    background: #fef3c7;
-    color: #b45309;
-  }
-
-  &.pending {
-    background: #e5e7eb;
-    color: #374151;
-  }
-}
-
-/* Actions */
-.actions {
-  display: flex;
-  gap: 8px;
-}
-
-.action {
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  border: none;
-  cursor: pointer;
-  transition: 0.2s;
-
-  &.view {
-    background: #eef2ff;
-    color: #4338ca;
+// دکمه‌ها
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition);
 
     &:hover {
-      background: #e0e7ff;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
     }
-  }
 
-  &.status {
-    background: #ecfeff;
-    color: #0369a1;
+    &.btn-primary {
+        background: var(--primary-color);
+        color: white;
 
-    &:hover {
-      background: #cffafe;
+        &:hover {
+            background: #3a56d4;
+        }
     }
-  }
+
+    &.btn-secondary {
+        background: var(--light-color);
+        color: var(--dark-color);
+
+        &:hover {
+            background: #e9ecef;
+        }
+    }
+}
+
+// جدول
+.discount-table-container {
+    background: white;
+    border-radius: var(--radius);
+    padding: 30px;
+    box-shadow: var(--shadow);
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+
+        .search-box {
+            position: relative;
+            width: 300px;
+
+            i {
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--gray-color);
+            }
+
+            input {
+                width: 100%;
+                padding: 12px 45px 12px 15px;
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                font-size: 16px;
+                transition: var(--transition);
+
+                &:focus {
+                    outline: none;
+                    border-color: var(--primary-color);
+                }
+            }
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 15px;
+
+            select {
+                padding: 12px 20px;
+                border: 2px solid var(--border-color);
+                border-radius: 8px;
+                font-size: 16px;
+                background: white;
+                cursor: pointer;
+                transition: var(--transition);
+
+                &:focus {
+                    outline: none;
+                    border-color: var(--primary-color);
+                }
+            }
+        }
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .discount-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        thead {
+            background: var(--light-color);
+
+            th {
+                padding: 18px;
+                text-align: right;
+                font-weight: 600;
+                color: var(--dark-color);
+                border-bottom: 2px solid var(--border-color);
+                white-space: nowrap;
+            }
+        }
+
+        tbody {
+            tr {
+                border-bottom: 1px solid var(--border-color);
+                transition: var(--transition);
+
+                &:hover {
+                    background: var(--primary-light);
+                }
+
+                td {
+                    padding: 18px;
+                    text-align: right;
+                }
+            }
+        }
+    }
+}
+
+// سلول کد تخفیف
+.code-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .discount-code {
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        color: var(--primary-color);
+        background: var(--primary-light);
+        padding: 6px 12px;
+        border-radius: 6px;
+    }
+
+    .copy-btn {
+        background: none;
+        border: none;
+        color: var(--gray-color);
+        cursor: pointer;
+        transition: var(--transition);
+        padding: 5px;
+
+        &:hover {
+            color: var(--primary-color);
+        }
+    }
+}
+
+// بدج‌های وضعیت
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+
+    &.active {
+        background: rgba(6, 214, 160, 0.2);
+        color: var(--success-color);
+    }
+
+    &.expired {
+        background: rgba(239, 71, 111, 0.2);
+        color: var(--danger-color);
+    }
+
+    &.limit {
+        background: rgba(255, 209, 102, 0.2);
+        color: #e6b400;
+    }
+}
+
+// بدج نوع تخفیف
+.type-badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+
+    &.percent {
+        background: rgba(67, 97, 238, 0.1);
+        color: var(--primary-color);
+    }
+
+    &.amount {
+        background: rgba(114, 9, 183, 0.1);
+        color: var(--secondary-color);
+    }
+}
+
+// نوار پیشرفت
+.usage-progress {
+    position: relative;
+    height: 30px;
+    background: var(--light-color);
+    border-radius: 6px;
+    overflow: hidden;
+
+    .progress-bar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        background: var(--primary-color);
+        transition: width 0.3s ease;
+    }
+
+    span {
+        position: absolute;
+        top: 50%;
+        right: 50%;
+        transform: translate(50%, -50%);
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+        z-index: 1;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+}
+
+// تگ محصولات
+.products-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .product-tag {
+        background: var(--light-color);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        color: var(--dark-color);
+    }
+}
+
+// دکمه‌های عملیات
+.action-buttons {
+    display: flex;
+    gap: 10px;
+
+    .action-btn {
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: var(--transition);
+
+        &.edit {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+
+            &:hover {
+                background: var(--primary-color);
+                color: white;
+            }
+        }
+
+        &.delete {
+            background: rgba(239, 71, 111, 0.1);
+            color: var(--danger-color);
+
+            &:hover {
+                background: var(--danger-color);
+                color: white;
+            }
+        }
+
+        &.view {
+            background: rgba(6, 214, 160, 0.1);
+            color: var(--success-color);
+
+            &:hover {
+                background: var(--success-color);
+                color: white;
+            }
+        }
+    }
+}
+
+// پاگرد جدول
+.table-footer {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+
+            &:hover {
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+
+        .page-info {
+            font-weight: 500;
+        }
+    }
+}
+
+// مودال
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 800px;
+        max-height: 90vh;
+        background: white;
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 25px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+            font-size: 24px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            transition: var(--transition);
+
+            &:hover {
+                transform: scale(1.2);
+            }
+        }
+    }
+
+    .modal-body {
+        padding: 30px;
+        overflow-y: auto;
+        max-height: calc(90vh - 85px);
+    }
+}
+
+// فرم
+#discountForm {
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark-color);
+
+            i {
+                color: var(--primary-color);
+            }
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: var(--transition);
+
+            &:focus {
+                outline: none;
+                border-color: var(--primary-color);
+            }
+        }
+
+        .input-with-unit {
+            position: relative;
+
+            .input-unit {
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--gray-color);
+                font-weight: 500;
+            }
+
+            input {
+                padding-left: 60px;
+            }
+        }
+
+        small {
+            display: block;
+            margin-top: 5px;
+            color: var(--gray-color);
+            font-size: 12px;
+        }
+
+        select[multiple] {
+            min-height: 120px;
+            padding: 10px;
+        }
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 40px;
+        padding-top: 25px;
+        border-top: 2px solid var(--border-color);
+    }
+}
+
+// انیمیشن‌ها
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+// رسپانسیو
+@media (max-width: 1200px) {
+    .discount-container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .discount-header {
+        .header-content {
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .header-stats {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .discount-table-container {
+        .table-header {
+            flex-direction: column;
+            gap: 20px;
+
+            .search-box {
+                width: 100%;
+            }
+
+            .filter-options {
+                width: 100%;
+                flex-direction: column;
+            }
+        }
+    }
+
+    .modal .modal-content {
+        width: 95%;
+        margin: 10px;
+    }
+
+    #discountForm .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .discount-header, 
+    .discount-table-container {
+        padding: 20px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
 }

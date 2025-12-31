@@ -1,126 +1,409 @@
-<div class="order-page">
-
-  <!-- Header -->
-  <div class="page-header">
-    <div class="header-top">
-      <h2>لیست سفارش‌ها</h2>
-      <button class="primary-btn">خروجی اکسل</button>
-    </div>
-
-    <div class="filters">
-      <input type="text" placeholder="جستجو شماره سفارش یا مشتری">
-
-      <select>
-        <option>همه وضعیت‌ها</option>
-        <option>در انتظار پرداخت</option>
-        <option>ثبت شده</option>
-        <option>در حال آماده‌سازی</option>
-        <option>ارسال شده</option>
-        <option>تحویل داده شده</option>
-        <option>لغو شده</option>
-      </select>
-
-      <select>
-        <option>همه پرداخت‌ها</option>
-        <option>آنلاین</option>
-        <option>نقدی</option>
-      </select>
-
-      <input type="date">
-    </div>
-  </div>
-
-  <!-- Stats -->
-  <div class="stats">
-    <div class="stat green">
-      <span>{{ 520 | number:'1.0-0' | persianNumber }}</span>
-      <p>کل سفارش‌ها</p>
-    </div>
-
-    <div class="stat yellow">
-      <span>{{ 64 | number:'1.0-0' | persianNumber }}</span>
-      <p>سفارش جدید</p>
-    </div>
-
-    <div class="stat blue">
-      <span>{{ 23300000 | number:'1.0-0' | persianNumber }}</span>
-      <p>فروش ماه (تومان)</p>
-    </div>
-  </div>
-
-  <!-- Orders Table -->
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th>شماره سفارش</th>
-          <th>مشتری</th>
-          <th>مبلغ کل</th>
-          <th>وضعیت سفارش</th>
-          <th>نوع پرداخت</th>
-          <th>تاریخ ثبت</th>
-          <th>عملیات</th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        <tr>
-          <td>#{{ 1023 | persianNumber }}</td>
-          <td>
-            <strong>علی پنلی</strong>
-            <span>{{ '09121111111' | persianNumber }}</span>
-          </td>
-          <td>{{ 1480000 | number:'1.0-0' | persianNumber }}</td>
-          <td><span class="badge success">تحویل شده</span></td>
-          <td>Online</td>
-          <td>{{ '1403/02/20' | persianNumber }}</td>
-          <td>
-            <div class="actions">
-              <button class="action view" routerLink="/discount/detail">جزئیات</button>
-              <button class="action status">تغییر وضعیت</button>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت کدهای تخفیف</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="discount-container">
+        <!-- هدر -->
+        <header class="discount-header">
+            <div class="header-content">
+                <h1>
+                    <i class="fas fa-tag"></i>
+                    مدیریت کدهای تخفیف
+                </h1>
+                <button class="btn btn-primary" id="addDiscountBtn">
+                    <i class="fas fa-plus-circle"></i>
+                    ایجاد کد تخفیف جدید
+                </button>
             </div>
-          </td>
-        </tr>
-
-        <tr>
-          <td>#{{ 1022 | persianNumber }}</td>
-          <td>
-            <strong>محمد احمدی</strong>
-            <span>{{ '09123333333' | persianNumber }}</span>
-          </td>
-          <td>{{ 750000 | number:'1.0-0' | persianNumber }}</td>
-          <td><span class="badge warning">در حال ارسال</span></td>
-          <td>Cash</td>
-          <td>{{ '1403/02/19' | persianNumber }}</td>
-          <td>
-            <div class="actions">
-              <button class="action view">جزئیات</button>
-              <button class="action status">تغییر وضعیت</button>
+            <div class="header-stats">
+                <div class="stat-card">
+                    <div class="stat-icon active">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p>تخفیف فعال</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon expired">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>5</h3>
+                        <p>منقضی شده</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon usage">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>42</h3>
+                        <p>استفاده شده</p>
+                    </div>
+                </div>
             </div>
-          </td>
-        </tr>
+        </header>
 
-        <tr>
-          <td>#{{ 1021 | persianNumber }}</td>
-          <td>
-            <strong>سارا محمدی</strong>
-            <span>{{ '09124444444' | persianNumber }}</span>
-          </td>
-          <td>{{ 530000 | number:'1.0-0' | persianNumber }}</td>
-          <td><span class="badge pending">منتظر پرداخت</span></td>
-          <td>Online</td>
-          <td>{{ '1403/02/18' | persianNumber }}</td>
-          <td>
-            <div class="actions">
-              <button class="action view">جزئیات</button>
-              <button class="action status">تغییر وضعیت</button>
+        <!-- جدول کدهای تخفیف -->
+        <div class="discount-table-container">
+            <div class="table-header">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="جستجو در کدهای تخفیف...">
+                </div>
+                <div class="filter-options">
+                    <select id="filterType">
+                        <option value="all">همه تخفیف‌ها</option>
+                        <option value="percent">تخفیف درصدی</option>
+                        <option value="amount">تخفیف مبلغی</option>
+                    </select>
+                    <select id="filterStatus">
+                        <option value="all">همه وضعیت‌ها</option>
+                        <option value="active">فعال</option>
+                        <option value="expired">منقضی شده</option>
+                        <option value="limit">تکمیل ظرفیت</option>
+                    </select>
+                </div>
             </div>
-          </td>
-        </tr>
 
-      </tbody>
-    </table>
-  </div>
+            <div class="table-responsive">
+                <table class="discount-table">
+                    <thead>
+                        <tr>
+                            <th>کد تخفیف</th>
+                            <th>نوع تخفیف</th>
+                            <th>مقدار</th>
+                            <th>تاریخ انقضا</th>
+                            <th>محدودیت استفاده</th>
+                            <th>موارد استفاده</th>
+                            <th>محصولات مرتبط</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="discountTableBody">
+                        <!-- داده‌ها به صورت دینامیک لود می‌شوند -->
+                    </tbody>
+                </table>
+            </div>
 
-</div>
+            <div class="table-footer">
+                <div class="pagination">
+                    <button class="page-btn" id="prevPage">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <span class="page-info">صفحه <span id="currentPage">1</span> از <span id="totalPages">3</span></span>
+                    <button class="page-btn" id="nextPage">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- مودال ایجاد/ویرایش تخفیف -->
+        <div class="modal" id="discountModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">ایجاد کد تخفیف جدید</h2>
+                    <button class="close-btn" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="discountForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="discountCode">
+                                    <i class="fas fa-code"></i>
+                                    کد تخفیف
+                                </label>
+                                <input type="text" id="discountCode" placeholder="مثال: SPRING2024" required>
+                                <small>کد باید یکتا باشد</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="discountType">
+                                    <i class="fas fa-tags"></i>
+                                    نوع تخفیف
+                                </label>
+                                <select id="discountType" required>
+                                    <option value="">انتخاب کنید</option>
+                                    <option value="percent">درصدی</option>
+                                    <option value="amount">مبلغی</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="discountValue" id="valueLabel">
+                                    <i class="fas fa-percentage"></i>
+                                    درصد تخفیف
+                                </label>
+                                <div class="input-with-unit">
+                                    <input type="number" id="discountValue" placeholder="10" required>
+                                    <span class="input-unit" id="valueUnit">%</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="usageLimit">
+                                    <i class="fas fa-users"></i>
+                                    محدودیت استفاده
+                                </label>
+                                <input type="number" id="usageLimit" placeholder="تعداد (اختیاری)">
+                                <small>در صورت عدم تعریف نامحدود است</small>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiryDate">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    تاریخ انقضا
+                                </label>
+                                <input type="datetime-local" id="expiryDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="relatedProducts">
+                                    <i class="fas fa-boxes"></i>
+                                    محصولات مرتبط
+                                </label>
+                                <select id="relatedProducts" multiple>
+                                    <option value="1">لپ‌تاپ گیمینگ</option>
+                                    <option value="2">موبایل سامسونگ</option>
+                                    <option value="3">هدفون بلوتوث</option>
+                                    <option value="4">موس گیمینگ</option>
+                                </select>
+                                <small>با Ctrl می‌توانید چند گزینه را انتخاب کنید</small>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelBtn">لغو</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                ذخیره تخفیف
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- اسکریپت -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // داده‌های نمونه
+            const sampleData = [
+                {
+                    id: 1,
+                    code: 'WELCOME20',
+                    type: 'percent',
+                    value: 20,
+                    expires_in: '2024-06-30T23:59:59',
+                    limit: 100,
+                    usage: 42,
+                    products: ['همه محصولات'],
+                    status: 'active'
+                },
+                {
+                    id: 2,
+                    code: 'SUMMER50',
+                    type: 'amount',
+                    value: 50000,
+                    expires_in: '2024-05-15T23:59:59',
+                    limit: 50,
+                    usage: 50,
+                    products: ['لپ‌تاپ گیمینگ', 'هدفون'],
+                    status: 'limit'
+                },
+                {
+                    id: 3,
+                    code: 'NEWYEAR10',
+                    type: 'percent',
+                    value: 10,
+                    expires_in: '2024-01-01T23:59:59',
+                    limit: null,
+                    usage: 15,
+                    products: ['همه محصولات'],
+                    status: 'expired'
+                }
+            ];
+
+            // المنت‌های DOM
+            const modal = document.getElementById('discountModal');
+            const addBtn = document.getElementById('addDiscountBtn');
+            const closeBtn = document.getElementById('closeModal');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const discountType = document.getElementById('discountType');
+            const tableBody = document.getElementById('discountTableBody');
+            const searchInput = document.getElementById('searchInput');
+
+            // تابع نمایش مودال
+            function openModal() {
+                modal.style.display = 'block';
+            }
+
+            // تابع بستن مودال
+            function closeModal() {
+                modal.style.display = 'none';
+                document.getElementById('discountForm').reset();
+            }
+
+            // تغییر نوع تخفیف
+            discountType.addEventListener('change', function() {
+                const valueLabel = document.getElementById('valueLabel');
+                const valueUnit = document.getElementById('valueUnit');
+                
+                if (this.value === 'percent') {
+                    valueLabel.innerHTML = '<i class="fas fa-percentage"></i> درصد تخفیف';
+                    valueUnit.textContent = '%';
+                    document.getElementById('discountValue').placeholder = '10';
+                } else if (this.value === 'amount') {
+                    valueLabel.innerHTML = '<i class="fas fa-money-bill-wave"></i> مبلغ تخفیف';
+                    valueUnit.textContent = 'تومان';
+                    document.getElementById('discountValue').placeholder = '50000';
+                }
+            });
+
+            // تابع فرمت تاریخ
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('fa-IR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+
+            // تابع تولید وضعیت
+            function getStatusBadge(status) {
+                const badges = {
+                    active: '<span class="status-badge active"><i class="fas fa-check-circle"></i> فعال</span>',
+                    expired: '<span class="status-badge expired"><i class="fas fa-clock"></i> منقضی</span>',
+                    limit: '<span class="status-badge limit"><i class="fas fa-ban"></i> تکمیل ظرفیت</span>'
+                };
+                return badges[status] || '';
+            }
+
+            // تابع نمایش داده در جدول
+            function renderTable(data) {
+                tableBody.innerHTML = '';
+                
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div class="code-cell">
+                                <span class="discount-code">${item.code}</span>
+                                <button class="copy-btn" onclick="copyToClipboard('${item.code}')">
+                                    <i class="far fa-copy"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="type-badge ${item.type}">
+                                ${item.type === 'percent' ? 'درصدی' : 'مبلغی'}
+                            </span>
+                        </td>
+                        <td>
+                            <strong>${item.type === 'percent' ? item.value + '%' : item.value.toLocaleString() + ' تومان'}</strong>
+                        </td>
+                        <td>${formatDate(item.expires_in)}</td>
+                        <td>${item.limit ? item.limit + ' بار' : 'نامحدود'}</td>
+                        <td>
+                            <div class="usage-progress">
+                                <div class="progress-bar" style="width: ${(item.usage / (item.limit || item.usage + 1)) * 100}%"></div>
+                                <span>${item.usage} / ${item.limit || '∞'}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="products-tags">
+                                ${item.products.map(p => `<span class="product-tag">${p}</span>`).join('')}
+                            </div>
+                        </td>
+                        <td>${getStatusBadge(item.status)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit" onclick="editDiscount(${item.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete" onclick="deleteDiscount(${item.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <button class="action-btn view" onclick="viewDiscount(${item.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // جستجو
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const filteredData = sampleData.filter(item => 
+                    item.code.toLowerCase().includes(searchTerm) ||
+                    item.products.some(p => p.toLowerCase().includes(searchTerm))
+                );
+                renderTable(filteredData);
+            });
+
+            // اولیه‌سازی
+            renderTable(sampleData);
+
+            // رویدادها
+            addBtn.addEventListener('click', openModal);
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+
+            // بستن مودال با کلیک خارج از آن
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // ثبت فرم
+            document.getElementById('discountForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // در اینجا کد ارسال به سرور قرار می‌گیرد
+                alert('کد تخفیف با موفقیت ذخیره شد!');
+                closeModal();
+            });
+        });
+
+        // توابع عمومی
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            alert(`کد ${text} در کلیپ‌بورد کپی شد!`);
+        }
+
+        function editDiscount(id) {
+            document.getElementById('modalTitle').textContent = 'ویرایش کد تخفیف';
+            // در اینجا داده‌های تخفیف بارگذاری می‌شود
+            document.getElementById('discountModal').style.display = 'block';
+        }
+
+        function deleteDiscount(id) {
+            if (confirm('آیا از حذف این کد تخفیف مطمئن هستید؟')) {
+                // در اینجا کد حذف از سرور قرار می‌گیرد
+                alert('کد تخفیف حذف شد!');
+            }
+        }
+
+        function viewDiscount(id) {
+            alert('نمایش جزئیات کد تخفیف');
+        }
+    </script>
+</body>
+</html>
