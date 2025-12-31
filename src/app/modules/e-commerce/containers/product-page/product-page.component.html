@@ -15,16 +15,6 @@
       </div>
     </div>
     
-    <div class="admin-image-actions">
-      <button mat-raised-button color="primary" (click)="addImage()">
-        <mat-icon>add_photo_alternate</mat-icon>
-        افزودن تصویر
-      </button>
-      <button mat-raised-button color="warn" (click)="removeImage(selectedImage)" [disabled]="!selectedImage">
-        <mat-icon>delete</mat-icon>
-        حذف تصویر انتخابی
-      </button>
-    </div>
   </div>
 
   <div class="info-wrapper">
@@ -53,7 +43,7 @@
         </div>
         <div class="info-row">
           <span>قیمت:</span>
-          <strong class="final-price">{{product?.price | currency:'تومان'}}</strong>
+          <strong class="final-price">{{ product?.price | currency:'تومان':'symbol':'1.0-0' }}</strong>
         </div>
         <div class="info-row">
           <span>تخفیف:</span>
@@ -144,42 +134,6 @@
       </div>
     </mat-tab>
 
-    <mat-tab label="تصاویر محصول">
-      <div class="tab-content">
-        <div class="image-management">
-          <div class="upload-section">
-            <h4>آپلود تصاویر جدید</h4>
-            <input type="file" #fileInput multiple (change)="onFileSelected($event)" accept="image/*" hidden>
-            <button mat-raised-button (click)="fileInput.click()">
-              <mat-icon>cloud_upload</mat-icon>
-              انتخاب فایل‌ها
-            </button>
-            <button mat-raised-button color="primary" (click)="uploadImages()" [disabled]="!selectedFiles.length">
-              آپلود تصاویر
-            </button>
-          </div>
-          
-          <div class="images-list">
-            <h4>تصاویر فعلی ({{product?.image?.length || 0}})</h4>
-            <div class="images-grid">
-              <div class="image-item" *ngFor="let img of product?.image; let i = index">
-                <img [src]="img?.url" [alt]="'image-' + i">
-                <div class="image-actions">
-                  <button mat-icon-button color="primary" (click)="selectImage(img?.url)">
-                    <mat-icon>visibility</mat-icon>
-                  </button>
-                  <button mat-icon-button color="warn" (click)="deleteImage(img?.url)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </div>
-                <span class="image-index">{{i + 1}}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </mat-tab>
-
     <mat-tab label="جزئیات فنی">
       <div class="tab-content">
         <div class="specs-table" *ngIf="product?.details && product.details.length > 0">
@@ -193,10 +147,8 @@
           <p>هیچ جزئیات فنی برای این محصول ثبت نشده است.</p>
         </div>
         
-        <button mat-raised-button color="primary" (click)="editSpecifications()">
-          ویرایش جزئیات فنی
-        </button>
+
       </div>
     </mat-tab>
   </mat-tab-group>
-</mat-card> -->
+</mat-card>

@@ -108,36 +108,15 @@ loadProduct(id: number) {
     }
   }
 
-  addImage(): void {
-    this.toastr.info('قابلیت افزودن تصویر در حال توسعه است');
-  }
 
-  removeImage(imageUrl: string): void {
-    if (confirm('آیا از حذف این تصویر اطمینان دارید؟')) {
-      this.toastr.success('تصویر با موفقیت حذف شد (نمایشی)');
-      // اینجا منطق واقعی حذف تصویر
-    }
-  }
 
-  onFileSelected(event: any): void {
-    this.selectedFiles = Array.from(event.target.files);
-    this.toastr.info(`${this.selectedFiles.length} فایل انتخاب شد`);
-  }
+
+
 
   uploadImages(): void {
     if (this.selectedFiles.length === 0) return;
     this.toastr.success('تصاویر با موفقیت آپلود شدند (نمایشی)');
     this.selectedFiles = [];
-  }
-
-  deleteImage(imageUrl: string): void {
-    this.removeImage(imageUrl);
-  }
-
-  editSpecifications(): void {
-    if (this.product?.id) {
-      this.router.navigate([`/admin/products/specs/${this.product.id}`]);
-    }
   }
 
   objectToArray(obj: any): Array<{ key: string, value: any }> {
