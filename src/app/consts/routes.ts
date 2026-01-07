@@ -40,8 +40,9 @@ export enum routes {
   // --- discount ---//
 
   DISCOUNT_LIST = '/discount/list',
-  DISCOUNT_DETAILS = '/discount/detail',
-
+  DISCOUNT_PRODUCT = '/discount/product',
+  DISCOUNT_EDIT = '/discount/edit',
+  DISCOUNT_DETAILS='/discount/detail',
 
 
   // --- Documentation ---//

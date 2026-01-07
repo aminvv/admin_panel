@@ -37,7 +37,8 @@ const routes: Routes = [
   {
     path: 'product/:id',
     component: ProductPageComponent,
-  }
+  },
+  
 ];
 
 @NgModule({

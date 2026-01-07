@@ -102,13 +102,17 @@
                 <!-- انتخاب نوع مقدار تخفیف -->
                 <div class="value-type-selector">
                   <mat-button-toggle-group class="value-toggle-group">
-                    <mat-button-toggle (click)="onValueTypeChange(true)" [class.active]="showPercentField">
+                    <mat-button-toggle 
+                      [checked]="showPercentField"
+                      (click)="onValueTypeChange(true)">
                       <div class="toggle-option">
                         <mat-icon>percent</mat-icon>
                         <span>درصدی</span>
                       </div>
                     </mat-button-toggle>
-                    <mat-button-toggle (click)="onValueTypeChange(false)" [class.active]="showAmountField">
+                    <mat-button-toggle 
+                      [checked]="showAmountField"
+                      (click)="onValueTypeChange(false)">
                       <div class="toggle-option">
                         <mat-icon>attach_money</mat-icon>
                         <span>مبلغی</span>

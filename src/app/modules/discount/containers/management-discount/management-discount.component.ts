@@ -4,9 +4,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { BlogService } from '../../services';
+import { DiscountService } from '../../services';
 import { Observable } from 'rxjs';
-import { BlogDetails } from '../../models/blog-details';
+import { DiscountDetails } from '../../models/discount-details';
 import { switchMap, take } from 'rxjs/operators';
 import { DeletePopupComponent } from '../../../../shared/popups/delete-popup/delete-popup.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,9 +21,9 @@ export class ManagementDiscountComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   public routes: typeof routes = routes;
-  public blogs$: Observable<BlogDetails[]>;
+  public Discounts$: Observable<DiscountDetails[]>;
   public displayedColumns: string[] = ['id', 'thumbnail',  'title','description',  'slug', 'category', 'status','actions'];
-  public dataSource: MatTableDataSource<BlogDetails>;
+  public dataSource: MatTableDataSource<DiscountDetails>;
   deleteConfirmSubscription;
   selectedId: number;
 
@@ -49,21 +49,21 @@ export class ManagementDiscountComponent implements OnInit {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: BlogDetails): string {
+  checkboxLabel(row?: DiscountDetails): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
   }
 
-  constructor(private service: BlogService,
+  constructor(private service: DiscountService,
     private toastr: ToastrService,
     public dialog: MatDialog) {
-    this.blogs$ = this.service.getBlogs();
+    this.Discounts$ = this.service.getDiscounts();
 
-    this.blogs$.pipe(
+    this.Discounts$.pipe(
       take(1)
-    ).subscribe((products: BlogDetails[]) => {
+    ).subscribe((products: DiscountDetails[]) => {
       this.dataSource = new MatTableDataSource(products);
     });
   }
@@ -87,12 +87,12 @@ export class ManagementDiscountComponent implements OnInit {
 
 
   public delete(id: number) {
-    this.service.deleteBlog(id).pipe(
+    this.service.deleteDiscount(id).pipe(
       switchMap((response: any) => {
 
         const message = response && response.message? String(response.message): 'وبلاگ با موفقیت حذف شد';
         this.toastr.success(message);
-        return this.service.getBlogs();
+        return this.service.getDiscounts();
       }),
       take(1)
     ).subscribe({

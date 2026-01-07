@@ -1,4 +1,4 @@
-import {RouterModule, Routes} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { ManagementDiscountComponent } from './containers/management-discount/management-discount.component';
 import { DiscountDetailComponent } from './containers/discount-deatails/discount-detail.component';
@@ -9,19 +9,12 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'list',
-     pathMatch: 'full', 
+    pathMatch: 'full',
   },
-  {
-    path: 'list',
-    component: ManagementDiscountComponent,
-  },
-  {
-    path: 'detail',
-    component: DiscountDetailComponent,
-  },
+  { path: 'list', component: ManagementDiscountComponent },
+  { path: 'product/:productId', component: DiscountDetailComponent },
+  { path: 'edit/:discountId', component: DiscountDetailComponent },
 
-  
-,
 ];
 
 @NgModule({

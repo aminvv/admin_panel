@@ -5,13 +5,14 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ProductService } from '../../services';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ProductDetails } from '../../models/product-details';
 import { switchMap, take } from 'rxjs/operators';
 import { DeletePopupComponent } from '../../../../shared/popups/delete-popup/delete-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { DiscountService } from 'src/app/modules/discount/services';
 
 @Component({
   selector: 'app-management-page',
@@ -28,6 +29,7 @@ export class ManagementPageComponent implements OnInit {
   public desktopColumns = this.displayedColumns;
   public mobileColumns = ['mobileView'];
   public dataSource: MatTableDataSource<ProductDetails>;
+  refreshSubscription: Subscription;
   deleteConfirmSubscription;
   selectedId: number;
 
@@ -63,16 +65,19 @@ export class ManagementPageComponent implements OnInit {
   constructor(
     private router: Router,
     private service: ProductService,
+    private discountService: DiscountService,
     private toastr: ToastrService,
     public dialog: MatDialog
-  ) {
-    this.products$ = this.service.getProducts();
 
-    this.products$.pipe(
-      take(1)
-    ).subscribe((products: ProductDetails[]) => {
-      this.dataSource = new MatTableDataSource(products);
-    });
+  ) {
+    this.loadProducts();
+    // this.products$ = this.service.getProducts();
+
+    // this.products$.pipe(
+    //   take(1)
+    // ).subscribe((products: ProductDetails[]) => {
+    //   this.dataSource = new MatTableDataSource(products);
+    // });
   }
 
   ngOnInit() {
@@ -81,7 +86,29 @@ export class ManagementPageComponent implements OnInit {
   }
 
 
+  ngOnDestroy() {
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
+  }
 
+
+
+    loadProducts() {
+    this.service.getProducts().pipe(
+      take(1)
+    ).subscribe({
+      next: (products: ProductDetails[]) => {
+        this.dataSource = new MatTableDataSource(products);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      },
+      error: (error) => {
+        console.error('خطا در دریافت محصولات:', error);
+        this.toastr.error('خطا در دریافت لیست محصولات');
+      }
+    });
+  }
 
 
   openDeleteModal(id: number): void {
@@ -132,16 +159,45 @@ export class ManagementPageComponent implements OnInit {
     });
   }
 
-  goToUpdateDiscount(product: any) {
-    this.router.navigate(['/discount/edit', product.id], {
-      state: { product }
-    });
+  goToUpdateDiscount(element: any) {
+    const discount = element.discounts[0];
+
+
+    this.router.navigate(
+      [this.routes.DISCOUNT_EDIT, discount.id],
+      {
+        state: {
+          product: element,
+          discount: discount
+        }
+      }
+    );
   }
 
 
-  removeDiscount(product: any) {
-    // تایید + حذف تخفیف
-    console.log('remove discount for', product);
+
+  // removeDiscount(id: number) {
+  //   this.discountService.deleteDiscount(id).subscribe({
+  //     next: (response) => {
+  //       this.toastr.success(response.message || 'تخفیف با موفقیت حذف  شد');
+  //       this.router.navigate([this.routes.MANAGEMENT]);
+  //     },
+  //   })
+
+
+
+
+  removeDiscount(discountId: number) {
+    this.discountService.deleteDiscount(discountId).subscribe({
+      next: (response: any) => {
+        this.toastr.success(response.message || 'تخفیف با موفقیت حذف شد');
+          this.loadProducts()
+      },
+      error: (err) => {
+        const errorMessage = err.error?.message || 'خطا در حذف تخفیف';
+        this.toastr.error(errorMessage);
+      }
+    });
   }
 
 

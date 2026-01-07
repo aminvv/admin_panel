@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 .discount-detail-page {
   background: #f8fafc;
   min-height: 100vh;
@@ -7,6 +16,10 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 16px;
+    
+    @media (max-width: 480px) {
+      padding: 0 12px;
+    }
   }
 
   .page-header {
@@ -24,6 +37,10 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
+      }
+      
+      @media (max-width: 480px) {
+        gap: 12px;
       }
 
       .back-btn {
@@ -53,12 +70,17 @@
           font-size: 14px;
           margin-left: 12px;
           font-weight: 500;
+          
+          @media (max-width: 480px) {
+            font-size: 13px;
+          }
         }
       }
 
       .header-info {
         flex: 1;
         direction: rtl;
+        padding-left: 155px;
 
         .page-title {
           margin: 0;
@@ -77,15 +99,32 @@
           @media (max-width: 768px) {
             font-size: 20px;
           }
+          
+          @media (max-width: 480px) {
+            font-size: 18px;
+            gap: 8px;
+            
+            .title-icon {
+              font-size: 24px;
+              width: 24px;
+              height: 24px;
+            }
+          }
         }
 
         .page-subtitle {
           margin: 8px 0 0 0;
           display: flex;
+          justify-content: flex-start;
           align-items: center;
           gap: 8px;
           opacity: 0.9;
           font-size: 14px;
+
+          @media (max-width: 480px) {
+            font-size: 13px;
+            flex-wrap: wrap;
+          }
 
           strong {
             background: rgba(255, 255, 255, 0.2);
@@ -103,6 +142,10 @@
     @media (max-width: 768px) {
       padding: 24px 0;
     }
+    
+    @media (max-width: 480px) {
+      padding: 20px 0;
+    }
 
     .discount-card {
       margin-bottom: 32px;
@@ -110,9 +153,18 @@
       overflow: hidden;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
       border: 1px solid #e2e8f0;
+      
+      @media (max-width: 768px) {
+        margin-bottom: 24px;
+        border-radius: 12px;
+      }
 
       mat-card-header {
         padding: 24px 24px 16px;
+        
+        @media (max-width: 480px) {
+          padding: 20px 16px 12px;
+        }
 
         .card-header-content {
           display: flex;
@@ -120,6 +172,10 @@
           direction: rtl;
           gap: 16px;
           width: 100%;
+          
+          @media (max-width: 480px) {
+            gap: 12px;
+          }
 
           .card-icon {
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
@@ -129,6 +185,14 @@
             font-size: 32px;
             width: 32px;
             height: 32px;
+            
+            @media (max-width: 480px) {
+              padding: 10px;
+              font-size: 28px;
+              width: 28px;
+              height: 28px;
+              border-radius: 10px;
+            }
           }
 
           .card-title-group {
@@ -137,12 +201,20 @@
               color: #1e293b;
               font-size: 20px;
               font-weight: 700;
+              
+              @media (max-width: 480px) {
+                font-size: 18px;
+              }
             }
 
             mat-card-subtitle {
               margin: 4px 0 0 0;
               color: #64748b;
               font-size: 14px;
+              
+              @media (max-width: 480px) {
+                font-size: 13px;
+              }
             }
           }
         }
@@ -151,10 +223,22 @@
       mat-divider {
         margin: 0 24px;
         border-color: #f1f5f9;
+        
+        @media (max-width: 480px) {
+          margin: 0 16px;
+        }
       }
 
       mat-card-content {
         padding: 32px 24px;
+        
+        @media (max-width: 768px) {
+          padding: 24px;
+        }
+        
+        @media (max-width: 480px) {
+          padding: 20px 16px;
+        }
 
         .discount-form {
           .form-section {
@@ -168,6 +252,16 @@
               margin-bottom: 0;
               padding-bottom: 0;
             }
+            
+            @media (max-width: 768px) {
+              margin-bottom: 32px;
+              padding-bottom: 24px;
+            }
+            
+            @media (max-width: 480px) {
+              margin-bottom: 24px;
+              padding-bottom: 20px;
+            }
 
             .section-title {
               margin: 0 0 24px 0;
@@ -178,6 +272,12 @@
               display: flex;
               align-items: center;
               gap: 12px;
+              
+              @media (max-width: 480px) {
+                font-size: 16px;
+                gap: 8px;
+                margin-bottom: 20px;
+              }
 
               mat-icon {
                 color: #6366f1;
@@ -190,6 +290,11 @@
                 gap: 16px;
                 border: none;
                 background: none;
+                
+                @media (max-width: 768px) {
+                  flex-direction: column;
+                  gap: 12px;
+                }
 
                 .type-toggle {
                   flex: 1;
@@ -198,6 +303,14 @@
                   padding: 20px;
                   transition: all 0.3s;
                   background: white;
+                  
+                  @media (max-width: 768px) {
+                    padding: 16px;
+                  }
+                  
+                  @media (max-width: 480px) {
+                    padding: 14px 12px;
+                  }
 
                   &::ng-deep .mat-button-toggle-label-content {
                     line-height: 1;
@@ -210,18 +323,43 @@
                     flex-direction: column;
                     align-items: center;
                     gap: 12px;
+                    
+                    @media (max-width: 768px) {
+                      flex-direction: row;
+                      justify-content: flex-start;
+                    }
+                    
+                    @media (max-width: 480px) {
+                      gap: 8px;
+                    }
 
                     mat-icon {
                       font-size: 32px;
                       width: 32px;
                       height: 32px;
                       color: #64748b;
+                      
+                      @media (max-width: 768px) {
+                        font-size: 28px;
+                        width: 28px;
+                        height: 28px;
+                      }
+                      
+                      @media (max-width: 480px) {
+                        font-size: 24px;
+                        width: 24px;
+                        height: 24px;
+                      }
                     }
 
                     span {
                       font-size: 14px;
                       font-weight: 600;
                       color: #475569;
+                      
+                      @media (max-width: 480px) {
+                        font-size: 13px;
+                      }
                     }
                   }
 
@@ -230,7 +368,6 @@
                     background: rgba(99, 102, 241, 0.05);
 
                     .toggle-content {
-
                       mat-icon,
                       span {
                         color: #6366f1;
@@ -256,6 +393,13 @@
                 border-radius: 8px;
                 color: #475569;
                 font-size: 14px;
+                
+                @media (max-width: 480px) {
+                  padding: 12px;
+                  gap: 8px;
+                  margin-top: 16px;
+                  font-size: 13px;
+                }
 
                 .desc-icon {
                   color: #6366f1;
@@ -271,12 +415,69 @@
 
               @media (max-width: 768px) {
                 grid-template-columns: 1fr;
+                gap: 16px;
+              }
+              
+              @media (max-width: 480px) {
+                gap: 12px;
               }
 
               .form-field {
+                // استایل خاص برای فیلدهای درصد و مبلغ
+                &[ng-reflect-name="percent"], 
+                &[ng-reflect-name="amount"] {
+                  mat-form-field {
+                    ::ng-deep {
+                      .mat-form-field-flex {
+                        @media (max-width: 480px) {
+                          padding: 0 10px;
+                        }
+                      }
+                      
+                      .mat-form-field-prefix {
+                        margin-right: 8px;
+                        
+                        @media (max-width: 480px) {
+                          margin-right: 4px;
+                        }
+                      }
+                      
+                      .mat-form-field-suffix {
+                        margin-left: 8px;
+                        
+                        @media (max-width: 480px) {
+                          margin-left: 4px;
+                          
+                          span {
+                            font-size: 14px;
+                          }
+                        }
+                      }
+                      
+                      .mat-input-element {
+                        text-align: left;
+                        direction: ltr;
+                        
+                        @media (max-width: 480px) {
+                          font-size: 16px;
+                        }
+                      }
+                    }
+                  }
+                }
+                
                 mat-form-field {
                   width: 100%;
-                       font-size: 18px;
+                  font-size: 18px;
+                  
+                  @media (max-width: 768px) {
+                    font-size: 16px;
+                  }
+                  
+                  @media (max-width: 480px) {
+                    font-size: 15px;
+                  }
+                  
                   ::ng-deep {
                     .mat-form-field-wrapper {
                       padding-bottom: 10;
@@ -288,6 +489,16 @@
                       padding: 0 16px;
                       border: 1px solid #e2e8f0;
                       transition: all 0.3s;
+                      
+                      @media (max-width: 768px) {
+                        padding: 0 14px;
+                        border-radius: 10px;
+                      }
+                      
+                      @media (max-width: 480px) {
+                        padding: 0 12px;
+                        border-radius: 8px;
+                      }
 
                       &:hover {
                         border-color: #94a3b8;
@@ -300,20 +511,72 @@
 
                     .mat-form-field-subscript-wrapper {
                       margin-top: 4px;
+                      font-size: 12px;
+                      
+                      @media (max-width: 480px) {
+                        font-size: 11px;
+                      }
                     }
 
                     .mat-form-field-prefix {
                       color: #6366f1;
                       margin-left: 8px;
+                      
+                      @media (max-width: 480px) {
+                        margin-left: 4px;
+                        font-size: 20px;
+                        width: 20px;
+                        height: 20px;
+                      }
+                    }
+                    
+                    .mat-form-field-suffix {
+                      color: #64748b;
+                      font-size: 15px;
+                      
+                      @media (max-width: 480px) {
+                        font-size: 14px;
+                      }
                     }
 
                     .mat-input-element {
                       color: #1e293b;
                       padding: 16px 0;
+                      
+                      @media (max-width: 768px) {
+                        padding: 14px 0;
+                      }
+                      
+                      @media (max-width: 480px) {
+                        padding: 12px 0;
+                        font-size: 15px;
+                      }
                     }
 
                     .mat-form-field-label {
                       color: #64748b;
+                      font-size: 15px;
+                      
+                      @media (max-width: 480px) {
+                        font-size: 14px;
+                      }
+                    }
+                    
+                    .mat-hint {
+                      font-size: 12px;
+                      color: #94a3b8;
+                      
+                      @media (max-width: 480px) {
+                        font-size: 11px;
+                      }
+                    }
+                    
+                    .mat-error {
+                      font-size: 12px;
+                      
+                      @media (max-width: 480px) {
+                        font-size: 11px;
+                      }
                     }
                   }
 
@@ -333,27 +596,54 @@
                   background: none;
                   display: flex;
                   gap: 12px;
+                  
+                  @media (max-width: 768px) {
+                    flex-direction: row;
+                    gap: 8px;
+                  }
 
                   .mat-button-toggle {
                     border: 2px solid #e2e8f0;
                     border-radius: 8px;
                     padding: 12px 24px;
                     transition: all 0.3s;
+                    
+                    @media (max-width: 768px) {
+                      width: 100%;
+                      justify-content: center;
+                      padding: 12px 16px;
+                    }
+                    
+                    @media (max-width: 480px) {
+                      padding: 10px 14px;
+                    }
 
                     .toggle-option {
                       display: flex;
                       align-items: center;
                       gap: 8px;
+                      
+                      @media (max-width: 480px) {
+                        gap: 6px;
+                      }
 
                       mat-icon {
                         font-size: 20px;
                         color: #64748b;
+                        
+                        @media (max-width: 480px) {
+                          font-size: 18px;
+                        }
                       }
 
                       span {
                         font-size: 14px;
                         font-weight: 500;
                         color: #475569;
+                        
+                        @media (max-width: 480px) {
+                          font-size: 13px;
+                        }
                       }
                     }
 
@@ -362,7 +652,6 @@
                       background: rgba(99, 102, 241, 0.05);
 
                       .toggle-option {
-
                         mat-icon,
                         span {
                           color: #6366f1;
@@ -388,6 +677,12 @@
               background: #fef3c7;
               border: 1px solid #fde68a;
               border-radius: 8px;
+              
+              @media (max-width: 480px) {
+                padding: 12px;
+                gap: 8px;
+                margin-top: 20px;
+              }
 
               mat-icon {
                 color: #d97706;
@@ -398,6 +693,10 @@
               .alert-content {
                 color: #92400e;
                 font-size: 14px;
+                
+                @media (max-width: 480px) {
+                  font-size: 13px;
+                }
 
                 strong {
                   font-weight: 600;
@@ -416,6 +715,15 @@
 
             @media (max-width: 768px) {
               flex-direction: column;
+              margin-top: 32px;
+              padding-top: 24px;
+              gap: 12px;
+            }
+            
+            @media (max-width: 480px) {
+              margin-top: 24px;
+              padding-top: 20px;
+              gap: 10px;
             }
 
             .action-btn {
@@ -431,6 +739,12 @@
               @media (max-width: 768px) {
                 width: 100%;
                 justify-content: center;
+                padding: 14px 24px;
+              }
+              
+              @media (max-width: 480px) {
+                padding: 12px 20px;
+                font-size: 14px;
               }
 
               &.cancel-btn {
@@ -447,6 +761,11 @@
                 background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
                 color: white;
                 min-width: 180px;
+                
+                @media (max-width: 768px) {
+                  min-width: auto;
+                  width: 100%;
+                }
 
                 &:hover:not([disabled]) {
                   transform: translateY(-2px);
@@ -486,9 +805,17 @@
         border-radius: 16px;
         background: #f8fafc;
         border: 1px solid #e2e8f0;
+        
+        @media (max-width: 768px) {
+          border-radius: 12px;
+        }
 
         mat-card-header {
           padding: 24px 24px 16px;
+          
+          @media (max-width: 480px) {
+            padding: 20px 16px 12px;
+          }
 
           .help-icon {
             background: #10b981;
@@ -502,11 +829,19 @@
             color: #1e293b;
             font-size: 18px;
             font-weight: 700;
+            
+            @media (max-width: 480px) {
+              font-size: 16px;
+            }
           }
         }
 
         mat-card-content {
           padding: 0 24px 24px;
+          
+          @media (max-width: 480px) {
+            padding: 0 16px 20px;
+          }
 
           .help-items {
             .help-item {
@@ -518,6 +853,13 @@
               background: white;
               border-radius: 12px;
               border: 1px solid #f1f5f9;
+              
+              @media (max-width: 480px) {
+                padding: 16px;
+                gap: 12px;
+                margin-bottom: 16px;
+                border-radius: 10px;
+              }
 
               &:last-child {
                 margin-bottom: 0;
@@ -529,6 +871,12 @@
                   font-size: 24px;
                   width: 24px;
                   height: 24px;
+                  
+                  @media (max-width: 480px) {
+                    font-size: 20px;
+                    width: 20px;
+                    height: 20px;
+                  }
                 }
               }
 
@@ -538,6 +886,10 @@
                   color: #1e293b;
                   font-size: 15px;
                   font-weight: 600;
+                  
+                  @media (max-width: 480px) {
+                    font-size: 14px;
+                  }
                 }
 
                 p {
@@ -545,9 +897,36 @@
                   color: #64748b;
                   font-size: 14px;
                   line-height: 1.5;
+                  
+                  @media (max-width: 480px) {
+                    font-size: 13px;
+                  }
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+}
+
+// استایل اضافی برای فیلدهای عددی در موبایل
+@media (max-width: 480px) {
+  .form-field {
+    // برای inputهای number در موبایل
+    input[type="number"] {
+      // جلوگیری از zoom در آیفون
+      font-size: 16px !important;
+    }
+    
+    // تنظیمات prefix و suffix در موبایل
+    mat-form-field {
+      ::ng-deep {
+        .mat-form-field-prefix,
+        .mat-form-field-suffix {
+          mat-icon, span {
+            font-size: 14px !important;
           }
         }
       }

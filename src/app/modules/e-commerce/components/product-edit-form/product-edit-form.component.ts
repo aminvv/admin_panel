@@ -245,7 +245,7 @@ export class ProductEditFormComponent implements OnChanges {
 
   // ================= SAVE =================
   public save(): void {
-    if (this.form.invalid) {
+    if (this.form.invalid ) {
       alert('لطفاً همه فیلدها را پر کنید');
       return;
     }
