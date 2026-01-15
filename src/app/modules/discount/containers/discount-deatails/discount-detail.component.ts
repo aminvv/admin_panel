@@ -7,7 +7,6 @@ import { routes } from 'src/app/consts';
 
 // منطق شما - سه حالت تخفیف
 export enum DiscountType {
-  BASKET_WITH_CODE = 'BASKET_WITH_CODE',     // سبد خرید (با کد)
   PRODUCT_WITH_CODE = 'PRODUCT_WITH_CODE',    // محصول (با کد)
   PRODUCT_WITHOUT_CODE = 'PRODUCT_WITHOUT_CODE' // محصول (بدون کد)
 }
@@ -32,12 +31,7 @@ export class DiscountDetailComponent implements OnInit {
       icon: 'local_offer',
       description: 'تخفیف با کد روی محصول خاص - مشتری باید کد را وارد کند'
     },
-    {
-      value: DiscountType.BASKET_WITH_CODE,
-      label: 'تخفیف سبد خرید',
-      icon: 'shopping_cart',
-      description: 'تخفیف عمومی با کد برای کل سبد خرید'
-    }
+
   ];
 
   minDate: Date;
@@ -112,12 +106,7 @@ this.discountForm.get('type')?.valueChanges
       codeControl?.setValidators([Validators.required, Validators.pattern('^[a-zA-Z0-9]+$')]);
       productIdControl?.setValidators([Validators.required, Validators.min(1)]);
     }
-    else if (type === DiscountType.BASKET_WITH_CODE) {
-      // برای سبد خرید - فقط کد اجباری
-      codeControl?.setValidators([Validators.required, Validators.pattern('^[a-zA-Z0-9]+$')]);
-      // برای سبد خرید، productId نباید داشته باشیم
-      productIdControl?.setValue(null);
-    }
+
 
     codeControl?.updateValueAndValidity();
     productIdControl?.updateValueAndValidity();
@@ -226,9 +215,7 @@ populateFormWithDiscountData(discount: any): void {
   let formType: DiscountType;
   if (discount.type === 'product') {
     formType = discount.code ? DiscountType.PRODUCT_WITH_CODE : DiscountType.PRODUCT_WITHOUT_CODE;
-  } else {
-    formType = DiscountType.BASKET_WITH_CODE;
-  }
+  } 
 
   const percentValue = discount.percent ? Number(discount.percent) : null;
   const amountValue = discount.amount ? Number(discount.amount) : null;
@@ -347,10 +334,7 @@ prepareFormData(): any {
   // تبدیل type فرانت به type بک‌اند
   if (rawData.type === DiscountType.PRODUCT_WITH_CODE || rawData.type === DiscountType.PRODUCT_WITHOUT_CODE) {
     rawData.type = 'product';
-  } else if (rawData.type === DiscountType.BASKET_WITH_CODE) {
-    rawData.type = 'basket';
-    delete rawData.productId; // برای سبد خرید productId نباید باشه
-  }
+  } 
 
   // حذف مقادیر null، undefined و خالی
   Object.keys(rawData).forEach(key => {
@@ -403,7 +387,7 @@ prepareFormData(): any {
 
   shouldShowProductIdField(): boolean {
     const type = this.discountForm.get('type')?.value;
-    return type !== DiscountType.BASKET_WITH_CODE;
+    return type
   }
 
   // آیا فیلد productId فقط خواندنی است؟
