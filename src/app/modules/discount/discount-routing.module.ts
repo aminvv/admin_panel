@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { ManagementDiscountComponent } from './containers/management-discount/management-discount.component';
 import { DiscountDetailComponent } from './containers/discount-deatails/discount-detail.component';
+import { DiscountBasketComponent } from './containers/discount-basket/discount-basket.component';
 
 
 
@@ -12,6 +13,7 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   { path: 'list', component: ManagementDiscountComponent },
+  { path: 'basket', component: DiscountBasketComponent },
   { path: 'product/:productId', component: DiscountDetailComponent },
   { path: 'edit/:discountId', component: DiscountDetailComponent },
 

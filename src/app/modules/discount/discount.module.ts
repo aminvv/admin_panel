@@ -29,11 +29,13 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
+import { DiscountBasketComponent } from './containers/discount-basket/discount-basket.component';
 
 @NgModule({
   declarations: [
     ManagementDiscountComponent,
     DiscountDetailComponent,
+    DiscountBasketComponent,
 
     
   ],

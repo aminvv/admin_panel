@@ -38,6 +38,7 @@ const TREE_DATA: any = [
     children: [
       { name: 'لیست تخفیفات', route: routes.DISCOUNT_LIST, active: 'active' },
       { name: 'جزئیات تخفیف', route: routes.DISCOUNT_DETAILS, active: 'active' },
+      { name: ' تخفیف سبدخرید', route: routes.DISCOUNT_BASKET, active: 'active' },
     ]
   },
 
