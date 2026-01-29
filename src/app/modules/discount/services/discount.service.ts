@@ -35,16 +35,25 @@ export class DiscountService {
 
 
 
-  //===================== GET DISCOUNTS ======================
-  public getDiscounts(): Observable<DiscountDetails[]> {
-    const headers = this.baseServe.getAuthHeader()
-    return this.http.get<discountResponse>(this.DiscountsGetUrl, { headers }).pipe(
-      tap(res => console.log('API response getDiscounts:', res)),
-      map(response => response.discount)
-    );
-  }
+  // //===================== GET DISCOUNTS ======================
+  // public getDiscounts(): Observable<DiscountDetails[]> {
+  //   const headers = this.baseServe.getAuthHeader()
+  //   return this.http.get<discountResponse>(this.DiscountsGetUrl, { headers }).pipe(
+  //     tap(res => console.log('API response getDiscounts:', res)),
+  //     map(response => response.discount)
+  //   );
+  // }
 
-
+// در فایل discount.service.ts
+//===================== GET DISCOUNTS ======================
+public getDiscounts(): Observable<DiscountDetails[]> {
+  const headers = this.baseServe.getAuthHeader()
+  return this.http.get<DiscountDetails[]>(this.DiscountsGetUrl, { headers }).pipe(
+    tap(res => console.log('API response (raw):', res)),
+    // map را کامنت کنید چون API شما آرایه مستقیم برمی‌گردد
+    // map(response => response.discount) // این خط را پاک یا کامنت کنید
+  );
+}
 
 
 

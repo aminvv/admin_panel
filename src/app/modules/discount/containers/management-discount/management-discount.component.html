@@ -1,410 +1,372 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدیریت کدهای تخفیف</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-    <div class="discount-container">
-        <!-- هدر -->
-        <header class="discount-header">
-            <div class="header-content">
-                <h1>
-                    <i class="fas fa-tag"></i>
-                    مدیریت کدهای تخفیف
-                </h1>
-                <button class="btn btn-primary" id="addDiscountBtn">
-                    <i class="fas fa-plus-circle"></i>
-                    ایجاد کد تخفیف جدید
-                </button>
-            </div>
-            <div class="header-stats">
-                <div class="stat-card">
-                    <div class="stat-icon active">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>12</h3>
-                        <p>تخفیف فعال</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon expired">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>5</h3>
-                        <p>منقضی شده</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon usage">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>42</h3>
-                        <p>استفاده شده</p>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- جدول کدهای تخفیف -->
-        <div class="discount-table-container">
-            <div class="table-header">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="جستجو در کدهای تخفیف...">
-                </div>
-                <div class="filter-options">
-                    <select id="filterType">
-                        <option value="all">همه تخفیف‌ها</option>
-                        <option value="percent">تخفیف درصدی</option>
-                        <option value="percent">تخفیف سبد</option>
-                        <option value="amount">تخفیف مبلغی</option>
-                    </select>
-                    <select id="filterStatus">
-                        <option value="all">همه وضعیت‌ها</option>
-                        <option value="active">فعال</option>
-                        <option value="expired">منقضی شده</option>
-                        <option value="limit">تکمیل ظرفیت</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="table-responsive">
-                <table class="discount-table">
-                    <thead>
-                        <tr>
-                            <th>کد تخفیف</th>
-                            <th>نوع تخفیف</th>
-                            <th>مقدار</th>
-                            <th>تاریخ انقضا</th>
-                            <th>محدودیت استفاده</th>
-                            <th>موارد استفاده</th>
-                            <th>محصولات مرتبط</th>
-                            <th>وضعیت</th>
-                            <th>عملیات</th>
-                        </tr>
-                    </thead>
-                    <tbody id="discountTableBody">
-                        <!-- داده‌ها به صورت دینامیک لود می‌شوند -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="table-footer">
-                <div class="pagination">
-                    <button class="page-btn" id="prevPage">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <span class="page-info">صفحه <span id="currentPage">1</span> از <span id="totalPages">3</span></span>
-                    <button class="page-btn" id="nextPage">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- مودال ایجاد/ویرایش تخفیف -->
-        <div class="modal" id="discountModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="modalTitle">ایجاد کد تخفیف جدید</h2>
-                    <button class="close-btn" id="closeModal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form id="discountForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="discountCode">
-                                    <i class="fas fa-code"></i>
-                                    کد تخفیف
-                                </label>
-                                <input type="text" id="discountCode" placeholder="مثال: SPRING2024" required>
-                                <small>کد باید یکتا باشد</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="discountType">
-                                    <i class="fas fa-tags"></i>
-                                    نوع تخفیف
-                                </label>
-                                <select id="discountType" required>
-                                    <option value="">انتخاب کنید</option>
-                                    <option value="percent">درصدی</option>
-                                    <option value="amount">مبلغی</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="discountValue" id="valueLabel">
-                                    <i class="fas fa-percentage"></i>
-                                    درصد تخفیف
-                                </label>
-                                <div class="input-with-unit">
-                                    <input type="number" id="discountValue" placeholder="10" required>
-                                    <span class="input-unit" id="valueUnit">%</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="usageLimit">
-                                    <i class="fas fa-users"></i>
-                                    محدودیت استفاده
-                                </label>
-                                <input type="number" id="usageLimit" placeholder="تعداد (اختیاری)">
-                                <small>در صورت عدم تعریف نامحدود است</small>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="expiryDate">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    تاریخ انقضا
-                                </label>
-                                <input type="datetime-local" id="expiryDate" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="relatedProducts">
-                                    <i class="fas fa-boxes"></i>
-                                    محصولات مرتبط
-                                </label>
-                                <select id="relatedProducts" multiple>
-                                    <option value="1">لپ‌تاپ گیمینگ</option>
-                                    <option value="2">موبایل سامسونگ</option>
-                                    <option value="3">هدفون بلوتوث</option>
-                                    <option value="4">موس گیمینگ</option>
-                                </select>
-                                <small>با Ctrl می‌توانید چند گزینه را انتخاب کنید</small>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" id="cancelBtn">لغو</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i>
-                                ذخیره تخفیف
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+<!-- management-discount.component.html -->
+<div class="discount-container">
+  <!-- هدر -->
+  <header class="discount-header">
+    <div class="header-content">
+      <h1>
+        <i class="material-icons">local_offer</i>
+        مدیریت کدهای تخفیف
+      </h1>
+      <button class="btn btn-primary" (click)="openCreateModal()">
+        <i class="material-icons">add_circle</i>
+        ایجاد کد تخفیف جدید
+      </button>
     </div>
 
-    <!-- اسکریپت -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // داده‌های نمونه
-            const sampleData = [
-                {
-                    id: 1,
-                    code: 'WELCOME20',
-                    type: 'percent',
-                    value: 20,
-                    expires_in: '2024-06-30T23:59:59',
-                    limit: 100,
-                    usage: 42,
-                    products: ['همه محصولات'],
-                    status: 'active'
-                },
-                {
-                    id: 2,
-                    code: 'SUMMER50',
-                    type: 'amount',
-                    value: 50000,
-                    expires_in: '2024-05-15T23:59:59',
-                    limit: 50,
-                    usage: 50,
-                    products: ['لپ‌تاپ گیمینگ', 'هدفون'],
-                    status: 'limit'
-                },
-                {
-                    id: 3,
-                    code: 'NEWYEAR10',
-                    type: 'percent',
-                    value: 10,
-                    expires_in: '2024-01-01T23:59:59',
-                    limit: null,
-                    usage: 15,
-                    products: ['همه محصولات'],
-                    status: 'expired'
-                }
-            ];
+    <!-- آمار -->
+    <div class="header-stats" *ngIf="!tableLoading">
+      <div class="stat-card">
+        <div class="stat-icon total">
+          <i class="material-icons">local_offer</i>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stats.total }}</h3>
+          <p>کل تخفیف‌ها</p>
+        </div>
+      </div>
 
-            // المنت‌های DOM
-            const modal = document.getElementById('discountModal');
-            const addBtn = document.getElementById('addDiscountBtn');
-            const closeBtn = document.getElementById('closeModal');
-            const cancelBtn = document.getElementById('cancelBtn');
-            const discountType = document.getElementById('discountType');
-            const tableBody = document.getElementById('discountTableBody');
-            const searchInput = document.getElementById('searchInput');
+      <div class="stat-card">
+        <div class="stat-icon active">
+          <i class="material-icons">check_circle</i>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stats.active }}</h3>
+          <p>تخفیف فعال</p>
+        </div>
+      </div>
 
-            // تابع نمایش مودال
-            function openModal() {
-                modal.style.display = 'block';
-            }
+      <div class="stat-card">
+        <div class="stat-icon expired">
+          <i class="material-icons">schedule</i>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stats.expired }}</h3>
+          <p>منقضی شده</p>
+        </div>
+      </div>
 
-            // تابع بستن مودال
-            function closeModal() {
-                modal.style.display = 'none';
-                document.getElementById('discountForm').reset();
-            }
+      <div class="stat-card">
+        <div class="stat-icon usage">
+          <i class="material-icons">trending_up</i>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stats.used }}</h3>
+          <p>استفاده شده</p>
+        </div>
+      </div>
+    </div>
+  </header>
 
-            // تغییر نوع تخفیف
-            discountType.addEventListener('change', function() {
-                const valueLabel = document.getElementById('valueLabel');
-                const valueUnit = document.getElementById('valueUnit');
-                
-                if (this.value === 'percent') {
-                    valueLabel.innerHTML = '<i class="fas fa-percentage"></i> درصد تخفیف';
-                    valueUnit.textContent = '%';
-                    document.getElementById('discountValue').placeholder = '10';
-                } else if (this.value === 'amount') {
-                    valueLabel.innerHTML = '<i class="fas fa-money-bill-wave"></i> مبلغ تخفیف';
-                    valueUnit.textContent = 'تومان';
-                    document.getElementById('discountValue').placeholder = '50000';
-                }
-            });
+  <!-- فیلترها و جستجو -->
+  <div class="filters-container" *ngIf="!tableLoading && dataSource.data.length > 0">
+    <div class="filters-row">
+      <div class="search-box">
+        <i class="material-icons">search</i>
+        <input type="text" [(ngModel)]="searchText" (ngModelChange)="applyFilter()"
+          placeholder="جستجو در کدهای تخفیف..." />
+      </div>
 
-            // تابع فرمت تاریخ
-            function formatDate(dateString) {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('fa-IR', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-            }
+      <div class="filter-controls">
+        <div class="filter-group">
+          <select [(ngModel)]="filterType" (ngModelChange)="applyFilter()">
+            <option value="all">همه انواع</option>
+            <option value="product">تخفیف محصول</option>
+            <option value="basket">تخفیف سبد خرید</option>
+          </select>
+        </div>
 
-            // تابع تولید وضعیت
-            function getStatusBadge(status) {
-                const badges = {
-                    active: '<span class="status-badge active"><i class="fas fa-check-circle"></i> فعال</span>',
-                    expired: '<span class="status-badge expired"><i class="fas fa-clock"></i> منقضی</span>',
-                    limit: '<span class="status-badge limit"><i class="fas fa-ban"></i> تکمیل ظرفیت</span>'
-                };
-                return badges[status] || '';
-            }
+        <div class="filter-group">
+          <select [(ngModel)]="filterStatus" (ngModelChange)="applyFilter()">
+            <option value="all">همه وضعیت‌ها</option>
+            <option value="active">فعال</option>
+            <option value="expired">منقضی شده</option>
+            <option value="limit">تکمیل ظرفیت</option>
+          </select>
+        </div>
 
-            // تابع نمایش داده در جدول
-            function renderTable(data) {
-                tableBody.innerHTML = '';
-                
-                data.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>
-                            <div class="code-cell">
-                                <span class="discount-code">${item.code}</span>
-                                <button class="copy-btn" onclick="copyToClipboard('${item.code}')">
-                                    <i class="far fa-copy"></i>
-                                </button>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="type-badge ${item.type}">
-                                ${item.type === 'percent' ? 'درصدی' : 'مبلغی'}
-                            </span>
-                        </td>
-                        <td>
-                            <strong>${item.type === 'percent' ? item.value + '%' : item.value.toLocaleString() + ' تومان'}</strong>
-                        </td>
-                        <td>${formatDate(item.expires_in)}</td>
-                        <td>${item.limit ? item.limit + ' بار' : 'نامحدود'}</td>
-                        <td>
-                            <div class="usage-progress">
-                                <div class="progress-bar" style="width: ${(item.usage / (item.limit || item.usage + 1)) * 100}%"></div>
-                                <span>${item.usage} / ${item.limit || '∞'}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="products-tags">
-                                ${item.products.map(p => `<span class="product-tag">${p}</span>`).join('')}
-                            </div>
-                        </td>
-                        <td>${getStatusBadge(item.status)}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit" onclick="editDiscount(${item.id})">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete" onclick="deleteDiscount(${item.id})">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <button class="action-btn view" onclick="viewDiscount(${item.id})">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            }
+        <button class="btn btn-secondary" (click)="clearFilters()">
+          <i class="material-icons">close</i>
+          پاک کردن فیلترها
+        </button>
+      </div>
+    </div>
+  </div>
 
-            // جستجو
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const filteredData = sampleData.filter(item => 
-                    item.code.toLowerCase().includes(searchTerm) ||
-                    item.products.some(p => p.toLowerCase().includes(searchTerm))
-                );
-                renderTable(filteredData);
-            });
+  <!-- حالت لودینگ -->
+  <div *ngIf="tableLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>در حال بارگذاری کدهای تخفیف...</p>
+  </div>
 
-            // اولیه‌سازی
-            renderTable(sampleData);
+  <!-- جدول تخفیف‌ها -->
+  <div *ngIf="!tableLoading && dataSource.data.length > 0" class="discount-table-container">
+    <div class="table-responsive">
+      <table class="discount-table">
+        <thead>
+          <tr>
+            <th>کد تخفیف</th>
+            <th>نوع تخفیف</th>
+            <th>مقدار</th>
+            <th>استفاده شده</th>
+            <th>محدودیت</th>
+            <th>تاریخ انقضا</th>
+            <th>وضعیت</th>
+            <th>عملیات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let discount of dataSource.data; trackBy: trackById">
+            <!-- کد تخفیف -->
+            <td data-label="کد تخفیف">
+              <div class="code-cell">
+                <span class="discount-code" [class.empty-code]="!discount.code">
+                  {{ discount.code || 'بدون کد' }}
+                </span>
+                <button *ngIf="discount.code" class="copy-btn" (click)="copyToClipboard(discount.code)" title="کپی کد">
+                  <i class="material-icons">content_copy</i>
+                </button>
+              </div>
+            </td>
 
-            // رویدادها
-            addBtn.addEventListener('click', openModal);
-            closeBtn.addEventListener('click', closeModal);
-            cancelBtn.addEventListener('click', closeModal);
+            <!-- نوع تخفیف -->
+            <td data-label="نوع تخفیف">
+              <div class="contentType-badge">
+                <span class="type-badge" [ngClass]="getTypeColor(discount.type)">
+                  <i class="material-icons">{{ getTypeIcon(discount.type) }}</i>
+                  {{ getTypeLabel(discount.type) }}
+                </span>
+                <div *ngIf="discount.productId && discount.productId > 0" class="product-info">
+                  <small>
+                    <i class="material-icons">sell</i>
+                    {{ getProductName(discount.productId) }}
+                  </small>
+                </div>
+              </div>
+            </td>
 
-            // بستن مودال با کلیک خارج از آن
-            window.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    closeModal();
-                }
-            });
+            <!-- مقدار تخفیف -->
+            <td data-label="مقدار">
+              <strong class="discount-value">
+                {{ getValueDisplay(discount)|persianNumber }}
+              </strong>
+            </td>
 
-            // ثبت فرم
-            document.getElementById('discountForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // در اینجا کد ارسال به سرور قرار می‌گیرد
-                alert('کد تخفیف با موفقیت ذخیره شد!');
-                closeModal();
-            });
-        });
+            <!-- استفاده شده -->
+            <td data-label="استفاده شده">
+              <div class="usage-cell">
+                <div class="usage-progress">
+                  <div class="progress-bar" [style.width.%]="getUsagePercentage(discount)"
+                    [ngClass]="getStatus(discount)"></div>
+                </div>
+                <span class="usage-text">
+                  {{ discount.usage || 0 }} بار
+                </span>
+              </div>
+            </td>
 
-        // توابع عمومی
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text);
-            alert(`کد ${text} در کلیپ‌بورد کپی شد!`);
-        }
+            <!-- محدودیت -->
+            <td data-label="محدودیت">
+              <span class="limit-badge" [ngClass]="discount.limit === 0 ? 'unlimited' : 'limited'">
+                <i class="material-icons">{{ discount.limit === 0 ? 'all_inclusive' : 'group' }}</i>
+                {{ discount.limit === 0 ? 'نامحدود' : discount.limit + ' بار' }}
+              </span>
+            </td>
 
-        function editDiscount(id) {
-            document.getElementById('modalTitle').textContent = 'ویرایش کد تخفیف';
-            // در اینجا داده‌های تخفیف بارگذاری می‌شود
-            document.getElementById('discountModal').style.display = 'block';
-        }
+            <!-- تاریخ انقضا -->
+            <td data-label="تاریخ انقضا">
+              <div class="date-cell">
+                <div class="expiry-date">
+                  {{ formatDate(discount.expires_in) }}
+                </div>
+                <small class="remaining" [ngClass]="getStatus(discount)">
+                  <i class="material-icons">schedule</i>
+                  {{ getRemainingDays(discount.expires_in) }}
+                </small>
+              </div>
+            </td>
 
-        function deleteDiscount(id) {
-            if (confirm('آیا از حذف این کد تخفیف مطمئن هستید؟')) {
-                // در اینجا کد حذف از سرور قرار می‌گیرد
-                alert('کد تخفیف حذف شد!');
-            }
-        }
+            <!-- وضعیت -->
+            <td data-label="وضعیت">
+              <span class="status-badge" [ngClass]="getStatus(discount)">
+                <i class="material-icons">{{ getStatusIcon(getStatus(discount)) }}</i>
+                {{ getStatusLabel(getStatus(discount)) }}
+              </span>
+            </td>
 
-        function viewDiscount(id) {
-            alert('نمایش جزئیات کد تخفیف');
-        }
-    </script>
-</body>
-</html>
+            <!-- عملیات -->
+            <td data-label="عملیات">
+              <div class="action-buttons">
+                <button class="action-btn edit" (click)="openEditModal(discount)" title="ویرایش">
+                  <i class="material-icons">edit</i>
+                </button>
+                <button class="action-btn delete" (click)="openDeleteModal(discount.id!)" title="حذف">
+                  <i class="material-icons">delete</i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- اطلاعات پایین جدول -->
+    <div class="table-footer">
+      <div class="pagination-info">
+        نمایش {{ dataSource.data.length }} تخفیف از {{ stats.total }}
+      </div>
+    </div>
+  </div>
+
+  <!-- حالت خالی -->
+  <div *ngIf="!tableLoading && dataSource.data.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <i class="material-icons">local_offer</i>
+    </div>
+    <h3>هیچ کد تخفیفی یافت نشد</h3>
+    <p *ngIf="searchText || filterType !== 'all' || filterStatus !== 'all'">
+      با فیلترهای فعلی هیچ تخفیفی پیدا نشد.
+    </p>
+    <p *ngIf="!searchText && filterType === 'all' && filterStatus === 'all'">
+      برای ایجاد اولین کد تخفیف روی دکمه زیر کلیک کنید
+    </p>
+    <button class="btn btn-primary" (click)="openCreateModal()">
+      <i class="material-icons">add_circle</i>
+      ایجاد کد تخفیف جدید
+    </button>
+  </div>
+</div>
+
+<!-- مودال ایجاد/ویرایش -->
+<div class="modal" [class.show]="showModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>{{ modalTitle }}</h2>
+      <button class="close-btn" (click)="closeModal()" [disabled]="loading">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <form [formGroup]="discountForm" (ngSubmit)="onSubmit()">
+        <!-- نوع تخفیف -->
+        <div class="form-group">
+          <label for="type">
+            <i class="material-icons">local_offer</i>
+            نوع تخفیف *
+          </label>
+          <select id="type" formControlName="type">
+            <option value="product">تخفیف محصول</option>
+            <option value="basket">تخفیف سبد خرید</option>
+          </select>
+          <div class="error-message" *ngIf="discountForm.get('type')?.invalid && discountForm.get('type')?.touched">
+            نوع تخفیف الزامی است
+          </div>
+        </div>
+
+        <!-- کد تخفیف -->
+        <div class="form-group">
+          <label for="code">
+            <i class="material-icons">code</i>
+            <span *ngIf="discountForm.get('type')?.value === 'basket'">کد تخفیف *</span>
+            <span *ngIf="discountForm.get('type')?.value === 'product'">کد تخفیف (اختیاری)</span>
+          </label>
+          <input type="text" id="code" formControlName="code" placeholder="مثال: SPRING2024" />
+          <div class="form-hint" *ngIf="discountForm.get('type')?.value === 'product'">
+            در صورت خالی گذاشتن، تخفیف بدون کد ایجاد می‌شود
+          </div>
+          <div class="form-hint" *ngIf="discountForm.get('type')?.value === 'basket'">
+            برای تخفیف سبد خرید، کد الزامی است
+          </div>
+          <div class="error-message" *ngIf="discountForm.get('code')?.invalid && discountForm.get('code')?.touched">
+            <span *ngIf="discountForm.get('code')?.errors?.['required']">کد تخفیف الزامی است</span>
+            <span *ngIf="discountForm.get('code')?.errors?.['maxlength']">حداکثر ۵۰ کاراکتر مجاز است</span>
+          </div>
+        </div>
+
+        <!-- محصول -->
+        <div class="form-group" *ngIf="shouldShowProductField()">
+          <label for="productId">
+            <i class="material-icons">inventory_2</i>
+            محصول *
+          </label>
+          <select id="productId" formControlName="productId">
+            <option [value]="0">-- انتخاب محصول --</option>
+            <option *ngFor="let product of products" [value]="product.id">
+              {{ product.name }}
+            </option>
+          </select>
+          <div class="error-message"
+            *ngIf="discountForm.get('productId')?.invalid && discountForm.get('productId')?.touched">
+            <span *ngIf="discountForm.get('productId')?.errors?.['required']">انتخاب محصول الزامی است</span>
+            <span *ngIf="discountForm.get('productId')?.errors?.['min']">لطفا یک محصول انتخاب کنید</span>
+          </div>
+        </div>
+
+        <!-- درصد تخفیف -->
+        <div class="form-group">
+          <label for="percent">
+            <i class="material-icons">percent</i>
+            درصد تخفیف
+          </label>
+          <div class="input-with-unit">
+            <input type="number" id="percent" formControlName="percent" placeholder="10" min="1" max="100"
+              (input)="onPercentChange()" />
+            <span class="input-unit">%</span>
+          </div>
+        </div>
+
+        <!-- یا -->
+        <div class="form-divider">
+          <span>یا</span>
+        </div>
+
+        <!-- مبلغ تخفیف -->
+        <div class="form-group">
+          <label for="amount">
+            <i class="material-icons">payments</i>
+            مبلغ تخفیف
+          </label>
+          <div class="input-with-unit">
+            <input type="text" id="amount" formControlName="amount" placeholder="50000" (input)="onAmountChange()" />
+            <span class="input-unit">تومان</span>
+          </div>
+        </div>
+
+        <!-- محدودیت استفاده -->
+        <div class="form-group">
+          <label for="limit">
+            <i class="material-icons">group</i>
+            محدودیت استفاده
+          </label>
+          <input type="number" id="limit" formControlName="limit" placeholder="0 برای نامحدود" min="0" />
+          <div class="form-hint">
+            0 = نامحدود
+          </div>
+        </div>
+
+        <!-- تاریخ انقضا -->
+        <div class="form-group">
+          <label for="expires_in">
+            <i class="material-icons">calendar_today</i>
+            تاریخ انقضا *
+          </label>
+          <input type="datetime-local" id="expires_in" formControlName="expires_in" />
+          <div class="error-message"
+            *ngIf="discountForm.get('expires_in')?.invalid && discountForm.get('expires_in')?.touched">
+            تاریخ انقضا الزامی است
+          </div>
+        </div>
+
+        <!-- دکمه‌های فرم -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="loading">
+            لغو
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="discountForm.invalid || loading">
+            <i class="material-icons">save</i>
+            {{ isEditMode ? 'ویرایش' : 'ذخیره' }}
+            <span *ngIf="loading" class="spinner-small"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,7 +37,7 @@ import { DiscountBasketComponent } from './containers/discount-basket/discount-b
     DiscountDetailComponent,
     DiscountBasketComponent,
 
-    
+
   ],
   imports: [
     CommonModule,
@@ -62,11 +62,13 @@ import { DiscountBasketComponent } from './containers/discount-basket/discount-b
     MatPaginatorModule,
     ReactiveFormsModule,
     CKEditorModule,
-      MatProgressSpinnerModule,
-  MatDatepickerModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
-    
+
     BaseService,
   ]
 })
