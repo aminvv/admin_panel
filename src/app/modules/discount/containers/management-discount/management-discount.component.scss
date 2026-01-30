@@ -1839,3 +1839,67 @@ $transition-slow: 0.4s ease;
     font-size: 16px !important;
   }
 }
+.product-thumbnail {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #e0e0e0;
+  background-color: #f5f5f5;
+}
+
+.no-image-placeholder {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  border: 1px dashed #ddd;
+  color: #999;
+}
+
+.no-image-placeholder .material-icons {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.no-image-placeholder small {
+  font-size: 10px;
+}
+
+
+.basket-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+}
+
+.basket-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+  margin-bottom: 6px;
+}
+
+.basket-icon {
+  font-size: 22px;
+  color: white;
+}
+
+.basket-label {
+  font-size: 11px;
+  color: #4CAF50;
+  font-weight: 500;
+}
+

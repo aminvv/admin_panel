@@ -55,12 +55,13 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   public filterStatus = 'all';
 
   // تغییر به محصولات واقعی از ProductService
-  public products: { id: number, name: string }[] = [];
+
+  public products: ProductDetails[] = [];
   public productsLoading = false;
 
   constructor(
     private discountService: DiscountService,
-    private productService: ProductService, // اضافه کردن ProductService
+    private productService: ProductService, 
     private toastr: ToastrService,
     private dialog: MatDialog,
     private fb: FormBuilder,
@@ -145,10 +146,7 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     this.productService.getProducts().subscribe({
       next: (products: ProductDetails[]) => {
         // تبدیل ProductDetails[] به {id: number, name: string}[]
-        this.products = products.map(product => ({
-          id: product.id || 0,
-          name: product.productName
-        }));
+        this.products = products
         this.productsLoading = false;
       },
       error: (error) => {
@@ -205,6 +203,19 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     });
   }
 
+
+
+
+
+  getProductImage(productId: number): string {
+    const product = this.products.find(p => p.id === productId);
+    if (product?.image && product.image.length > 0 && product.image[0].url) {
+      return product.image[0].url;
+    }
+
+      return null
+
+  }
 
 
   private calculateStats(discounts: DiscountDetails[]): void {
@@ -346,7 +357,7 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   // این تابع تغییر نکرده، فقط products از دیتابیس می‌آید
   getProductName(productId: number): string {
     const product = this.products.find(p => p.id === productId);
-    return product?.name || `محصول ${productId}`;
+    return product?.productName || `محصول ${productId}`;
   }
 
   // ==================== فیلترینگ ====================

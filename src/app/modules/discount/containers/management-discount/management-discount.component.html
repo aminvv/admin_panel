@@ -106,6 +106,7 @@
           <tr>
             <th>کد تخفیف</th>
             <th>نوع تخفیف</th>
+            <th>تصویر محصول</th>
             <th>مقدار</th>
             <th>استفاده شده</th>
             <th>محدودیت</th>
@@ -127,6 +128,24 @@
                 </button>
               </div>
             </td>
+
+
+<td data-label="تصویر محصول">
+  <div *ngIf="discount.type === 'product' && discount.productId && getProductImage(discount.productId)">
+    <img 
+      [src]="getProductImage(discount.productId)" 
+      [alt]="getProductName(discount.productId)"
+      class="product-thumbnail"
+    />
+  </div>
+  <div *ngIf="discount.type === 'basket'" class="basket-card">
+    <div class="basket-icon-wrapper">
+      <i class="material-icons basket-icon">shopping_basket</i>
+    </div>
+    <span class="basket-label">سبد خرید</span>
+  </div>
+</td>
+
 
             <!-- نوع تخفیف -->
             <td data-label="نوع تخفیف">
@@ -290,7 +309,7 @@
           <select id="productId" formControlName="productId">
             <option [value]="0">-- انتخاب محصول --</option>
             <option *ngFor="let product of products" [value]="product.id">
-              {{ product.name }}
+              {{ product.productName }}
             </option>
           </select>
           <div class="error-message"
