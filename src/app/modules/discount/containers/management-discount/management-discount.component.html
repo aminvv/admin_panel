@@ -46,12 +46,12 @@
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon usage">
-          <i class="material-icons">trending_up</i>
+        <div class="stat-icon avg-usage">
+          <i class="material-icons">avg_pace</i>
         </div>
         <div class="stat-info">
-          <h3>{{ stats.used }}</h3>
-          <p>استفاده شده</p>
+          <h3>{{ getAvgUsage() | number:'1.1-1' }}</h3>
+          <p>میانگین استفاده</p>
         </div>
       </div>
     </div>
@@ -130,21 +130,18 @@
             </td>
 
 
-<td data-label="تصویر محصول">
-  <div *ngIf="discount.type === 'product' && discount.productId && getProductImage(discount.productId)">
-    <img 
-      [src]="getProductImage(discount.productId)" 
-      [alt]="getProductName(discount.productId)"
-      class="product-thumbnail"
-    />
-  </div>
-  <div *ngIf="discount.type === 'basket'" class="basket-card">
-    <div class="basket-icon-wrapper">
-      <i class="material-icons basket-icon">shopping_basket</i>
-    </div>
-    <span class="basket-label">سبد خرید</span>
-  </div>
-</td>
+            <td data-label="تصویر محصول">
+              <div *ngIf="discount.type === 'product' && discount.productId && getProductImage(discount.productId)">
+                <img [src]="getProductImage(discount.productId)" [alt]="getProductName(discount.productId)"
+                  class="product-thumbnail" />
+              </div>
+              <div *ngIf="discount.type === 'basket'" class="basket-card">
+                <div class="basket-icon-wrapper">
+                  <i class="material-icons basket-icon">shopping_basket</i>
+                </div>
+                <span class="basket-label">سبد خرید</span>
+              </div>
+            </td>
 
 
             <!-- نوع تخفیف -->

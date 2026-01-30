@@ -61,7 +61,7 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
 
   constructor(
     private discountService: DiscountService,
-    private productService: ProductService, 
+    private productService: ProductService,
     private toastr: ToastrService,
     private dialog: MatDialog,
     private fb: FormBuilder,
@@ -157,6 +157,11 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getAvgUsage(): number {
+    if (this.stats.total === 0) return 0;
+    return this.stats.used / this.stats.total;
+  }
+
   private loadDiscounts(preservePosition: boolean = false): void {
     // ذخیره صفحه فعلی
     const currentPage = this.paginator?.pageIndex || 0;
@@ -213,7 +218,7 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
       return product.image[0].url;
     }
 
-      return null
+    return null
 
   }
 
