@@ -24,6 +24,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HttpInterceptorService } from './shared/services/http-interceptor.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { JalaliDateAdapter } from './shared/adapter/jalali-date-adapter';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [AppComponent, NotFoundComponent],
@@ -58,8 +60,50 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
       useClass: HttpInterceptorService,
       multi: true,
     },
-        MatDatepickerModule
+        MatDatepickerModule,
+        { provide: DateAdapter, useClass: JalaliDateAdapter },
+    { provide: MAT_DATE_LOCALE, useValue: 'fa-IR' },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: 'jYYYY/jMM/jDD',
+        },
+        display: {
+          dateInput: 'jYYYY/jMM/jDD',
+          monthYearLabel: 'jMMMM jYYYY',
+          dateA11yLabel: 'jYYYY/jMM/jDD',
+          monthYearA11yLabel: 'jMMMM jYYYY',
+        },
+      },
+    },
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
+
+
+
+
+
+// providers: [
+//   {
+//     provide: HTTP_INTERCEPTORS,
+//     useClass: HttpInterceptorService,
+//     multi: true,
+//   },
+//   { provide: DateAdapter, useClass: JalaliDateAdapter },
+//   { provide: MAT_DATE_LOCALE, useValue: 'fa-IR' },
+//   {
+//     provide: MAT_DATE_FORMATS,
+//     useValue: {
+//       parse: { dateInput: 'jYYYY/jMM/jDD' },
+//       display: {
+//         dateInput: 'jYYYY/jMM/jDD',
+//         monthYearLabel: 'jMMMM jYYYY',
+//         dateA11yLabel: 'jYYYY/jMM/jDD',
+//         monthYearA11yLabel: 'jMMMM jYYYY',
+//       },
+//     },
+//   },
+// ],

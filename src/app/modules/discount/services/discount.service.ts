@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { HttpClient, } from '@angular/common/http';
-import { map, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { BaseService } from 'src/app/shared/services/base.service';
 import { DiscountDetails } from '../models/discount-details';
 
@@ -25,6 +25,7 @@ export class DiscountService {
   private discountEditUrl = '/discount/update-discount';
   private DiscountsGetUrl = '/discount/get-discounts';
   private discountGetUrl = '/discount/get-discount';
+  private GetDiscountByProduct = '/discount/get-discounts-by-product';
   private DiscountDeleteUrl = '/discount/delete-discount';
 
 
@@ -143,8 +144,29 @@ public getDiscounts(): Observable<DiscountDetails[]> {
 
   }
 
+  // ===================== GET PRODUCT DISCOUNTS ======================
+  public getProductDiscounts(productId: number): Observable<DiscountDetails[]> {
+    // اضافه کردن headers مثل بقیه متدها
+    const headers = this.baseServe.getAuthHeader();
+    
+    return this.http.get<DiscountDetails[]>(`${this.GetDiscountByProduct}/${productId}`, { headers }).pipe(
+      tap(res => {
+        console.log('📦 پاسخ getProductDiscounts:', res);
+        console.log('🔢 تعداد تخفیفات:', res?.length || 0);
+      }),
+      catchError(error => {
+        console.error('❌ خطا در getProductDiscounts:', error);
+        console.error('🔗 آدرس:', `${this.GetDiscountByProduct}/${productId}`);
+        console.error('📊 کد خطا:', error.status);
+        return throwError(() => error);
+      })
+    );
+  }
 
 
+
+
+ //===================== REMOVE UPLOADED IMAGE ======================
   public removeUploadedImage(publicId: string) {
     const headers = this.baseServe.getAuthHeader();
     return this.http.delete(`/product/removeImage/${encodeURIComponent(publicId)}`, { headers });
@@ -153,7 +175,7 @@ public getDiscounts(): Observable<DiscountDetails[]> {
 
 }
 
-
+ 
 
 
 

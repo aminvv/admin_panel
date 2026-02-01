@@ -357,14 +357,21 @@
             0 = نامحدود
           </div>
         </div>
-
         <!-- تاریخ انقضا -->
-        <div class="form-group">
+        <div class="form-group material-like">
           <label for="expires_in">
             <i class="material-icons">calendar_today</i>
             تاریخ انقضا *
           </label>
-          <input type="datetime-local" id="expires_in" formControlName="expires_in" />
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>تاریخ و زمان انقضا</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="expires_in" [min]="minDate" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <!-- پیام خطا ساده -->
           <div class="error-message"
             *ngIf="discountForm.get('expires_in')?.invalid && discountForm.get('expires_in')?.touched">
             تاریخ انقضا الزامی است

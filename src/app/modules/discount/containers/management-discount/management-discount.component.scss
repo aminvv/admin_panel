@@ -132,7 +132,7 @@ $transition-slow: 0.4s ease;
   padding: 24px;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   min-height: 100vh;
-  
+
 
   @media (max-width: 768px) {
     padding: 16px;
@@ -1659,6 +1659,62 @@ $transition-slow: 0.4s ease;
       }
     }
 
+
+
+
+
+    .form-group.material-like {
+
+      /* حذف کامل Material look */
+      ::ng-deep mat-form-field {
+        display: block;
+        width: 100%;
+      }
+
+      ::ng-deep .mat-form-field-flex {
+        display: block;
+        padding: 0 !important;
+        background: transparent !important;
+      }
+
+      ::ng-deep .mat-form-field-infix {
+        display: block;
+        width: 100%;
+        padding: 0 !important;
+        border: none !important;
+      }
+
+      ::ng-deep .mat-input-element {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: white;
+        font-family: inherit;
+        font-size: 14px;
+      }
+
+      ::ng-deep .mat-form-field-label-wrapper,
+      ::ng-deep .mat-form-field-label,
+      ::ng-deep .mat-form-field-outline,
+      ::ng-deep .mat-form-field-underline {
+        display: none !important;
+      }
+
+      ::ng-deep .mat-form-field-suffix {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #666;
+      }
+    }
+
+
+
+
     .form-divider {
       text-align: center;
       margin: 30px 0;
@@ -1839,6 +1895,7 @@ $transition-slow: 0.4s ease;
     font-size: 16px !important;
   }
 }
+
 .product-thumbnail {
   width: 50px;
   height: 50px;
@@ -1902,4 +1959,3 @@ $transition-slow: 0.4s ease;
   color: #4CAF50;
   font-weight: 500;
 }
-

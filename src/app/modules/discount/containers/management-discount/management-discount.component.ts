@@ -12,6 +12,7 @@ import { DeletePopupComponent } from '../../../../shared/popups/delete-popup/del
 import { ProductService } from 'src/app/modules/e-commerce/services';
 import { ProductDetails } from 'src/app/modules/e-commerce/models/product-details';
 import { Subscription } from 'rxjs';
+import * as moment from 'moment-jalaali';
 
 @Component({
   selector: 'app-management-discount',
@@ -42,6 +43,8 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   public selectedDiscountId: number | null = null;
   public loading = false;
   public tableLoading = false;
+  public minDate: Date = new Date();
+
 
   public stats = {
     active: 0,
@@ -54,7 +57,7 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   public filterType = 'all';
   public filterStatus = 'all';
 
-  // تغییر به محصولات واقعی از ProductService
+
 
   public products: ProductDetails[] = [];
   public productsLoading = false;
@@ -66,7 +69,8 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) { 
+  }
 
 
   ngOnDestroy(): void {
@@ -178,13 +182,16 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
             usage: discount.usage || 0,
             limit: discount.limit || 0,
             productId: discount.productId || 0,
-            expires_in: new Date(discount.expires_in)
+            expires_in: discount.expires_in,
+            
           }))
           .sort((a, b) => {
             // جدیدترین اول (بیشترین تاریخ)
             return new Date(b.expires_in).getTime() - new Date(a.expires_in).getTime();
           });
 
+
+          
         this.dataSource.data = processedDiscounts;
         this.calculateStats(processedDiscounts);
         this.tableLoading = false;
@@ -321,19 +328,24 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     return '---';
   }
 
-  formatDate(date: Date): string {
-    try {
-      return new Date(date).toLocaleDateString('fa-IR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch {
-      return 'تاریخ نامعتبر';
-    }
+
+
+formatDate(dateInput: Date | string | null): string {
+  if (!dateInput) return '—';
+
+  const raw = dateInput instanceof Date ? dateInput.toISOString() : dateInput;
+
+  const m = moment(raw);  
+
+  if (!m.isValid()) {
+    console.warn('تاریخ نامعتبر:', raw);
+    return 'نامعتبر';
   }
+
+  return m.format('jYYYY/jMM/jDD');
+}
+
+
 
   getRemainingDays(date: Date): string {
     try {
