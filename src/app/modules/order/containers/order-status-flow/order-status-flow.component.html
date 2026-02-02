@@ -1,0 +1,200 @@
+<!-- src/app/modules/admin/orders/components/order-status-flow.component.html -->
+<div class="status-flow-container" dir="rtl">
+  
+  <!-- Current Status Card -->
+  <div class="current-status-card" [class]="'status-' + statusColor">
+    <div class="status-header">
+      <div class="header-left">
+        <mat-icon class="status-icon">{{ statusIcon }}</mat-icon>
+        <h3>وضعیت سفارش #{{ orderId }}</h3>
+      </div>
+      <div class="header-right">
+        <span [class]="'current-status-badge ' + statusColor">
+          {{ statusLabel }}
+        </span>
+      </div>
+    </div>
+    
+    <div class="status-info">
+      <p class="status-description">{{ statusDescription }}</p>
+      
+      <div class="status-actions" *ngIf="canEdit && !isCancelled && !isCompleted">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="openChangeModal()"
+          [disabled]="nextPossibleStatuses.length === 0"
+        >
+          <mat-icon>edit</mat-icon>
+          تغییر وضعیت
+        </button>
+        
+        <button 
+          mat-raised-button 
+          color="accent" 
+          (click)="quickAdvance()"
+          *ngIf="suggestedNextStatus"
+          class="quick-action"
+        >
+          <mat-icon>fast_forward</mat-icon>
+          مرحله بعد
+        </button>
+        
+        <button 
+          mat-stroked-button 
+          color="warn" 
+          (click)="revertStatus()"
+          *ngIf="canRevert"
+        >
+          <mat-icon>undo</mat-icon>
+          بازگشت
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Flow Steps -->
+  <div class="flow-steps" *ngIf="!isCancelled">
+    <h3 class="flow-title">
+      <mat-icon>timeline</mat-icon>
+      روند سفارش
+    </h3>
+    
+    <div class="steps-wrapper">
+      <div 
+        *ngFor="let step of flow" 
+        class="step-item"
+        [class.active]="step.isActive"
+        [class.completed]="step.isCompleted"
+        [class.disabled]="step.status === 'canceled'"
+      >
+        <div class="step-indicator">
+          <div class="step-number">{{ step.step }}</div>
+          <div class="step-icon-wrapper">
+            <mat-icon [class]="'step-icon ' + step.color">{{ step.icon }}</mat-icon>
+          </div>
+        </div>
+        
+        <div class="step-content">
+          <div class="step-header">
+            <h4 class="step-title">{{ step.label }}</h4>
+            <span class="step-status" *ngIf="step.isActive">
+              <span class="current-badge">فعلی</span>
+            </span>
+            <span class="step-status" *ngIf="step.isCompleted">
+              <mat-icon class="completed-icon">check_circle</mat-icon>
+            </span>
+          </div>
+          
+          <p class="step-description">{{ step.description }}</p>
+        </div>
+        
+        <div class="step-connector" *ngIf="step.step < 6 && !step.isCancelled"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Possible Statuses -->
+  <div class="next-options" *ngIf="nextPossibleStatuses.length > 0 && !isCancelled && !isCompleted">
+    <h3>
+      <mat-icon>arrow_forward</mat-icon>
+      اقدامات بعدی
+    </h3>
+    
+    <div class="options-grid">
+      <div 
+        *ngFor="let option of nextPossibleStatuses"
+        class="option-card"
+        [class]="'option-' + option.color"
+        (click)="selectedNewStatus = option.status; openChangeModal()"
+      >
+        <div class="option-icon">
+          <mat-icon>{{ option.icon }}</mat-icon>
+        </div>
+        <div class="option-content">
+          <h4>{{ option.label }}</h4>
+          <p>{{ option.description }}</p>
+        </div>
+        <mat-icon class="option-arrow">chevron_left</mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Status Modal -->
+  <div class="change-modal-overlay" *ngIf="showChangeModal" (click)="closeChangeModal()"></div>
+  
+  <div class="change-modal" *ngIf="showChangeModal">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>
+          <mat-icon>swap_horiz</mat-icon>
+          تغییر وضعیت سفارش
+        </h2>
+        <button mat-icon-button (click)="closeChangeModal()" [disabled]="loading">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>وضعیت جدید</mat-label>
+          <mat-select [(ngModel)]="selectedNewStatus">
+            <mat-option *ngFor="let option of nextPossibleStatuses" [value]="option.status">
+              <div class="status-option">
+                <mat-icon [class]="'option-icon ' + option.color">{{ option.icon }}</mat-icon>
+                <div class="option-details">
+                  <div class="option-title">{{ option.label }}</div>
+                  <div class="option-description">{{ option.description }}</div>
+                </div>
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>دلیل تغییر (اختیاری)</mat-label>
+          <textarea 
+            matInput 
+            [(ngModel)]="changeReason" 
+            rows="3"
+            placeholder="در صورت نیاز، دلیل تغییر وضعیت را وارد کنید..."
+          ></textarea>
+        </mat-form-field>
+
+        <div class="modal-actions">
+          <button 
+            mat-button 
+            (click)="closeChangeModal()" 
+            [disabled]="loading"
+          >
+            انصراف
+          </button>
+          
+          <button 
+            mat-raised-button 
+            [color]="selectedNewStatus === 'canceled' ? 'warn' : 'primary'"
+            (click)="changeStatus()"
+            [disabled]="!selectedNewStatus || loading"
+          >
+            <div class="button-content">
+              <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+              <span *ngIf="!loading">
+                <mat-icon>
+                  {{ selectedNewStatus === 'canceled' ? 'cancel' : 'check' }}
+                </mat-icon>
+                {{ selectedNewStatus === 'canceled' ? 'لغو سفارش' : 'تأیید تغییر' }}
+              </span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-overlay" *ngIf="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>در حال اعمال تغییرات...</p>
+  </div>
+
+</div>

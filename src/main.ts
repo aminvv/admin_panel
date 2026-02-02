@@ -24,3 +24,4 @@ if (environment.hmr) {
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .catch((err) => console.error(err));
+ 

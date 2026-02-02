@@ -1,7 +1,7 @@
 import {RouterModule, Routes} from '@angular/router';
 import { NgModule } from '@angular/core';
-import { ManagementOrderComponent } from './containers/management-page/management-order.component';
-import { OrderDetailComponent } from './containers/order-deatails/order-detail.component';
+import { OrderListComponent } from './containers/management-page/order-list.component';
+import { OrderStatusFlowComponent } from './containers/order-status-flow/order-status-flow.component';
 
 
 
@@ -12,11 +12,11 @@ const routes: Routes = [
   },
   {
     path: 'list',
-    component: ManagementOrderComponent,
+    component: OrderListComponent,
   },
   {
     path: 'detail/:id',
-    component: OrderDetailComponent,
+    component: OrderStatusFlowComponent,
   },
   // {
   //   path: 'create',

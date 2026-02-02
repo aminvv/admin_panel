@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,19 +20,20 @@ import { SharedModule } from '../../shared/shared.module';
 import { BaseService } from 'src/app/shared/services/base.service';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
-import { ProductService } from '../e-commerce/services';
-import { ManagementOrderComponent } from './containers/management-page/management-order.component';
 import { OrderRoutingModule } from './order-routing.module';
-import { OrderDetailComponent } from './containers/order-deatails/order-detail.component';
+import { OrderListComponent } from './containers/management-page/order-list.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { OrderStatusFlowComponent } from './containers/order-status-flow/order-status-flow.component';
 
 @NgModule({
   declarations: [
-    ManagementOrderComponent,
-    OrderDetailComponent,
+    OrderListComponent,
+    OrderStatusFlowComponent,
 
     
   ],
   imports: [
+    FormsModule,
     CommonModule,
     OrderRoutingModule,
     SharedModule,
@@ -48,9 +49,11 @@ import { OrderDetailComponent } from './containers/order-deatails/order-detail.c
     MatTooltipModule,
     MatCheckboxModule,
     MatSortModule,
+    MatProgressSpinnerModule,
     MatPaginatorModule,
     ReactiveFormsModule,
     CKEditorModule,
+
   ],
   providers: [
     
