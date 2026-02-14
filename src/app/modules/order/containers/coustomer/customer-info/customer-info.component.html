@@ -1,0 +1,147 @@
+<div class="customer-info">
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-title">
+      <mat-icon class="header-icon">people</mat-icon>
+      <h1>لیست مشتریان سفارش‌دهنده</h1>
+      <span class="badge" *ngIf="!loading && totalItems > 0">{{ totalItems | number }} مشتری</span>
+    </div>
+    <p class="header-subtitle">مشاهده و مدیریت مشتریانی که در سیستم سفارش ثبت کرده‌اند</p>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="جستجوی مشتری (نام، شماره تماس، شماره سفارش)"
+        [(ngModel)]="searchTerm" (keyup.enter)="applyFilter()" />
+      <button class="search-btn" (click)="applyFilter()" [disabled]="loading">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+
+    <div class="toolbar-actions">
+      <button class="refresh-btn" (click)="refresh()" [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+        بروزرسانی
+      </button>
+    </div>
+  </div>
+  <!-- CARD TABLE -->
+  <mat-card class="table-card">
+    <!-- LOADING -->
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>در حال دریافت اطلاعات از سرور...</p>
+    </div>
+
+    <!-- TABLE -->
+    <div *ngIf="!loading" class="table-responsive">
+      <table mat-table [dataSource]="dataSource" matSort class="customer-table">
+
+        <!-- شماره ردیف -->
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            {{ (currentPage * pageSize) + i + 1 }}
+          </td>
+        </ng-container>
+
+        <!-- شماره سفارش -->
+        <ng-container matColumnDef="orderNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>شماره سفارش</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="order-number">{{ element.orderNumber }}</span>
+          </td>
+        </ng-container>
+
+        <!-- نام مشتری -->
+        <ng-container matColumnDef="customerName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>نام مشتری</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="customer-name">
+              <mat-icon class="avatar-icon">person</mat-icon>
+              {{ element.customerName }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- آدرس -->
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>آدرس</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="address" [matTooltip]="element.address">
+              {{ element.address }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- شماره تماس -->
+        <ng-container matColumnDef="phone">
+          <th mat-header-cell *matHeaderCellDef>شماره تماس</th>
+          <td mat-cell *matCellDef="let element">
+            <a *ngIf="element.phone !== 'ندارد'" [href]="'tel:' + element.phone" class="phone-link">
+              <mat-icon>phone</mat-icon>
+              {{ element.phone }}
+            </a>
+            <span *ngIf="element.phone === 'ندارد'" class="no-phone">ندارد</span>
+          </td>
+        </ng-container>
+
+        <!-- وضعیت سفارش -->
+        <ng-container matColumnDef="orderStatus">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>وضعیت سفارش</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="status-chip" [ngClass]="getOrderStatusClass(element.orderStatus)">
+              {{ getOrderStatusText(element.orderStatus) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- وضعیت پرداخت -->
+        <ng-container matColumnDef="paymentStatus">
+          <th mat-header-cell *matHeaderCellDef>وضعیت پرداخت</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="payment-chip" [ngClass]="getPaymentStatusClass(element.paymentStatus)">
+              {{ getPaymentStatusText(element.paymentStatus) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- عملیات -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>عملیات</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="openCustomerDetail(element.customerId)"
+              matTooltip="مشاهده جزئیات سفارش" [disabled]="!element.customerId">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- حالت بدون داده -->
+        <tr *ngIf="dataSource.data.length === 0">
+          <td colspan="8" class="no-data-cell">
+            <div class="no-data">
+              <mat-icon>inbox</mat-icon>
+              <p>هیچ سفارشی یافت نشد.</p>
+              <button mat-button color="primary" (click)="refresh()">
+                <mat-icon>refresh</mat-icon>
+                بارگذاری مجدد
+              </button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <div *ngIf="!loading && dataSource.data.length > 0" class="pagination-container">
+      <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="currentPage" (page)="onPageChange($event)" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </mat-card>
+</div>

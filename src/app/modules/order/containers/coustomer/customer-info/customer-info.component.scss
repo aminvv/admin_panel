@@ -1,0 +1,413 @@
+.customer-info {
+  padding: 24px;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 64px);
+  direction: rtl;
+  font-family: 'Vazir', 'Roboto', sans-serif;
+}
+
+/* ===== هدر صفحه ===== */
+.page-header {
+  margin-bottom: 32px;
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+
+    .header-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: #3f51b5;
+      background: rgba(63, 81, 181, 0.1);
+      padding: 8px;
+      border-radius: 12px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin: 0;
+    }
+
+    .badge {
+      background-color: #e3f2fd;
+      color: #1976d2;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+
+  .header-subtitle {
+    color: #7f8c8d;
+    font-size: 1rem;
+    margin: 0 46px 0 0;
+  }
+}
+
+/* ===== نوار ابزار ===== */
+// .toolbar {
+//   display: flex;
+//   flex-wrap: wrap;
+//   align-items: center;
+//   justify-content: space-between;
+//   gap: 16px;
+//   margin-bottom: 24px;
+
+//   .search-field {
+//     flex: 1;
+//     min-width: 280px;
+
+//     ::ng-deep .mat-form-field-outline {
+//       background-color: white;
+//       border-radius: 12px;
+//     }
+//   }
+
+//   .toolbar-actions {
+//     display: flex;
+//     gap: 8px;
+
+//     button {
+//       display: flex;
+//       align-items: center;
+//       gap: 6px;
+//       height: 48px;
+//       padding: 0 20px;
+//     }
+//   }
+// }
+
+/* ===== کارت جدول ===== */
+.table-card {
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  background: white;
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    min-height: 300px;
+
+    p {
+      margin-top: 20px;
+      color: #5f6368;
+      font-size: 0.95rem;
+    }
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .customer-table {
+    width: 100%;
+
+    .mat-header-row {
+      background: linear-gradient(to right, #f8f9fa, #ffffff);
+      height: 56px;
+
+      .mat-header-cell {
+        color: #34495e;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.3px;
+        border-bottom: none;
+        padding: 0 16px;
+      }
+    }
+
+    .mat-row {
+      height: 64px;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #f5f8ff;
+      }
+
+      .mat-cell {
+        padding: 0 16px;
+        color: #2c3e50;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #ecf0f1;
+      }
+    }
+
+    .order-number {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 600;
+      color: #2c3e50;
+      background: #ecf0f1;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      display: inline-block;
+    }
+
+    .customer-name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .avatar-icon {
+        color: #5c6bc0;
+        background: #e8eaf6;
+        border-radius: 50%;
+        padding: 6px;
+        font-size: 18px;
+      }
+    }
+
+    .address {
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #546e7a;
+    }
+
+    .phone-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #3498db;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #2980b9;
+        text-decoration: underline;
+      }
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    .no-phone {
+      color: #95a5a6;
+      font-style: italic;
+    }
+
+    /* وضعیت‌های سفارش */
+    .status-chip {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .status-pending { background: #fff3e0; color: #ef6c00; }
+    .status-ordered { background: #e3f2fd; color: #1976d2; }
+    .status-processing { background: #e1f5fe; color: #0288d1; }
+    .status-packed { background: #ede7f6; color: #5e35b1; }
+    .status-shipped { background: #e0f2f1; color: #00796b; }
+    .status-delivered { background: #e8f5e9; color: #2e7d32; }
+    .status-cancelled { background: #ffebee; color: #c62828; }
+    .status-default { background: #f5f5f5; color: #616161; }
+
+    /* وضعیت‌های پرداخت */
+    .payment-chip {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .payment-pending { background: #fff3e0; color: #ef6c00; }
+    .payment-paid { background: #e8f5e9; color: #2e7d32; }
+    .payment-failed { background: #ffebee; color: #c62828; }
+    .payment-refunded { background: #e1f5fe; color: #0288d1; }
+    .payment-default { background: #f5f5f5; color: #616161; }
+  }
+
+  .no-data-cell {
+    text-align: center;
+    padding: 48px 16px !important;
+
+    .no-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      color: #95a5a6;
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        opacity: 0.6;
+      }
+
+      p {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      button {
+        margin-top: 8px;
+      }
+    }
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid #ecf0f1;
+    background: #fafcff;
+  }
+}
+
+/* ===== ریسپانسیو ===== */
+@media (max-width: 768px) {
+  .customer-info {
+    padding: 16px;
+  }
+
+  .page-header {
+    .header-title {
+      flex-wrap: wrap;
+    }
+  }
+
+  // .toolbar {
+  //   flex-direction: column;
+  //   align-items: stretch;
+
+  //   .search-field {
+  //     min-width: auto;
+  //   }
+  // }
+}
+
+
+
+
+
+
+/* ===== نوار ابزار با طراحی جدید ===== */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  .search-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-width: 280px;
+    background-color: white;
+    border-radius: 40px;        // گرد شدن کامل
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease;
+    border: 1px solid #e0e7ef;
+
+    &:focus-within {
+      box-shadow: 0 4px 15px rgba(63, 81, 181, 0.15);
+      border-color: #3f51b5;
+    }
+
+    .search-input {
+      flex: 1;
+      height: 48px;
+      padding: 0 20px;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      color: #2c3e50;
+      outline: none;
+
+      &::placeholder {
+        color: #a0b3c6;
+        font-size: 0.9rem;
+      }
+    }
+
+    .search-btn {
+      width: 48px;
+      height: 48px;
+      border: none;
+      background: transparent;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #5c6bc0;
+      transition: background-color 0.2s, color 0.2s;
+
+      &:hover:not(:disabled) {
+        background-color: #f0f3ff;
+        color: #3f51b5;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  .toolbar-actions {
+    display: flex;
+    gap: 8px;
+
+    .refresh-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 48px;
+      padding: 0 20px;
+      background-color: white;
+      border: 1px solid #e0e7ef;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #546e7a;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover:not(:disabled) {
+        background-color: #f8f9fa;
+        border-color: #3f51b5;
+        color: #3f51b5;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}

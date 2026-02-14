@@ -12,16 +12,16 @@ export class OrderStatusFlowComponent implements OnInit {
   @Input() currentStatus!: string;
   @Input() canEdit: boolean = true;
   @Output() statusChanged = new EventEmitter<string>();
-  
+
   flow: OrderStatusFlow[] = [];
   nextPossibleStatuses: OrderStatusFlow[] = [];
   selectedNewStatus: string = '';
   changeReason: string = '';
-  
+
   showChangeModal: boolean = false;
   loading: boolean = false;
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService) { }
 
   ngOnInit(): void {
     this.loadStatusFlow();
@@ -31,15 +31,15 @@ export class OrderStatusFlowComponent implements OnInit {
   get statusLabel(): string {
     return this.orderService.getStatusLabel(this.currentStatus);
   }
-  
+
   get statusColor(): string {
     return this.orderService.getStatusColor(this.currentStatus);
   }
-  
+
   get statusIcon(): string {
     return this.orderService.getStatusIcon(this.currentStatus);
   }
-  
+
   get statusDescription(): string {
     const statusInfo = this.flow.find(item => item.status === this.currentStatus);
     return statusInfo?.description || 'توضیحی موجود نیست';
@@ -54,13 +54,11 @@ export class OrderStatusFlowComponent implements OnInit {
   openChangeModal(): void {
     this.showChangeModal = true;
     this.selectedNewStatus = '';
-    this.changeReason = '';
   }
 
   closeChangeModal(): void {
     this.showChangeModal = false;
     this.selectedNewStatus = '';
-    this.changeReason = '';
   }
 
   changeStatus(): void {
@@ -74,17 +72,17 @@ export class OrderStatusFlowComponent implements OnInit {
       return;
     }
 
-    const confirmMessage = this.selectedNewStatus === 'canceled' 
+    const confirmMessage = this.selectedNewStatus === 'canceled'
       ? 'آیا از لغو این سفارش اطمینان دارید؟ این عمل قابل بازگشت نیست.'
       : `آیا از تغییر وضعیت از "${this.statusLabel}" به "${this.orderService.getStatusLabel(this.selectedNewStatus)}" اطمینان دارید؟`;
 
     if (confirm(confirmMessage)) {
       this.loading = true;
-      
-      const apiMethod = this.selectedNewStatus === 'canceled' 
+
+      const apiMethod = this.selectedNewStatus === 'canceled'
         ? this.orderService.cancelOrder(this.orderId)
         : this.orderService.advanceStatus(this.orderId);
-      
+
       apiMethod.subscribe({
         next: () => {
           this.statusChanged.emit(this.selectedNewStatus);
@@ -100,9 +98,22 @@ export class OrderStatusFlowComponent implements OnInit {
     }
   }
 
+
+
+
+  getStatusIcon(status: string): string {
+    const option = this.nextPossibleStatuses.find(item => item.status === status);
+    return option?.icon || 'help_outline';
+  }
+
+  getStatusLabel(status: string): string {
+    const option = this.nextPossibleStatuses.find(item => item.status === status);
+    return option?.label || status;
+  }
+
   revertStatus(): void {
     if (!this.canRevert) return;
-    
+
     if (confirm('آیا از بازگشت به مرحله قبل اطمینان دارید؟')) {
       this.loading = true;
       this.orderService.revertStatus(this.orderId).subscribe({
@@ -134,7 +145,7 @@ export class OrderStatusFlowComponent implements OnInit {
 
   get suggestedNextStatus(): OrderStatusFlow | null {
     if (this.nextPossibleStatuses.length === 0) return null;
-    
+
     const nonCancelStatus = this.nextPossibleStatuses.find(s => s.status !== 'canceled');
     return nonCancelStatus || this.nextPossibleStatuses[0];
   }
@@ -143,7 +154,7 @@ export class OrderStatusFlowComponent implements OnInit {
     return this.currentStatus === 'canceled';
   }
 
-  get isCompleted(): boolean {
-    return this.currentStatus === 'completed';
+  get isDelivered(): boolean {
+    return this.currentStatus === 'delivered';
   }
 }

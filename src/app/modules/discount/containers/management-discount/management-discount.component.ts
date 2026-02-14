@@ -311,7 +311,7 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   }
 
   getTypeIcon(type: string): string {
-    return type === 'product' ? 'inventory_2' : 'shopping_cart';
+    return type === 'product' ? 'packed' : 'shopping_cart';
   }
 
   getTypeColor(type: string): string {

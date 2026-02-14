@@ -28,7 +28,7 @@ const TREE_DATA: any = [
     name: 'سفارشات',
     children: [
       { name: 'لیست سفارشات', route: routes.ORDER_LIST, active: 'active' },
-      { name: 'جزئیات سفارش', route: routes.ORDER_DETAILS, active: 'active' },
+      { name: 'اطلاعات مشتری', route: routes.CUSTOMER_INFO, active: 'active' },
       { name: 'مدیریت پرداخت‌ها', route: routes.PAYMENTS_MANAGE, active: 'active' },
       { name: 'گزارش‌ها و آمار', route: routes.ORDER_REPORTS, active: 'active' },
     ]

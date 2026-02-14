@@ -1,0 +1,241 @@
+<div class="detail-dialog">
+  <!-- HEADER -->
+  <div class="dialog-header">
+    <div class="header-content">
+      <h2 mat-dialog-title>
+        <mat-icon class="title-icon">person</mat-icon>
+        <span>جزئیات مشتری</span>
+      </h2>
+      <p class="customer-id" *ngIf="customerDetail">کد مشتری: {{ customerDetail.id }}</p>
+    </div>
+    <button mat-icon-button (click)="close()" class="close-btn" matTooltip="بستن">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <!-- LOADING -->
+    <div *ngIf="loading" class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>در حال دریافت اطلاعات مشتری...</p>
+    </div>
+
+    <!-- ERROR STATE -->
+    <div *ngIf="!loading && !customerDetail" class="error-state">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <h4>خطا در بارگذاری اطلاعات</h4>
+      <p>امکان دریافت اطلاعات مشتری وجود ندارد.</p>
+      <button mat-button color="primary" (click)="loadCustomerDetail()">
+        <mat-icon>refresh</mat-icon>
+        تلاش مجدد
+      </button>
+    </div>
+
+    <!-- CONTENT -->
+    <div *ngIf="!loading && customerDetail" class="dialog-content">
+      
+      <!-- اطلاعات شخصی -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>account_circle</mat-icon>
+            اطلاعات شخصی
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">نام و نام خانوادگی:</span>
+              <span class="value">{{ getFullName() }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">شماره موبایل:</span>
+              <span class="value">
+                <a [href]="'tel:' + customerDetail.mobile" class="phone-link">{{ customerDetail.mobile }}</a>
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="label">ایمیل:</span>
+              <span class="value">{{ customerDetail.email || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">تاریخ ثبت‌نام:</span>
+              <span class="value">{{ formatDate(customerDetail.registrationDate) }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- آمار خرید -->
+      <div class="stats-section">
+        <h3 class="section-title">
+          <mat-icon>analytics</mat-icon>
+          آمار خرید
+        </h3>
+        <div class="stats-grid">
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-icon orders-icon">
+                <mat-icon>shopping_cart</mat-icon>
+              </div>
+              <div class="stat-details">
+                <span class="stat-value">{{ customerDetail.totalOrders }}</span>
+                <span class="stat-label">تعداد سفارشات</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-icon spent-icon">
+                <mat-icon>payments</mat-icon>
+              </div>
+              <div class="stat-details">
+                <span class="stat-value">{{ formatPrice(customerDetail.totalSpent) }}</span>
+                <span class="stat-label">مجموع خرید</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-icon last-order-icon">
+                <mat-icon>history</mat-icon>
+              </div>
+              <div class="stat-details">
+                <span class="stat-value">{{ formatDate(customerDetail.lastOrderDate) }}</span>
+                <span class="stat-label">آخرین سفارش</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card class="stat-card">
+            <mat-card-content>
+              <div class="stat-icon avg-icon">
+                <mat-icon>equalizer</mat-icon>
+              </div>
+              <div class="stat-details">
+                <span class="stat-value">
+                  {{ customerDetail.totalOrders ? formatPrice(customerDetail.totalSpent / customerDetail.totalOrders) : '۰ تومان' }}
+                </span>
+                <span class="stat-label">میانگین هر سفارش</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- آدرس‌ها -->
+      <div *ngIf="customerDetail.addresses?.length" class="addresses-section">
+        <h3 class="section-title">
+          <mat-icon>location_on</mat-icon>
+          آدرس‌های ثبت شده
+        </h3>
+        <div class="addresses-grid">
+          <mat-card *ngFor="let addr of customerDetail.addresses" class="address-card" [class.default-address]="addr.isDefault">
+            <mat-card-header>
+              <mat-card-title>
+                <div class="address-title">
+                  <mat-icon>home</mat-icon>
+                  <span>{{ addr.title || addr.province + '، ' + addr.city + '، ' + addr.street }}</span>
+                  <span *ngIf="addr.isDefault" class="default-badge">پیش‌فرض</span>
+                </div>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="address-detail">
+                <p>{{ addr.province }}، {{ addr.city }}، {{ addr.street }}</p>
+                <p *ngIf="addr.plaque">پلاک: {{ addr.plaque }}</p>
+                <p class="postal-code">کدپستی: {{ addr.postalCode }}</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+<!-- سفارشات (همه سفارشات مشتری) -->
+<div *ngIf="customerDetail.recentOrders?.length" class="orders-section">
+  <h3 class="section-title">
+    <mat-icon>receipt</mat-icon>
+    سفارشات
+    <span class="orders-count">({{ customerDetail.totalOrders }} سفارش)</span>
+  </h3>
+  <div class="orders-table-container">
+    <table mat-table [dataSource]="customerDetail.recentOrders" class="orders-table">
+      
+      <!-- شماره سفارش -->
+      <ng-container matColumnDef="orderNumber">
+        <th mat-header-cell *matHeaderCellDef>شماره سفارش</th>
+        <td mat-cell *matCellDef="let order">
+          <span class="order-number">{{ order.orderNumber }}</span>
+        </td>
+      </ng-container>
+
+      <!-- تاریخ -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>تاریخ</th>
+        <td mat-cell *matCellDef="let order">{{ formatDate(order.orderDate) }}</td>
+      </ng-container>
+
+      <!-- مبلغ -->
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>مبلغ</th>
+        <td mat-cell *matCellDef="let order">{{ formatPrice(order.totalAmount) }}</td>
+      </ng-container>
+
+      <!-- وضعیت سفارش -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>وضعیت سفارش</th>
+        <td mat-cell *matCellDef="let order">
+          <span class="order-status" [ngClass]="getOrderStatusClass(order.status)">
+            {{ getOrderStatusText(order.status) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- وضعیت پرداخت -->
+      <ng-container matColumnDef="payment">
+        <th mat-header-cell *matHeaderCellDef>وضعیت پرداخت</th>
+        <td mat-cell *matCellDef="let order">
+          <span class="payment-status" [ngClass]="getPaymentStatusClass(order.paymentStatus)">
+            {{ getPaymentStatusText(order.paymentStatus) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- دکمه مشاهده جزئیات سفارش -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let order">
+          <button 
+            mat-icon-button 
+            color="primary" 
+            (click)="viewOrderDetails(order.id)"
+            matTooltip="مشاهده جزئیات سفارش">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['orderNumber', 'date', 'amount', 'status', 'payment', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['orderNumber', 'date', 'amount', 'status', 'payment', 'actions']"></tr>
+    </table>
+  </div>
+
+  <!-- دکمه مشاهده همه سفارشات (اختیاری – چون الان همه رو نشون میدیم، می‌تونیم حذفش کنیم یا نگه داریم) -->
+  <!-- اگه خواستید نگه دارید، می‌تونه به صفحه سفارشات با فیلتر مشتری لینک بده -->
+</div>
+      <!-- اگر هیچ سفارشی نبود -->
+      <div *ngIf="!customerDetail.recentOrders?.length" class="no-orders">
+        <mat-icon>inbox</mat-icon>
+        <p>این مشتری تاکنون سفارشی ثبت نکرده است.</p>
+      </div>
+
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="close()">بستن</button>
+    <button mat-raised-button color="primary" (click)="close()">
+      <mat-icon>check_circle</mat-icon>
+      تایید
+    </button>
+  </mat-dialog-actions>
+</div>

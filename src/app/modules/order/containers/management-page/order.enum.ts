@@ -22,7 +22,7 @@ export const OrderStatusLabels = {
   [OrderStatus.PAYMENT_FAILED]: 'پرداخت ناموفق',
   [OrderStatus.PAYMENT_VERIFIED]: 'پرداخت تایید شد',
   [OrderStatus.PROCESSING]: 'در حال پردازش',
-  [OrderStatus.PACKED]: 'بسته‌بندی شده',
+  [OrderStatus.PACKED]: 'در حال بارگیری',
   [OrderStatus.READY_TO_SHIP]: 'آماده ارسال',
   [OrderStatus.IN_TRANSIT]: 'در حال حمل',
   [OrderStatus.DELIVERED]: 'تحویل داده شد',

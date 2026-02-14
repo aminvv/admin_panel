@@ -1,0 +1,277 @@
+<div class="order-detail-container" dir="rtl" *ngIf="order && !loading; else loadingTemplate">
+
+  <!-- Header Section -->
+  <div class="order-header">
+    <div class="header-top">
+      <button mat-icon-button class="back-btn" (click)="onBack()">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+      <h1 class="page-title">
+        <mat-icon>shopping_cart</mat-icon>
+        جزئیات سفارش #{{ order.id }}
+      </h1>
+    </div>
+
+    <div class="header-info">
+      <div class="info-row">
+        <div class="info-item">
+          <mat-icon>calendar_today</mat-icon>
+          <span>{{ formatDate(order.create_at) }}</span>
+        </div>
+        <div class="info-item clickable" (click)="onViewCustomer()">
+          <mat-icon>person</mat-icon>
+          <span>{{ getCustomerName(order.user) }}</span>
+        </div>
+        <div class="info-item" [ngClass]="getStatusColor(order.status)">
+          <mat-icon>{{ getStatusIcon(order.status) }}</mat-icon>
+          <span>{{ getStatusLabel(order.status) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- در order-list.component.html -->
+      <button mat-icon-button color="info" (click)="printInvoice(order.id)" matTooltip="چاپ فاکتور" class="action-btn"
+        *ngIf="order.payment?.status">
+        <mat-icon>print</mat-icon>
+      </button>
+
+      <button mat-button color="warn" (click)="cancelOrder(orderId)" *ngIf="canCancelOrder()">
+        <mat-icon>cancel</mat-icon>
+        لغو سفارش
+      </button>
+      <button mat-icon-button [matMenuTriggerFor]="moreMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #moreMenu="matMenu">
+        <button mat-menu-item (click)="onExportExcel()">
+          <mat-icon>table_chart</mat-icon>
+          <span>خروجی Excel</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" *ngIf="!error; else errorTemplate">
+
+    <!-- Order Summary Card -->
+    <mat-card class="summary-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>receipt</mat-icon>
+          خلاصه سفارش
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="label">مبلغ کل:</span>
+            <span class="value">{{ formatPrice(order.total_amount) }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">تخفیف:</span>
+            <span class="value discount">{{ formatPrice(order.discount_amount) }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">مبلغ نهایی:</span>
+            <span class="value total">{{ formatPrice(order.final_amount) }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">وضعیت پرداخت:</span>
+            <span class="value" [ngClass]="order.payment?.status ? 'paid' : 'unpaid'">
+              <mat-icon>{{ order.payment?.status ? 'check_circle' : 'cancel' }}</mat-icon>
+              {{ order.payment?.status ? 'پرداخت شده' : 'پرداخت نشده' }}
+            </span>
+          </div>
+          <div class="summary-item">
+            <span class="label">شماره فاکتور:</span>
+            <span class="value">{{ order.payment?.invoice_number || 'ندارد' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Two Column Layout -->
+    <div class="content-grid">
+
+      <!-- Left Column -->
+      <div class="left-column">
+
+        <!-- Customer Info -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>person</mat-icon>
+              اطلاعات مشتری
+            </mat-card-title>
+            <button mat-icon-button matTooltip="تماس با مشتری">
+              <mat-icon>phone</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-field">
+              <mat-icon>person_outline</mat-icon>
+              <div class="field-content">
+                <span class="field-label">نام کامل</span>
+                <span class="field-value">{{ getCustomerName(order.user) }}</span>
+              </div>
+            </div>
+            <div class="info-field">
+              <mat-icon>phone</mat-icon>
+              <div class="field-content">
+                <span class="field-label">شماره موبایل</span>
+                <span class="field-value clickable">
+                  {{ order.user?.mobile || 'ندارد' }}
+                </span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Shipping Info -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>local_shipping</mat-icon>
+              اطلاعات ارسال
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-field">
+              <mat-icon>location_on</mat-icon>
+              <div class="field-content">
+                <span class="field-label">آدرس</span>
+                <span class="field-value">{{ order.street || 'تعیین نشده' }}</span>
+              </div>
+            </div>
+            <div class="info-field">
+              <mat-icon>location_city</mat-icon>
+              <div class="field-content">
+                <span class="field-label">شهر</span>
+                <span class="field-value">{{ order.city || 'تعیین نشده' }}</span>
+              </div>
+            </div>
+            <div class="info-field">
+              <mat-icon>local_post_office</mat-icon>
+              <div class="field-content">
+                <span class="field-label">کد پستی</span>
+                <span class="field-value">{{ order.postal_code || 'تعیین نشده' }}</span>
+              </div>
+            </div>
+            <div class="info-field">
+              <mat-icon>phone</mat-icon>
+              <div class="field-content">
+                <span class="field-label">تلفن تماس</span>
+                <span class="field-value">{{ order.phone || 'تعیین نشده' }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Right Column -->
+      <div class="right-column">
+
+        <!-- Order Items -->
+        <mat-card class="items-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>shopping_basket</mat-icon>
+              محصولات سفارش
+              <span class="items-count">{{ order?.items?.length || 0 }} محصول</span>
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <!-- نمایش آیتم‌ها -->
+            <div *ngIf="order?.items?.length > 0">
+              <div class="item-row" *ngFor="let item of order.items">
+                <div class="item-image">
+                  <img [src]="getImageUrl(item)" [alt]="item.product?.name" width="60" height="60"
+                    (error)="$event.target.src='https://via.placeholder.com/100x100/cccccc/969696?text=محصول'">
+                </div>
+                <div class="item-details">
+                  <h4>{{ item.product?.name }}</h4>
+                  <p>کد: {{ item.product?.sku }}</p>
+                  <p class="quantity">تعداد: {{ item.quantity || 0 }}</p>
+                </div>
+                <div class="item-price">
+                  <div class="unit-price">{{ formatPrice(item.price) }}</div>
+                  <div class="total-price">{{ formatPrice((item.price || 0) * (item.quantity || 0)) }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- اگر آیتمی وجود نداشت -->
+            <div *ngIf="!order?.items || order.items.length === 0">
+              <div class="no-items">
+                <mat-icon>shopping_basket</mat-icon>
+                <p>هیچ محصولی در این سفارش وجود ندارد</p>
+              </div>
+            </div>
+
+            <!-- جمع کل -->
+            <div class="order-totals" *ngIf="order">
+              <div class="total-row">
+                <span>جمع کل:</span>
+                <span>{{ formatPrice(order.total_amount) }}</span>
+              </div>
+              <div class="total-row">
+                <span>تخفیف:</span>
+                <span class="discount">{{ formatPrice(order.discount_amount) }}</span>
+              </div>
+              <div class="total-row final">
+                <span>مبلغ قابل پرداخت:</span>
+                <span class="total">{{ formatPrice(order.final_amount) }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Status Flow -->
+        <mat-card class="status-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>timeline</mat-icon>
+              وضعیت سفارش
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <app-order-status-flow [orderId]="order.id" [currentStatus]="order.status" [canEdit]="true"
+              (statusChanged)="loadOrder()">
+            </app-order-status-flow>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Floating Action Button -->
+  <button mat-fab class="fab-refresh" (click)="onRefresh()" matTooltip="بروزرسانی">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
+
+<!-- Loading Template -->
+<ng-template #loadingTemplate>
+  <div class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>در حال دریافت اطلاعات...</p>
+  </div>
+</ng-template>
+
+<!-- Error Template -->
+<ng-template #errorTemplate>
+  <div class="error-state">
+    <mat-icon class="error-icon">error_outline</mat-icon>
+    <h3>خطا در بارگذاری اطلاعات</h3>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadOrder()">
+      <mat-icon>refresh</mat-icon>
+      تلاش مجدد
+    </button>
+  </div>
+</ng-template>

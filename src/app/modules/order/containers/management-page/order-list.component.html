@@ -1,6 +1,6 @@
 <!-- src/app/modules/admin/orders/containers/management-page/order-list.component.html -->
 <div class="order-list-container" dir="rtl">
-  
+
   <!-- HEADER -->
   <div class="header-section">
     <div class="header-title">
@@ -10,7 +10,7 @@
       </h1>
       <p class="subtitle">مدیریت و پیگیری کلیه سفارشات سیستم</p>
     </div>
-    
+
     <div class="header-actions">
       <button mat-raised-button color="primary" (click)="refresh()">
         <mat-icon>refresh</mat-icon>
@@ -98,27 +98,33 @@
       <div class="search-container">
         <mat-form-field appearance="outline" class="search-field">
           <mat-icon matPrefix>search</mat-icon>
-          <input 
-            matInput 
-            [(ngModel)]="searchQuery" 
-            (keyup.enter)="applyFilter()"
-            placeholder="جستجوی شماره سفارش، مشتری یا آدرس..."
-          >
+          <input matInput [(ngModel)]="searchQuery" (keyup.enter)="applyFilter()"
+            placeholder="جستجوی شماره سفارش، مشتری یا آدرس...">
         </mat-form-field>
       </div>
 
       <div class="filter-controls">
-        <mat-form-field appearance="outline" class="status-filter">
+        <mat-form-field appearance="outline" class="status-filter" floatLabel="always">
           <mat-label>وضعیت سفارش</mat-label>
           <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilter()">
+
+            <mat-select-trigger>
+              <div class="status-trigger">
+                <mat-icon>{{ getStatusIcon(statusFilter) }}</mat-icon>
+                <span>{{ getStatusLabel(statusFilter) }}</span>
+              </div>
+            </mat-select-trigger>
+
             <mat-option *ngFor="let status of statusOptions" [value]="status.value">
               <div class="status-option">
                 <mat-icon>{{ status.icon }}</mat-icon>
                 <span>{{ status.label }}</span>
               </div>
             </mat-option>
+
           </mat-select>
         </mat-form-field>
+
 
         <mat-form-field appearance="outline" class="page-size">
           <mat-label>تعداد در صفحه</mat-label>
@@ -190,22 +196,15 @@
   <div class="table-section" *ngIf="!loading && !error">
     <div class="table-container" *ngIf="dataSource.data.length > 0">
       <table mat-table [dataSource]="dataSource" class="orders-table" matSort>
-        
+
         <!-- Checkbox Column -->
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef width="50">
-            <mat-checkbox 
-              [(ngModel)]="isAllSelected"
-              (change)="toggleSelectAll()"
-              color="primary"
-            ></mat-checkbox>
+            <mat-checkbox [(ngModel)]="isAllSelected" (change)="toggleSelectAll()" color="primary"></mat-checkbox>
           </th>
           <td mat-cell *matCellDef="let order">
-            <mat-checkbox 
-              [checked]="selectedOrders.has(order.id)"
-              (change)="toggleOrderSelection(order.id)"
-              color="primary"
-            ></mat-checkbox>
+            <mat-checkbox [checked]="selectedOrders.has(order.id)" (change)="toggleOrderSelection(order.id)"
+              color="primary"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -276,34 +275,20 @@
                 <mat-icon>{{ orderService.getStatusIcon(order.status) }}</mat-icon>
                 {{ orderService.getStatusLabel(order.status) }}
               </span>
-              
+
               <div class="quick-status-actions">
-                <button 
-                  mat-icon-button 
-                  *ngIf="orderService.canAdvance(order.status)"
-                  (click)="advanceOrder(order.id)"
-                  matTooltip="مرحله بعد"
-                  class="advance-btn"
-                >
+                <button mat-icon-button *ngIf="orderService.canAdvance(order.status)" (click)="advanceOrder(order.id)"
+                  matTooltip="مرحله بعد" class="advance-btn">
                   <mat-icon>arrow_forward</mat-icon>
                 </button>
-                
-                <button 
-                  mat-icon-button 
-                  *ngIf="orderService.canRevert(order.status)"
-                  (click)="revertOrder(order.id)"
-                  matTooltip="مرحله قبل"
-                  class="revert-btn"
-                >
+
+                <button mat-icon-button *ngIf="orderService.canRevert(order.status)" (click)="revertOrder(order.id)"
+                  matTooltip="مرحله قبل" class="revert-btn">
                   <mat-icon>arrow_back</mat-icon>
                 </button>
-                
-                <button 
-                  mat-icon-button 
-                  (click)="openStatusFlow(order)"
-                  matTooltip="تغییر وضعیت پیشرفته"
-                  class="flow-btn"
-                >
+
+                <button mat-icon-button (click)="openStatusFlow(order)" matTooltip="تغییر وضعیت پیشرفته"
+                  class="flow-btn">
                   <mat-icon>swap_horiz</mat-icon>
                 </button>
               </div>
@@ -332,33 +317,25 @@
           <th mat-header-cell *matHeaderCellDef>عملیات</th>
           <td mat-cell *matCellDef="let order">
             <div class="actions-cell">
-              <button 
-                mat-icon-button 
-                color="primary"
-                (click)="viewOrder(order.id)"
-                matTooltip="مشاهده جزئیات"
-              >
-                <mat-icon>visibility</mat-icon>
-              </button>
-              
-              <button 
-                mat-icon-button 
-                color="accent"
-                (click)="editOrder(order.id)"
-                matTooltip="ویرایش سفارش"
-              >
-                <mat-icon>edit</mat-icon>
-              </button>
-              
-              <button 
-                mat-icon-button 
-                color="warn"
-                *ngIf="orderService.canCancel(order.status)"
-                (click)="cancelOrder(order.id)"
-                matTooltip="لغو سفارش"
-              >
+
+              <button mat-icon-button color="warn" *ngIf="orderService.canCancel(order.status)"
+                (click)="cancelOrder(order.id)" matTooltip="لغو سفارش">
                 <mat-icon>cancel</mat-icon>
               </button>
+
+
+              <button mat-icon-button color="primary" (click)="viewOrder(order.id)" matTooltip="مشاهده جزئیات"
+                class="action-btn">
+                <mat-icon>visibility</mat-icon>
+              </button>
+
+
+              <!-- Print Invoice -->
+              <button mat-icon-button color="info" (click)="printInvoice(order.id)" matTooltip="چاپ فاکتور"
+                class="action-btn" *ngIf="order.payment?.status">
+                <mat-icon>print</mat-icon>
+              </button>
+
             </div>
           </td>
         </ng-container>
@@ -369,12 +346,8 @@
       </table>
 
       <!-- Paginator -->
-      <mat-paginator 
-        [pageSizeOptions]="pageSizeOptions"
-        [pageSize]="pageSize"
-        showFirstLastButtons
-        aria-label="انتخاب صفحه"
-      ></mat-paginator>
+      <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" showFirstLastButtons
+        aria-label="انتخاب صفحه"></mat-paginator>
     </div>
 
     <!-- Empty State -->
@@ -393,7 +366,7 @@
 
   <!-- STATUS FLOW MODAL -->
   <div class="status-flow-modal-overlay" *ngIf="showStatusFlowModal" (click)="closeStatusFlow()"></div>
-  
+
   <div class="status-flow-modal" *ngIf="showStatusFlowModal && selectedOrderForFlow">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
@@ -405,14 +378,10 @@
           <mat-icon>close</mat-icon>
         </button>
       </div>
-      
+
       <div class="modal-body">
-        <app-order-status-flow
-          [orderId]="selectedOrderForFlow.id"
-          [currentStatus]="selectedOrderForFlow.status"
-          [canEdit]="true"
-          (statusChanged)="closeStatusFlow()"
-        ></app-order-status-flow>
+        <app-order-status-flow [orderId]="selectedOrderForFlow.id" [currentStatus]="selectedOrderForFlow.status"
+          [canEdit]="true" (statusChanged)="closeStatusFlow()"></app-order-status-flow>
       </div>
     </div>
   </div>

@@ -33,7 +33,9 @@ export enum routes {
   PAYMENTS_MANAGE = '/order/payments-manage',
   ORDER_LIST = '/order/list',
   ORDER_DETAILS = '/order/detail',
+  ORDER_STATUS_FLOW = '/order/status-flow',
   ORDER_REPORTS = '/order/reports',
+  CUSTOMER_INFO = '/order/customerInfo',
 
 
 

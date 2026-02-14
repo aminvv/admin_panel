@@ -176,13 +176,6 @@ export class ManagementPageComponent implements OnInit {
 
 
 
-  // removeDiscount(id: number) {
-  //   this.discountService.deleteDiscount(id).subscribe({
-  //     next: (response) => {
-  //       this.toastr.success(response.message || 'تخفیف با موفقیت حذف  شد');
-  //       this.router.navigate([this.routes.MANAGEMENT]);
-  //     },
-  //   })
 
 
 

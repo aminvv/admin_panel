@@ -876,6 +876,48 @@
     }
   }
 
+
+
+  .simple-option {
+    display: flex;
+    align-items: center;
+    height: 48px;
+  }
+
+  .option-icon {
+    margin-left: 8px;
+    font-size: 20px;
+  }
+
+  .selected-status { 
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .trigger-icon {
+    margin-left: 8px;
+    font-size: 20px;
+  }
+
+  .trigger-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* اگر بازم مشکل داشت */
+  .mat-select-panel .mat-option {
+    height: 48px;
+    line-height: 48px;
+  }
+
+  .mat-select-trigger {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
   /* ======== LOADING OVERLAY ======== */
   .loading-overlay {
     position: fixed;
@@ -1069,6 +1111,10 @@
           }
         }
       }
+    }
+
+        .modal-body .mat-select-trigger {
+      flex-direction: row-reverse;
     }
 
     .loading-overlay {
