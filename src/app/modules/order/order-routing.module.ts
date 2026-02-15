@@ -5,6 +5,7 @@ import { OrderListComponent } from './containers/management-page/order-list.comp
 import { OrderDetailComponent } from './containers/order-detail/order-detail.component';
 import { OrderStatusFlowComponent } from './containers/order-status-flow/order-status-flow.component';
 import { CustomerInfoComponent } from './containers/coustomer/customer-info/customer-info.component';
+import { PaymentListComponent } from './containers/payment/payment-list/payment-list.component';
 
 const routes: Routes = [
   {
@@ -31,7 +32,11 @@ const routes: Routes = [
     path: 'customerInfo',
     component: CustomerInfoComponent,
     data: { title: 'اطلاعات مشتری' }
-  }
+  },
+  {
+    path: 'payments-list',
+    component: PaymentListComponent
+  },
 ];
 
 @NgModule({

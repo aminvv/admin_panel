@@ -123,6 +123,7 @@
         letter-spacing: 0.3px;
         border-bottom: none;
         padding: 0 16px;
+        text-align: start;
       }
     }
 
@@ -160,6 +161,9 @@
 
       .avatar-icon {
         color: #5c6bc0;
+        align-items: center;
+        justify-content: center;
+        display: flex;
         background: #e8eaf6;
         border-radius: 50%;
         padding: 6px;
@@ -211,14 +215,45 @@
       text-align: center;
     }
 
-    .status-pending { background: #fff3e0; color: #ef6c00; }
-    .status-ordered { background: #e3f2fd; color: #1976d2; }
-    .status-processing { background: #e1f5fe; color: #0288d1; }
-    .status-packed { background: #ede7f6; color: #5e35b1; }
-    .status-shipped { background: #e0f2f1; color: #00796b; }
-    .status-delivered { background: #e8f5e9; color: #2e7d32; }
-    .status-cancelled { background: #ffebee; color: #c62828; }
-    .status-default { background: #f5f5f5; color: #616161; }
+    .status-pending {
+      background: #fff3e0;
+      color: #ef6c00;
+    }
+
+    .status-ordered {
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .status-processing {
+      background: #e1f5fe;
+      color: #0288d1;
+    }
+
+    .status-packed {
+      background: #ede7f6;
+      color: #5e35b1;
+    }
+
+    .status-shipped {
+      background: #e0f2f1;
+      color: #00796b;
+    }
+
+    .status-delivered {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status-cancelled {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .status-default {
+      background: #f5f5f5;
+      color: #616161;
+    }
 
     /* وضعیت‌های پرداخت */
     .payment-chip {
@@ -229,11 +264,30 @@
       font-weight: 500;
     }
 
-    .payment-pending { background: #fff3e0; color: #ef6c00; }
-    .payment-paid { background: #e8f5e9; color: #2e7d32; }
-    .payment-failed { background: #ffebee; color: #c62828; }
-    .payment-refunded { background: #e1f5fe; color: #0288d1; }
-    .payment-default { background: #f5f5f5; color: #616161; }
+    .payment-pending {
+      background: #fff3e0;
+      color: #ef6c00;
+    }
+
+    .payment-paid {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .payment-failed {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .payment-refunded {
+      background: #e1f5fe;
+      color: #0288d1;
+    }
+
+    .payment-default {
+      background: #f5f5f5;
+      color: #616161;
+    }
   }
 
   .no-data-cell {
@@ -316,7 +370,7 @@
     align-items: center;
     min-width: 280px;
     background-color: white;
-    border-radius: 40px;        // گرد شدن کامل
+    border-radius: 40px; // گرد شدن کامل
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
     transition: box-shadow 0.2s ease;
     border: 1px solid #e0e7ef;

@@ -30,12 +30,13 @@ export enum routes {
 
   // --- Order ---//
 
-  PAYMENTS_MANAGE = '/order/payments-manage',
+  PAYMENTS_MANAGE = '/order/payments-list',
   ORDER_LIST = '/order/list',
   ORDER_DETAILS = '/order/detail',
   ORDER_STATUS_FLOW = '/order/status-flow',
   ORDER_REPORTS = '/order/reports',
   CUSTOMER_INFO = '/order/customerInfo',
+  // FINANCE = '/order/finance',
 
 
 

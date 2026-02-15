@@ -1,0 +1,180 @@
+<div class="payment-list">
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-title">
+      <mat-icon class="header-icon">payments</mat-icon>
+      <h1>مدیریت پرداخت‌ها</h1>
+      <span class="badge" *ngIf="!loading && totalItems > 0">{{ totalItems | number }} تراکنش</span>
+    </div>
+    <p class="header-subtitle">مشاهده و جستجوی تمام تراکنش‌های مالی سیستم</p>
+  </div>
+
+  <!-- FILTERS TOOLBAR - ترکیب HTML خالص و mat-form-field -->
+  <div class="filters-toolbar">
+    <!-- جستجو (HTML خالص) -->
+    <div class="filter-item search-wrapper">
+      <input type="text" class="filter-input search-input" placeholder="جستجو (شماره فاکتور)"
+        [(ngModel)]="searchTerm" (keyup.enter)="applyFilters()" />
+      <button class="filter-btn search-btn" (click)="applyFilters()" [disabled]="loading">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+
+    <!-- وضعیت پرداخت (HTML خالص) -->
+    <div class="filter-item select-wrapper">
+      <select class="filter-select" [(ngModel)]="statusFilter" (change)="applyFilters()">
+        <option value="all">همه وضعیت‌ها</option>
+        <option value="success">موفق</option>
+        <option value="failed">ناموفق</option>
+      </select>
+      <mat-icon class="select-arrow">arrow_drop_down</mat-icon>
+    </div>
+
+    <!-- از تاریخ (با mat-datepicker) -->
+    <mat-form-field appearance="outline" class="date-field">
+      <input placeholder="از تاریخ" matInput [matDatepicker]="fromPicker" [(ngModel)]="dateFrom"
+        (dateChange)="applyFilters()">
+      <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+      <mat-datepicker #fromPicker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- تا تاریخ (با mat-datepicker) -->
+    <mat-form-field appearance="outline" class="date-field">
+      <input placeholder="تا تاریخ" matInput [matDatepicker]="toPicker" [(ngModel)]="dateTo"
+        (dateChange)="applyFilters()">
+      <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+      <mat-datepicker #toPicker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- دکمه‌ها -->
+    <div class="filter-actions">
+      <button class="action-btn" (click)="resetFilters()" [disabled]="loading">
+        <mat-icon>clear</mat-icon>
+        <span>پاک کردن</span>
+      </button>
+      <button class="action-btn" (click)="refresh()" [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+        <span>بروزرسانی</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- TABLE CARD (بدون تغییر) -->
+  <mat-card class="table-card">
+    <!-- LOADING -->
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>در حال دریافت پرداخت‌ها...</p>
+    </div>
+
+    <!-- TABLE -->
+    <div *ngIf="!loading" class="table-responsive">
+      <table mat-table [dataSource]="dataSource" matSort class="payment-table">
+
+        <!-- شماره فاکتور -->
+        <ng-container matColumnDef="invoice_number">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>شماره فاکتور</th>
+          <td mat-cell *matCellDef="let payment">
+            <span class="invoice-number">{{ payment.invoice_number }}</span>
+          </td>
+        </ng-container>
+
+        <!-- شناسه سفارش -->
+        <ng-container matColumnDef="order_id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>شماره سفارش</th>
+          <td mat-cell *matCellDef="let payment">
+            <span *ngIf="payment.order?.id">{{ payment.order.id }}</span>
+            <span *ngIf="!payment.order?.id">—</span>
+          </td>
+        </ng-container>
+
+        <!-- محصولات -->
+        <ng-container matColumnDef="products">
+          <th mat-header-cell *matHeaderCellDef>محصولات</th>
+          <td mat-cell *matCellDef="let payment">
+            <span class="product-names" [matTooltip]="payment.productNames || ''">
+              {{ payment.productNames || '—' }}
+            </span>
+            <span class="product-codes" [matTooltip]="payment.productCodes || ''">
+              {{ payment.productCodes || '—' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- کاربر -->
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>کاربر</th>
+          <td mat-cell *matCellDef="let payment">
+            <div class="user-cell">
+              <mat-icon class="user-icon">person</mat-icon>
+              <div class="user-info">
+                <span class="user-name">{{ payment.user?.firstName }} {{ payment.user?.lastName }}</span>
+                <span class="user-phone">{{ payment.user?.mobile }}</span>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- مبلغ -->
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>مبلغ</th>
+          <td mat-cell *matCellDef="let payment">
+            <span class="amount">{{ formatPrice(payment.amount) }}</span>
+          </td>
+        </ng-container>
+
+        <!-- وضعیت -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>وضعیت</th>
+          <td mat-cell *matCellDef="let payment">
+            <span class="status-badge" [ngClass]="getStatusClass(payment.status)">
+              {{ getStatusText(payment.status) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- تاریخ -->
+        <ng-container matColumnDef="create_at">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>تاریخ</th>
+          <td mat-cell *matCellDef="let payment">
+            <span class="date">{{ formatDate(payment.create_at) }}</span>
+          </td>
+        </ng-container>
+
+        <!-- عملیات -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>عملیات</th>
+          <td mat-cell *matCellDef="let payment">
+            <button mat-icon-button color="primary" (click)="openPaymentDetail(payment)" matTooltip="مشاهده جزئیات">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- حالت خالی -->
+        <tr *ngIf="dataSource.data.length === 0">
+          <td colspan="8" class="no-data-cell">
+            <div class="no-data">
+              <mat-icon>receipt</mat-icon>
+              <p>هیچ پرداختی یافت نشد.</p>
+              <button mat-button color="primary" (click)="resetFilters()">
+                <mat-icon>clear</mat-icon>
+                پاک کردن فیلترها
+              </button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <div *ngIf="!loading && dataSource.data.length > 0" class="pagination-container">
+      <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="currentPage" (page)="onPageChange($event)" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </mat-card>
+</div>

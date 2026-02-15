@@ -1,0 +1,124 @@
+.detail-dialog {
+  max-width: 600px;
+  max-height: 90vh;
+  direction: rtl;
+
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0;
+      font-size: 1.4rem;
+
+      .title-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .close-btn {
+      color: white;
+      &:hover { background: rgba(255,255,255,0.1); }
+    }
+  }
+
+  mat-dialog-content {
+    padding: 24px;
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #2c3e50;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+      mat-icon { color: #5c6bc0; }
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      background: #f8f9fa;
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .label {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+      }
+
+      .value {
+        font-weight: 500;
+        color: #2c3e50;
+
+        &.amount {
+          color: #27ae60;
+          font-size: 1.1rem;
+        }
+
+        &.phone a {
+          color: #3498db;
+          text-decoration: none;
+          &:hover { text-decoration: underline; }
+        }
+      }
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      &.status-success {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+      &.status-failed {
+        background: #ffebee;
+        color: #c62828;
+      }
+    }
+
+    .order-number {
+      font-family: 'Roboto Mono', monospace;
+      background: #ecf0f1;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .action-row {
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  mat-dialog-actions {
+    padding: 16px 24px;
+    border-top: 1px solid #ecf0f1;
+  }
+}

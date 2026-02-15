@@ -36,6 +36,28 @@ import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.ser
 import { CustomerInfoComponent } from './containers/coustomer/customer-info/customer-info.component';
 import { CustomerService } from './services/customer.service';
 import { CustomerDetailDialogComponent } from './containers/coustomer/customer-detail-dialog/customer-detail-dialog.component';
+import { PaymentDetailDialogComponent } from './containers/payment/payment-detail-dialog/payment-detail-dialog.component';
+import { PaymentListComponent } from './containers/payment/payment-list/payment-list.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { JalaliDateAdapter } from 'src/app/shared/adapter/jalali-date-adapter';
+import { DateAdapter } from 'angular-calendar';
+
+export const JALALI_MOMENT_FORMATS = {
+  parse: {
+    dateInput: 'jYYYY/jMM/jDD',
+  },
+  display: {
+    dateInput: 'jYYYY/jMM/jDD',
+    monthYearLabel: 'jYYYY jMMMM',
+    dateA11yLabel: 'jYYYY/jMM/jDD',
+    monthYearA11yLabel: 'jYYYY jMMMM',
+  },
+};
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -43,7 +65,9 @@ import { CustomerDetailDialogComponent } from './containers/coustomer/customer-d
     OrderStatusFlowComponent,
     OrderDetailComponent,
     CustomerInfoComponent,
-    CustomerDetailDialogComponent
+    CustomerDetailDialogComponent,
+    PaymentDetailDialogComponent,
+    PaymentListComponent
 
   ],
   imports: [
@@ -58,10 +82,12 @@ import { CustomerDetailDialogComponent } from './containers/coustomer/customer-d
     MatIconModule,
     MatChipsModule,
     MatFormFieldModule,
+    MatNativeDateModule,
     MatSelectModule,
     MatSnackBarModule,
     MatButtonModule,
     MatInputModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatTableModule,
     MatTooltipModule,
@@ -71,9 +97,15 @@ import { CustomerDetailDialogComponent } from './containers/coustomer/customer-d
     MatSortModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
+
+
+
   ],
   providers: [
+    { provide: DateAdapter, useClass: JalaliDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: JALALI_MOMENT_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'fa' },
     OrderService,
     CustomerService,
     BaseService,

@@ -89,7 +89,7 @@ getCustomerOrderList(): Observable<CustomerOrderListItem[]> {
 
         return {
           id: order.id,
-          orderNumber: `ORD-${order.id}`,
+          orderNumber: `${order.id}`,
           customerName,
           address: order.street || 'آدرس ثبت نشده',
           phone: order.user?.mobile || 'ندارد',
@@ -123,7 +123,6 @@ getCustomerDetail(customerId: number): Observable<CustomerDetail> {
         (a, b) => new Date(b.create_at).getTime() - new Date(a.create_at).getTime()
       );
 
-      // تبدیل payment.status به string
       const allOrders = sortedOrders.map(order => {
         let paymentStatus = 'unknown';
         if (order.payment) {
@@ -136,7 +135,7 @@ getCustomerDetail(customerId: number): Observable<CustomerDetail> {
 
         return {
           id: order.id,
-          orderNumber: `ORD-${order.id}`,
+          orderNumber: `${order.id}`,
           orderDate: order.create_at,
           status: order.status,
           paymentStatus,
@@ -169,7 +168,7 @@ getCustomerDetail(customerId: number): Observable<CustomerDetail> {
         totalOrders: orders.length,
         totalSpent,
         lastOrderDate,
-        recentOrders: allOrders  // ✅ همه سفارشات
+        recentOrders: allOrders  
       };
     })
   );

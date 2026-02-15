@@ -219,10 +219,9 @@
     </table>
   </div>
 
-  <!-- دکمه مشاهده همه سفارشات (اختیاری – چون الان همه رو نشون میدیم، می‌تونیم حذفش کنیم یا نگه داریم) -->
-  <!-- اگه خواستید نگه دارید، می‌تونه به صفحه سفارشات با فیلتر مشتری لینک بده -->
+
 </div>
-      <!-- اگر هیچ سفارشی نبود -->
+   
       <div *ngIf="!customerDetail.recentOrders?.length" class="no-orders">
         <mat-icon>inbox</mat-icon>
         <p>این مشتری تاکنون سفارشی ثبت نکرده است.</p>
@@ -232,10 +231,10 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-button (click)="close()">بستن</button>
+   
     <button mat-raised-button color="primary" (click)="close()">
-      <mat-icon>check_circle</mat-icon>
-      تایید
+      <mat-icon>close</mat-icon>
+      بستن
     </button>
   </mat-dialog-actions>
 </div>

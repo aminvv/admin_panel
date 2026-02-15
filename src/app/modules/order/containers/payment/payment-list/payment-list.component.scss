@@ -1,0 +1,936 @@
+.payment-list {
+  padding: 24px;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 64px);
+  direction: rtl;
+  font-family: 'Vazir', 'Roboto', sans-serif;
+}
+
+.page-header {
+  margin-bottom: 32px;
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+
+    .header-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: #f39c12;
+      background: rgba(243, 156, 18, 0.1);
+      padding: 8px;
+      border-radius: 12px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin: 0;
+    }
+
+    .badge {
+      background-color: #e3f2fd;
+      color: #1976d2;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+
+  .header-subtitle {
+    color: #7f8c8d;
+    font-size: 1rem;
+    margin: 0 46px 0 0;
+  }
+}
+
+/* ===== نوار فیلتر اختصاصی ===== */
+.filters-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: white;
+  padding: 16px 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  direction: rtl;
+
+  .filter-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  /* جستجو */
+  .search-wrapper {
+    flex: 3 1 300px;
+    display: flex;
+    border: 1px solid #e0e7ef;
+    border-radius: 40px;
+    background: white;
+    transition: all 0.2s;
+    overflow: hidden;
+
+    &:focus-within {
+      border-color: #3f51b5;
+      box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+    }
+
+    .search-input {
+      flex: 1;
+      height: 44px;
+      padding: 0 16px;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      color: #2c3e50;
+      outline: none;
+
+      &::placeholder {
+        color: #a0b3c6;
+      }
+    }
+
+    .search-btn {
+      width: 44px;
+      height: 44px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #5c6bc0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover:not(:disabled) {
+        background-color: #f0f3ff;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  /* سلیکت وضعیت */
+  .select-wrapper {
+    flex: 1 1 160px;
+    position: relative;
+    border: 1px solid #e0e7ef;
+    border-radius: 40px;
+    background: white;
+    transition: all 0.2s;
+
+    &:focus-within {
+      border-color: #3f51b5;
+      box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+    }
+
+    .filter-select {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      color: #2c3e50;
+      outline: none;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .select-arrow {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #7f8c8d;
+      pointer-events: none;
+      font-size: 24px;
+    }
+  }
+
+  /* تاریخ */
+  .date-wrapper {
+    flex: 1 1 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .date-label {
+      font-size: 0.75rem;
+      color: #7f8c8d;
+      margin-right: 8px;
+    }
+
+    .persian-datepicker {
+      width: 100%;
+      height: 44px;
+      border: 1px solid #e0e7ef;
+      border-radius: 40px;
+      padding: 0 12px;
+      font-size: 0.9rem;
+      color: #2c3e50;
+      outline: none;
+      transition: all 0.2s;
+      background: white;
+
+      &:focus {
+        border-color: #3f51b5;
+        box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+      }
+    }
+  }
+
+  /* دکمه‌ها */
+  .filter-actions {
+    display: flex;
+    gap: 8px;
+    margin-right: auto;
+    flex-wrap: wrap;
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 44px;
+      padding: 0 16px;
+      border: 1px solid #e0e7ef;
+      border-radius: 40px;
+      background: white;
+      color: #546e7a;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+
+      &:hover:not(:disabled) {
+        background-color: #f8f9fa;
+        border-color: #3f51b5;
+        color: #3f51b5;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+/* ===== جدول ===== */
+.table-card {
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    min-height: 300px;
+
+    p {
+      margin-top: 20px;
+      color: #5f6368;
+    }
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .payment-table {
+    width: 100%;
+
+    .mat-header-row {
+      background: linear-gradient(to right, #f8f9fa, #ffffff);
+      height: 56px;
+
+      .mat-header-cell {
+        color: #34495e;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 0 16px;
+        text-align: right;
+      }
+    }
+
+    .mat-row {
+      height: 64px;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #f5f8ff;
+      }
+
+      .mat-cell {
+        padding: 0 16px;
+        color: #2c3e50;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #ecf0f1;
+      }
+    }
+
+    .invoice-number {
+      font-family: 'Roboto Mono', monospace;
+      background: #ecf0f1;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    .product-names {
+      display: block;
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.85rem;
+      color: #2c3e50;
+    }
+
+    .product-codes {
+      display: block;
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.75rem;
+      color: #7f8c8d;
+    }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .user-icon {
+        color: #5c6bc0;
+        background: #e8eaf6;
+        border-radius: 50%;
+        padding: 6px;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+
+        .user-name {
+          font-weight: 500;
+        }
+
+        .user-phone {
+          font-size: 0.75rem;
+          color: #7f8c8d;
+        }
+      }
+    }
+
+    .amount {
+      font-weight: 600;
+      color: #27ae60;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+
+      &.status-success {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      &.status-failed {
+        background: #ffebee;
+        color: #c62828;
+      }
+    }
+
+    .date {
+      color: #546e7a;
+      font-size: 0.85rem;
+    }
+  }
+
+  .no-data-cell {
+    text-align: center;
+    padding: 48px 16px !important;
+
+    .no-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      color: #95a5a6;
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        opacity: 0.6;
+      }
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid #ecf0f1;
+    background: #fafcff;
+  }
+}
+
+/* ===== ریسپانسیو ===== */
+@media (max-width: 1024px) {
+  .filters-toolbar {
+    .search-wrapper {
+      flex: 2 1 250px;
+    }
+
+    .select-wrapper,
+    .date-wrapper {
+      flex: 1 1 140px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .payment-list {
+    padding: 16px;
+  }
+
+  .filters-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+
+    .filter-item {
+      width: 100%;
+    }
+
+    .filter-actions {
+      margin-right: 0;
+      justify-content: flex-end;
+    }
+  }
+}
+
+
+
+
+.payment-list {
+  padding: 24px;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 64px);
+  direction: rtl;
+  font-family: 'Vazir', 'Roboto', sans-serif;
+}
+
+.page-header {
+  margin-bottom: 32px;
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+
+    .header-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: #f39c12;
+      background: rgba(243, 156, 18, 0.1);
+      padding: 8px;
+      border-radius: 12px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin: 0;
+    }
+
+    .badge {
+      background-color: #e3f2fd;
+      color: #1976d2;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+
+  .header-subtitle {
+    color: #7f8c8d;
+    font-size: 1rem;
+    margin: 0 46px 0 0;
+  }
+}
+
+/* ===== نوار فیلتر (ترکیبی) ===== */
+.filters-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: white;
+  padding: 16px 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  direction: rtl;
+
+  /* بخش‌های HTML خالص */
+  .filter-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  /* جستجو */
+  .search-wrapper {
+    flex: 2 1 280px;
+    display: flex;
+    border: 1px solid #e0e7ef;
+    border-radius: 40px;
+    background: white;
+    transition: all 0.2s;
+    overflow: hidden;
+
+    &:focus-within {
+      border-color: #3f51b5;
+      box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+    }
+
+    .search-input {
+      flex: 1;
+      height: 44px;
+      padding: 0 16px;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      color: #2c3e50;
+      outline: none;
+
+      &::placeholder {
+        color: #a0b3c6;
+      }
+    }
+
+    .search-btn {
+      width: 44px;
+      height: 44px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #5c6bc0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover:not(:disabled) {
+        background-color: #f0f3ff;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  /* سلیکت وضعیت */
+  .select-wrapper {
+    flex: 1 1 160px;
+    position: relative;
+    border: 1px solid #e0e7ef;
+    border-radius: 40px;
+    background: white;
+    transition: all 0.2s;
+
+    &:focus-within {
+      border-color: #3f51b5;
+      box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+    }
+
+    .filter-select {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px;
+      border: none;
+      background: transparent;
+      font-size: 0.95rem;
+      color: #2c3e50;
+      outline: none;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .select-arrow {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #7f8c8d;
+      pointer-events: none;
+      font-size: 24px;
+    }
+  }
+
+
+  .date-field {
+    flex: 1 1 160px;
+
+    ::ng-deep .mat-form-field-wrapper {
+      padding: 0;
+      margin: 0;
+    }
+
+    ::ng-deep .mat-form-field-flex {
+      align-items: center;
+      height: 44px;
+      padding: 0 12px !important;
+      background-color: white;
+      border: 1px solid #e0e7ef;
+      border-radius: 40px;
+      transition: all 0.2s;
+    }
+
+    ::ng-deep .mat-form-field-infix {
+      padding: 0;
+      border-top: none;
+    }
+
+    ::ng-deep .mat-form-field-outline {
+      display: none;
+    }
+
+    ::ng-deep .mat-form-field-underline {
+      display: none;
+    }
+
+    ::ng-deep input.mat-input-element {
+      margin: 0;
+      padding: 0;
+      font-size: 0.95rem;
+      color: #2c3e50;
+    }
+
+    /* تنظیم آیکون تقویم */
+    ::ng-deep .mat-datepicker-toggle .mat-icon-button {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      color: #5c6bc0;
+    }
+
+    &:focus-within {
+      ::ng-deep .mat-form-field-flex {
+        border-color: #3f51b5;
+        box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.1);
+      }
+    }
+  }
+
+  /* دکمه‌ها */
+  .filter-actions {
+    display: flex;
+    gap: 8px;
+    margin-right: auto;
+    flex-wrap: wrap;
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 44px;
+      padding: 0 16px;
+      border: 1px solid #e0e7ef;
+      border-radius: 40px;
+      background: white;
+      color: #546e7a;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+
+      &:hover:not(:disabled) {
+        background-color: #f8f9fa;
+        border-color: #3f51b5;
+        color: #3f51b5;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+/* ===== جدول (بدون تغییر) ===== */
+.table-card {
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    min-height: 300px;
+
+    p {
+      margin-top: 20px;
+      color: #5f6368;
+    }
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .payment-table {
+    width: 100%;
+
+    .mat-header-row {
+      background: linear-gradient(to right, #f8f9fa, #ffffff);
+      height: 56px;
+
+      .mat-header-cell {
+        color: #34495e;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 0 16px;
+        text-align: right;
+      }
+    }
+
+    .mat-row {
+      height: 64px;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #f5f8ff;
+      }
+
+      .mat-cell {
+        padding: 0 16px;
+        color: #2c3e50;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #ecf0f1;
+      }
+    }
+
+    .invoice-number {
+      font-family: 'Roboto Mono', monospace;
+      background: #ecf0f1;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    .product-names {
+      display: block;
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.85rem;
+      color: #2c3e50;
+    }
+
+    .product-codes {
+      display: block;
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.75rem;
+      color: #7f8c8d;
+    }
+
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .user-icon {
+        color: #5c6bc0;
+        background: #e8eaf6;
+        border-radius: 50%;
+        padding: 6px;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+
+        .user-name {
+          font-weight: 500;
+        }
+
+        .user-phone {
+          font-size: 0.75rem;
+          color: #7f8c8d;
+        }
+      }
+    }
+
+    .amount {
+      font-weight: 600;
+      color: #27ae60;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+
+      &.status-success {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      &.status-failed {
+        background: #ffebee;
+        color: #c62828;
+      }
+    }
+
+    .date {
+      color: #546e7a;
+      font-size: 0.85rem;
+    }
+  }
+
+  .no-data-cell {
+    text-align: center;
+    padding: 48px 16px !important;
+
+    .no-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      color: #95a5a6;
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        opacity: 0.6;
+      }
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid #ecf0f1;
+    background: #fafcff;
+  }
+}
+
+/* ===== ریسپانسیو ===== */
+@media (max-width: 1024px) {
+  .filters-toolbar {
+    .search-wrapper {
+      flex: 2 1 250px;
+    }
+
+    .select-wrapper,
+    .date-field {
+      flex: 1 1 140px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .payment-list {
+    padding: 16px;
+  }
+
+  .filters-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+
+    .filter-item,
+    .date-field {
+      width: 100%;
+      flex: auto;
+    }
+
+    .filter-actions {
+      margin-right: 0;
+      justify-content: flex-end;
+    }
+  }
+}

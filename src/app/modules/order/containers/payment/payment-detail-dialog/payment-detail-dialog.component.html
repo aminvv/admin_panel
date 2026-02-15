@@ -1,0 +1,105 @@
+<div class="detail-dialog">
+  <!-- HEADER -->
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon class="title-icon">receipt</mat-icon>
+      <span>جزئیات پرداخت</span>
+    </h2>
+    <button mat-icon-button (click)="close()" class="close-btn" matTooltip="بستن">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <div class="content">
+      <!-- اطلاعات اصلی -->
+      <div class="section">
+        <h3 class="section-title">
+          <mat-icon>info</mat-icon>
+          اطلاعات پرداخت
+        </h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">شماره فاکتور:</span>
+            <span class="value">{{ payment.invoice_number }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">مبلغ:</span>
+            <span class="value amount">{{ formatPrice(payment.amount) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">وضعیت:</span>
+            <span class="value status-badge" [ngClass]="payment.status ? 'status-success' : 'status-failed'">
+              {{ getStatusText(payment.status) }}
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="label">تاریخ:</span>
+            <span class="value">{{ formatDate(payment.create_at) }}</span>
+          </div>
+          <div class="info-item" *ngIf="payment.refId">
+            <span class="label">کد پیگیری:</span>
+            <span class="value">{{ payment.refId }}</span>
+          </div>
+          <div class="info-item" *ngIf="payment.authority">
+            <span class="label">شناسه ارجاع:</span>
+            <span class="value">{{ payment.authority }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- اطلاعات کاربر (همیشه نمایش داده شود، حتی اگر نام ناقص باشد) -->
+      <div class="section" *ngIf="payment.user">
+        <h3 class="section-title">
+          <mat-icon>person</mat-icon>
+          اطلاعات کاربر
+        </h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">نام و نام خانوادگی:</span>
+            <span class="value">{{ fullName }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">شماره موبایل:</span>
+            <span class="value phone">
+              <a *ngIf="payment.user.mobile" [href]="'tel:' + payment.user.mobile">{{ payment.user.mobile }}</a>
+              <span *ngIf="!payment.user.mobile">—</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- اطلاعات سفارش -->
+      <div class="section" *ngIf="payment.order">
+        <h3 class="section-title">
+          <mat-icon>shopping_cart</mat-icon>
+          سفارش مرتبط
+        </h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">شماره سفارش:</span>
+            <span class="value order-number">{{ payment.order.id }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">مبلغ نهایی سفارش:</span>
+            <span class="value">{{ formatPrice(payment.order.final_amount) }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">وضعیت سفارش:</span>
+            <span class="value">{{ getOrderStatusText(payment.order.status) }}</span>
+          </div>
+        </div>
+        <div class="action-row">
+          <button mat-button color="primary" (click)="viewOrder(payment.order!.id)">
+            <mat-icon>visibility</mat-icon>
+            مشاهده سفارش
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="close()">بستن</button>
+  </mat-dialog-actions>
+</div>

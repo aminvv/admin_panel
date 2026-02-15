@@ -9,7 +9,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 export interface Order {
   id: number;
   status: string;
-  street:string;
+  street: string;
   total_amount: number;
   final_amount: number;
   discount_amount: number;
@@ -118,15 +118,19 @@ export class OrderService {
     private baseService: BaseService
   ) { }
 
-  // ======== متدهای موجود ========
-  getOrders(filters?: any): Observable<Order[]> {
-    const headers = this.baseService.getAuthHeader();
-    let params = new HttpParams();
-    if (filters?.status) params = params.set('status', filters.status);
-    if (filters?.search) params = params.set('search', filters.search);
+getOrders(filters?: any): Observable<Order[]> {
+  const headers = this.baseService.getAuthHeader();
+  let params = new HttpParams();
+  if (filters?.status) params = params.set('status', filters.status);
+  if (filters?.search) params = params.set('search', filters.search);
 
-    return this.http.get<Order[]>(this.baseUrl, { headers, params });
-  }
+  return this.http.get<any[]>(this.baseUrl, { headers, params }).pipe(
+    map(orders => orders.map(order => ({
+      ...order,
+      street: order.shippingAddress?.street || order.address || ''
+    })))
+  );
+}
 
   getOrder(id: number): Observable<OrderDetail> {
     const headers = this.baseService.getAuthHeader();
@@ -158,8 +162,8 @@ export class OrderService {
         return {
           ...response,
           items: items,
-          city: shippingAddress?.city || '',               
-          postal_code: shippingAddress?.postalCode || '',  
+          city: shippingAddress?.city || '',
+          postal_code: shippingAddress?.postalCode || '',
           phone: response.user?.mobile || '',
           street: shippingAddress?.street || response.street || ''
         };

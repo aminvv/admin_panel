@@ -92,7 +92,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.dataSource.sort = this.sort; 
   }
 
 
@@ -381,9 +381,9 @@ export class OrderListComponent implements OnInit, AfterViewInit {
     return name || user.mobile || 'نامشخص';
   }
 
-  getShortAddress(address: string): string {
-    if (!address) return 'آدرس ندارد';
-    return address.length > 30 ? address.substring(0, 30) + '...' : address;
+  getShortAddress(street: string): string {
+    if (!street) return 'آدرس ندارد';
+    return street.length > 30 ? street.substring(0, 30) + '...' : street;
   }
 
   // ============ EXPORT & PRINT ============

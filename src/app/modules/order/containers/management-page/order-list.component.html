@@ -84,14 +84,14 @@
             <mat-icon class="stat-icon">attach_money</mat-icon>
             <div class="stat-info">
               <div class="stat-value">{{ orderService.formatPrice(stats.revenue) }}</div>
-              <div class="stat-label">درآمد کل</div>
+              <div class="stat-label" >درآمد کل از سفارش های تحویل داده شده </div>
             </div>
           </div>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
-
+  
   <!-- FILTERS -->
   <div class="filters-section" *ngIf="!loading">
     <div class="filter-row">
@@ -213,7 +213,7 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header>شماره سفارش</th>
           <td mat-cell *matCellDef="let order">
             <div class="order-id-cell">
-              <span class="order-number">#{{ order.id }}</span>
+              <span class="order-number">{{ order.id }}</span>
               <small class="order-date-mobile">
                 {{ orderService.formatDate(order.create_at) }}
               </small>
@@ -234,7 +234,7 @@
                 </span>
                 <span class="customer-address">
                   <mat-icon>location_on</mat-icon>
-                  {{ getShortAddress(order.address) }}
+                  {{ getShortAddress(order.street) }}
                 </span>
               </div>
             </div>
