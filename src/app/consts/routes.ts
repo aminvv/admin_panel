@@ -36,7 +36,6 @@ export enum routes {
   ORDER_STATUS_FLOW = '/order/status-flow',
   ORDER_REPORTS = '/order/reports',
   CUSTOMER_INFO = '/order/customerInfo',
-  // FINANCE = '/order/finance',
 
 
 

@@ -42,6 +42,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { JalaliDateAdapter } from 'src/app/shared/adapter/jalali-date-adapter';
 import { DateAdapter } from 'angular-calendar';
+import { ReportsComponent } from './containers/reports/reports.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 export const JALALI_MOMENT_FORMATS = {
   parse: {
@@ -67,7 +69,8 @@ export const JALALI_MOMENT_FORMATS = {
     CustomerInfoComponent,
     CustomerDetailDialogComponent,
     PaymentDetailDialogComponent,
-    PaymentListComponent
+    PaymentListComponent,
+    ReportsComponent,
 
   ],
   imports: [
@@ -83,6 +86,7 @@ export const JALALI_MOMENT_FORMATS = {
     MatChipsModule,
     MatFormFieldModule,
     MatNativeDateModule,
+     MatSlideToggleModule,
     MatSelectModule,
     MatSnackBarModule,
     MatButtonModule,

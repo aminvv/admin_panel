@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import * as moment from 'moment-jalaali'; // برای تبدیل تاریخ
+
 
 import { Payment, PaymentStatusMap } from '../../../models/payment.model';
 import { PaymentService } from '../../../services/payment.service';

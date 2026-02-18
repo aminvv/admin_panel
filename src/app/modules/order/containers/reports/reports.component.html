@@ -1,0 +1,197 @@
+<div class="reports-dashboard">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="title-section">
+      <h1>
+        <mat-icon class="header-icon">bar_chart</mat-icon>
+        داشبورد گزارشات پیشرفته
+      </h1>
+      <p class="subtitle">آمار و نمودارهای تحلیلی سفارشات</p>
+    </div>
+
+    <div class="toolbar">
+      <!-- فیلتر بازه زمانی (در حالت غیر مقایسه‌ای) -->
+      <mat-form-field appearance="outline" *ngIf="!comparativeMode">
+        <mat-label>بازه زمانی</mat-label>
+        <mat-select [value]="currentRange" (selectionChange)="onRangeChange($event.value)">
+          <mat-option value="week">هفته جاری</mat-option>
+          <mat-option value="month">ماه جاری</mat-option>
+          <mat-option value="year">سال جاری</mat-option>
+          <mat-option value="all">همه زمان‌ها</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button [color]="comparativeMode ? 'primary' : 'basic'"
+        (click)="toggleComparative(!comparativeMode)">
+        {{ comparativeMode ? 'حالت عادی' : 'حالت مقایسه‌ای' }}
+      </button>
+      <!-- دکمه‌های خروجی -->
+      <button mat-raised-button color="primary" (click)="exportToPDF()" [disabled]="!stats && !comparativeStats">
+        <mat-icon>picture_as_pdf</mat-icon> PDF
+      </button>
+      <button mat-raised-button color="accent" (click)="exportToExcel()" [disabled]="!stats && !comparativeStats">
+        <mat-icon>table_chart</mat-icon> Excel
+      </button>
+
+      <!-- منوی شخصی‌سازی -->
+      <button mat-icon-button [matMenuTriggerFor]="widgetMenu" matTooltip="شخصی‌سازی داشبورد">
+        <mat-icon>settings</mat-icon>
+      </button>
+      <mat-menu #widgetMenu="matMenu">
+        <div style="padding: 8px 16px; min-width: 220px;">
+          <h4>انتخاب ویجت‌ها</h4>
+          <div *ngFor="let w of availableWidgets">
+            <mat-checkbox [checked]="w.visible" (change)="onWidgetToggle(w, $event.checked)">
+              {{ w.title }}
+            </mat-checkbox>
+          </div>
+          <mat-divider></mat-divider>
+          <div style="margin-top: 8px;"></div>
+        </div>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- بخش انتخاب تاریخ در حالت مقایسه‌ای -->
+  <div *ngIf="comparativeMode" class="comparative-panel">
+    <mat-card>
+      <mat-card-content>
+        <div class="period-selectors">
+          <div class="period">
+            <h4 id="title-section">دوره اول</h4>
+            <mat-form-field id="date" appearance="outline">
+              <mat-label>از تاریخ</mat-label>
+              <input matInput [matDatepicker]="picker1" [(ngModel)]="period1.start"
+                [ngModelOptions]="{standalone: true}">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field id="date" appearance="outline">
+              <mat-label>تا تاریخ</mat-label>
+              <input matInput [matDatepicker]="picker2" [(ngModel)]="period1.end" [ngModelOptions]="{standalone: true}">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="period">
+            <h4 id="title-section">دوره دوم</h4>
+            <mat-form-field id="date" appearance="outline">
+              <mat-label>از تاریخ</mat-label>
+              <input matInput [matDatepicker]="picker3" [(ngModel)]="period2.start"
+                [ngModelOptions]="{standalone: true}">
+              <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+              <mat-datepicker #picker3></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field id="date" appearance="outline">
+              <mat-label>تا تاریخ</mat-label>
+              <input matInput [matDatepicker]="picker4" [(ngModel)]="period2.end" [ngModelOptions]="{standalone: true}">
+              <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+              <mat-datepicker #picker4></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <button mat-raised-button color="primary" (click)="applyComparativeDates()">اعمال مقایسه</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- لودینگ -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>در حال پردازش داده‌ها...</p>
+  </div>
+
+  <!-- محتوا در حالت عادی -->
+  <div *ngIf="!loading && stats && !comparativeMode" class="content">
+    <!-- کارت‌های آماری -->
+<!-- کارت‌های آماری -->
+<div class="stats-grid">
+  <ng-container *ngFor="let widget of selectedWidgets">
+    <mat-card *ngIf="widget.type === 'card'" class="stat-card">
+      <mat-card-content>
+        <div class="stat-label">{{ widget.title }}</div>
+        <div class="stat-value">
+          <ng-container [ngSwitch]="widget.dataKey">
+            <span *ngSwitchCase="'totalOrders'">{{ stats?.totalOrders | number }}</span>
+            <span *ngSwitchCase="'totalRevenue'">{{ formatPrice(stats?.totalRevenue) }}</span>
+            <span *ngSwitchCase="'totalDiscount'">{{ formatPrice(stats?.totalDiscount) }}</span>
+            <span *ngSwitchCase="'averageOrderValue'">{{ formatPrice(stats?.averageOrderValue, false) }}</span>
+            <span *ngSwitchCase="'completedOrders'">{{ stats?.completedOrders }}</span>
+            <span *ngSwitchCase="'maxDailySale'">
+              <ng-container *ngIf="stats?.maxDailySale; else noData">
+                {{ formatPrice(stats?.maxDailySale) }}
+                <small *ngIf="stats?.maxDailySaleDate">({{ formatDate(stats?.maxDailySaleDate) }})</small>
+              </ng-container>
+              <ng-template #noData>---</ng-template>
+            </span>
+          </ng-container>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</div>
+
+    <!-- نمودارها -->
+    <div class="charts-grid">
+      <ng-container *ngFor="let widget of selectedWidgets">
+        <mat-card *ngIf="widget.type === 'chart'" class="chart-card">
+          <mat-card-header>
+            <mat-card-title>{{ widget.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="chart-container">
+              <canvas [id]="widget.id"></canvas>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- محتوا در حالت مقایسه‌ای -->
+  <div *ngIf="!loading && comparativeStats && comparativeMode" class="content">
+    <!-- کارت‌های خلاصه مقایسه -->
+    <div class="comparative-summary">
+      <mat-card class="summary-card">
+        <mat-card-content>
+          <div class="summary-item">
+            <span class="label">تغییر تعداد سفارشات:</span>
+            <span class="value" [class.positive]="comparativeStats.changes.totalOrders > 0"
+              [class.negative]="comparativeStats.changes.totalOrders < 0">
+              {{ comparativeStats.changes.totalOrders | number:'1.0-1' }}%
+            </span>
+          </div>
+          <div class="summary-item">
+            <span class="label">تغییر درآمد:</span>
+            <span class="value" [class.positive]="comparativeStats.changes.totalRevenue > 0"
+              [class.negative]="comparativeStats.changes.totalRevenue < 0">
+              {{ comparativeStats.changes.totalRevenue | number:'1.0-1' }}%
+            </span>
+          </div>
+          <div class="summary-item">
+            <span class="label">تغییر میانگین:</span>
+            <span class="value" [class.positive]="comparativeStats.changes.averageOrderValue > 0"
+              [class.negative]="comparativeStats.changes.averageOrderValue < 0">
+              {{ comparativeStats.changes.averageOrderValue | number:'1.0-1' }}%
+            </span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- نمودار مقایسه‌ای -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>مقایسه فروش روزانه دو دوره</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container" style="height: 300px;">
+          <canvas id="comparativeChart"></canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+
+  
+</div>

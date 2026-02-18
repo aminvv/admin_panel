@@ -6,6 +6,7 @@ import { OrderDetailComponent } from './containers/order-detail/order-detail.com
 import { OrderStatusFlowComponent } from './containers/order-status-flow/order-status-flow.component';
 import { CustomerInfoComponent } from './containers/coustomer/customer-info/customer-info.component';
 import { PaymentListComponent } from './containers/payment/payment-list/payment-list.component';
+import { ReportsComponent } from './containers/reports/reports.component';
 
 const routes: Routes = [
   {
@@ -35,7 +36,13 @@ const routes: Routes = [
   },
   {
     path: 'payments-list',
-    component: PaymentListComponent
+    component: PaymentListComponent,
+    data: { title: 'لیست پرداخت' }
+  },
+  {
+    path: 'reports',
+    component: ReportsComponent,
+    data: { title: 'گزارش وآمار' }
   },
 ];
 
