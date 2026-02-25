@@ -32,13 +32,7 @@ const route: Routes = [
         path: 'dashboard',
         pathMatch: 'full',
         canActivate: [AuthGuard],
-        children: [
-          {
-            path: '',
-            component: DashboardPageComponent
-          }
-        ]
-      },
+        children: [{path: '',component: DashboardPageComponent}]},
       {
         path: 'e-commerce',
         canActivate: [AuthGuard],

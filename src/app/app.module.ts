@@ -32,6 +32,7 @@ import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
     BrowserModule,
     SharedModule,
     AuthModule,
+    DashboardModule,
     BrowserAnimationsModule,
     RouterModule,
     DashboardModule,
@@ -83,3 +84,4 @@ export class AppModule { }
 
 
 
+ 

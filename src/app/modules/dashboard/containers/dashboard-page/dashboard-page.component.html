@@ -1,53 +1,227 @@
-<mat-card class="card">
-  <mat-toolbar class="page-header" role="heading">
-    <div class="title-inner-wrapper">
-      <p class="title-text">Dashboard</p>
+<div class="dashboard-container">
+  <!-- هدر -->
+  <div class="header">
+    <h1>
+      <mat-icon>dashboard</mat-icon>
+      داشبورد مدیریت
+    </h1>
+    <button mat-raised-button color="primary" (click)="loadDashboard()" [disabled]="loading">
+      <mat-icon>refresh</mat-icon>
+      بروزرسانی
+    </button>
+  </div>
 
-      <mat-tab-group color="warn" class="dashboard-mat-tab">
-        <mat-tab label="Today">
-          <div class="empty-block"></div>
-        </mat-tab>
-        <mat-tab label="This Week">
-          <div class="empty-block"></div>
-        </mat-tab>
-        <mat-tab label="This Month">
-          <div class="empty-block"></div>
-        </mat-tab>
-        <mat-tab label="This Year">
-          <div class="empty-block"></div>
-        </mat-tab>
-      </mat-tab-group>
+  <!-- بارگذاری -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>در حال بارگذاری اطلاعات...</p>
+  </div>
+
+  <!-- خطا -->
+  <div *ngIf="error" class="error-container">
+    <mat-icon>error</mat-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- محتوای داشبورد -->
+  <div *ngIf="!loading && stats" class="dashboard-content">
+    <!-- کارت‌های آماری -->
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon orders">
+            <mat-icon>shopping_cart</mat-icon>
+          </div>
+          <div class="stat-details">
+            <div class="stat-value">{{ stats.totalOrders | number }}</div>
+            <div class="stat-label">کل سفارشات</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon users">
+            <mat-icon>people</mat-icon>
+          </div>
+          <div class="stat-details">
+            <div class="stat-value">{{ stats.totalUsers | number }}</div>
+            <div class="stat-label">کاربران فعال</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon revenue">
+            <mat-icon>payments</mat-icon>
+          </div>
+          <div class="stat-details">
+            <div class="stat-value">{{ formatPrice(stats.totalRevenue) }}</div>
+            <div class="stat-label">درآمد کل</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon pending">
+            <mat-icon>pending</mat-icon>
+          </div>
+          <div class="stat-details">
+            <div class="stat-value">{{ stats.pendingOrders | number }}</div>
+            <div class="stat-label">در انتظار</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon completed">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="stat-details">
+            <div class="stat-value">{{ stats.completedOrders | number }}</div>
+            <div class="stat-label">تکمیل شده</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon cancelled">
+            <mat-icon>cancel</mat-icon>
+          </div>
+          <div class="stat-details">
+            <div class="stat-value">{{ stats.cancelledOrders | number }}</div>
+            <div class="stat-label">لغو شده</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon avg">
+            <mat-icon>equalizer</mat-icon>
+          </div>
+          <div class="stat-details">
+            <div class="stat-value">{{ formatPrice(stats.averageOrderValue) }}</div>
+            <div class="stat-label">میانگین هر سفارش</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon discount">
+            <mat-icon>sell</mat-icon>
+          </div>
+          <div class="stat-details">
+            <div class="stat-value">{{ formatPrice(stats.totalDiscount) }}</div>
+            <div class="stat-label">تخفیف کل</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
 
-    <div class="title-inner-wrapper">
-      <div class="title-date">
-        <mat-icon class="title-icon-data" color="primary">calendar_today</mat-icon>
+    <!-- ردیف نمودارها -->
+    <div class="charts-row">
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>فروش روزانه (۳۰ روز اخیر)</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div echarts [options]="dailySalesChartOptions" class="chart"></div>
+        </mat-card-content>
+      </mat-card>
 
-        <p class="title-data-text"> {{todayDate | date: 'dd MMM yyyy, EEEE'}}</p>
-      </div>
-
-      <button mat-flat-button color="warn" class="title-button">Latest Reports</button>
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>وضعیت سفارشات</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div echarts [options]="ordersStatusChartOptions" class="chart"></div>
+        </mat-card-content>
+      </mat-card>
     </div>
-  </mat-toolbar>
-</mat-card>
 
-<div class="charts-wrapper">
-  <app-visits-chart class="chart" [visitsChartData]="visitsChartData$ | async" [currentTheme]="currentTheme"></app-visits-chart>
+    <div class="charts-row">
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>محصولات پرفروش</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div echarts [options]="topProductsChartOptions" class="chart"></div>
+        </mat-card-content>
+      </mat-card>
 
-  <app-performance-chart class="chart" [performanceChartData]="performanceChartData$ | async" [currentTheme]="currentTheme"></app-performance-chart>
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>روند ثبت‌نام کاربران (۳۰ روز)</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div echarts [options]="userTrendChartOptions" class="chart"></div>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
-  <app-server-chart class="chart" [serverChartData]="serverChartData$ | async"></app-server-chart>
+    <!-- جداول آخرین داده‌ها -->
+    <div class="tables-row">
+      <mat-card class="table-card">
+        <mat-card-header>
+          <mat-card-title>آخرین سفارشات</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <table class="dashboard-table">
+            <thead>
+              <tr>
+                <th>شماره سفارش</th>
+                <th>مشتری</th>
+                <th>وضعیت</th>
+                <th>مبلغ</th>
+                <th>تاریخ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of stats.recentOrders">
+                <td>#{{ order.id }}</td>
+                <td>{{ order.user?.firstName }} {{ order.user?.lastName }}</td>
+                <td><span class="status-badge" [ngClass]="getStatusClass(order.status)">{{ getStatusText(order.status) }}</span></td>
+                <td>{{ formatPrice(order.final_amount || 0) }}</td>
+                <td>{{ formatDate(order.create_at) }}</td>
+              </tr>
+              <tr *ngIf="stats.recentOrders.length === 0"><td colspan="5">سفارشی یافت نشد</td></tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
 
-  <app-revenue-chart class="chart" [revenueCharData]="revenueChartData$ | async"></app-revenue-chart>
+      <mat-card class="table-card">
+        <mat-card-header>
+          <mat-card-title>آخرین کاربران</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <table class="dashboard-table">
+            <thead>
+              <tr>
+                <th>نام</th>
+                <th>موبایل</th>
+                <th>نقش</th>
+                <th>تاریخ ثبت‌نام</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of stats.recentUsers">
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>{{ user.mobile }}</td>
+                <td>{{ user.role === 'admin' ? 'مدیر' : 'کاربر' }}</td>
+                <td>{{ formatDate(user.create_at) }}</td>
+              </tr>
+              <tr *ngIf="stats.recentUsers.length === 0"><td colspan="4">کاربری یافت نشد</td></tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
 </div>
-
-<app-daily-line-chart
-  [dailyLineChartData]="dailyLineChartData$ | async"
-  [currentTheme]="currentTheme"
-  [currentMode]="currentMode"
-></app-daily-line-chart>
-
-<app-project-stat-chart [projectsStatsData]="projectsStatsData$ | async"></app-project-stat-chart>
-
-<app-support-requests [supportRequestData]="supportRequestData$ | async"></app-support-requests>
-
