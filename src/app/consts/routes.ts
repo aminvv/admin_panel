@@ -6,9 +6,10 @@ export enum routes {
 
   // --- CRUD module ---//
 
-  Users = '/admin/users',
-  Users_CREATE = '/admin/users/new',
-  Users_EDIT = '/admin/users/edit',
+  USER_LIST = '/user/list',
+  USER_ADD = '/user/add',
+  ADMIN_LIST = '/user/admin/list',
+  ADMIN_ADD = '/user/admin/add',
 
   // --- E-commerce ---//
 

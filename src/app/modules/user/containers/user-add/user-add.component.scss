@@ -1,0 +1,156 @@
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px 0;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  flex-direction: row-reverse;
+
+  .title-icon {
+    color: #3f51b5;
+    background: rgba(63, 81, 181, 0.1);
+    padding: 8px;
+    border-radius: 12px;
+  }
+}
+
+.dialog-content {
+  padding: 20px 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.info-card {
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecf1 100%);
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    flex-direction: row-reverse;
+    
+    .info-icon {
+      color: #3f51b5;
+    }
+    
+    .info-text {
+      color: #2c3e50;
+      direction: rtl;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+  }
+}
+
+.user-form {
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .additional-info {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    border: 1px solid #e0e0e0;
+
+    .note {
+      display: flex;
+      align-items: center;
+      flex-direction: row-reverse;
+      gap: 10px;
+      margin: 0;
+      color: #546e7a;
+      font-size: 0.9rem;
+
+      mat-icon {
+        color: #ffb74d;
+        font-size: 20px;
+      }
+      .note-info{
+         direction: rtl; 
+      }
+    }
+  }
+}
+
+.dialog-actions {
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  gap: 12px;
+
+  .cancel-btn, .submit-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    height: 48px;
+    font-weight: 500;
+  }
+
+  .submit-btn {
+    position: relative;
+
+    .btn-spinner {
+      display: inline-block;
+      margin-right: 8px;
+    }
+  }
+}
+
+// استایل اسنک‌بار
+::ng-deep .success-snackbar {
+  background: #4caf50;
+  color: white;
+  direction: rtl;
+  text-align: right;
+}
+
+::ng-deep .error-snackbar {
+  background: #f44336;
+  color: white;
+  direction: rtl;
+  text-align: right;
+}
+
+// ریسپانسیو
+@media (max-width: 600px) {
+  .dialog-title {
+    font-size: 1.2rem;
+    padding: 16px 20px 0;
+  }
+
+  .dialog-content {
+    padding: 16px 20px;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    padding: 16px 20px;
+
+    .cancel-btn, .submit-btn {
+      width: 100%;
+    }
+  }
+}

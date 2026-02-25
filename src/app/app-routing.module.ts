@@ -81,11 +81,6 @@ const route: Routes = [
         loadChildren: () => import('./modules/templates/extra/extra.module').then(m => m.ExtraModule)
       },
       {
-        path: 'admin',
-        loadChildren: () =>
-          import('./modules/CRUD/crud.module').then((m) => m.CrudModule),
-      },
-      {
         path: 'user',
         canActivate: [AuthGuard],
         loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule)

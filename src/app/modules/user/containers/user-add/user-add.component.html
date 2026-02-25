@@ -1,0 +1,87 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="title-icon">{{ isEdit ? 'edit' : 'person_add' }}</mat-icon>
+  <span>{{ isEdit ? 'ویرایش کاربر' : 'افزودن کاربر جدید' }}</span>
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <!-- کارت راهنما -->
+  <mat-card class="info-card">
+    <mat-card-content>
+      <div class="info-row">
+        <mat-icon class="info-icon">info</mat-icon>
+        <span class="info-text">
+          {{ isEdit ? 'اطلاعات کاربر را ویرایش کنید. شماره موبایل باید معتبر باشد.' : 'برای ثبت کاربر جدید، اطلاعات زیر را وارد کنید. شماره موبایل باید معتبر باشد.' }}
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- فرم -->
+  <form [formGroup]="form" (ngSubmit)="submit()" class="user-form">
+    <div class="form-grid">
+      <!-- نام -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>نام</mat-label>
+        <input matInput formControlName="firstName" placeholder="مثلاً علی">
+        <mat-icon matSuffix>badge</mat-icon>
+        <mat-hint>حداقل ۲ کاراکتر</mat-hint>
+        <mat-error *ngIf="form.get('firstName')?.hasError('required')">
+          نام الزامی است
+        </mat-error>
+        <mat-error *ngIf="form.get('firstName')?.hasError('minlength')">
+          حداقل ۲ کاراکتر وارد کنید
+        </mat-error>
+      </mat-form-field>
+
+      <!-- نام خانوادگی -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>نام خانوادگی</mat-label>
+        <input matInput formControlName="lastName" placeholder="مثلاً محمدی">
+        <mat-icon matSuffix>badge</mat-icon>
+        <mat-hint>حداقل ۲ کاراکتر</mat-hint>
+        <mat-error *ngIf="form.get('lastName')?.hasError('required')">
+          نام خانوادگی الزامی است
+        </mat-error>
+        <mat-error *ngIf="form.get('lastName')?.hasError('minlength')">
+          حداقل ۲ کاراکتر وارد کنید
+        </mat-error>
+      </mat-form-field>
+
+      <!-- شماره موبایل -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>شماره موبایل</mat-label>
+        <input matInput formControlName="mobile" placeholder="09123456789">
+        <mat-icon matSuffix>phone</mat-icon>
+        <mat-hint>فرمت: 09xxxxxxxxx</mat-hint>
+        <mat-error *ngIf="form.get('mobile')?.hasError('required')">
+          شماره موبایل الزامی است
+        </mat-error>
+        <mat-error *ngIf="form.get('mobile')?.hasError('pattern')">
+          شماره موبایل باید با 09 شروع شود و ۱۱ رقم باشد
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- توضیحات تکمیلی (اختیاری) -->
+    <div class="additional-info">
+      <div class="note">
+        <mat-icon>lightbulb</mat-icon>
+        <span class="note-info">
+          پس از ثبت، کاربر می‌تواند با شماره موبایل خود و دریافت رمز یکبارمصرف (OTP) وارد شود.
+        </span>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button type="button" (click)="close()" [disabled]="loading" class="cancel-btn">
+    <mat-icon>close</mat-icon>
+    انصراف
+  </button>
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading" (click)="submit()" class="submit-btn">
+    <mat-icon>{{ isEdit ? 'save' : 'add' }}</mat-icon>
+    {{ isEdit ? 'ذخیره تغییرات' : 'ایجاد کاربر' }}
+    <mat-spinner *ngIf="loading" diameter="20" class="btn-spinner"></mat-spinner>
+  </button>
+</mat-dialog-actions>  

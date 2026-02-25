@@ -1,1 +1,1 @@
-export * from './user-details';
+export * from './product-card';

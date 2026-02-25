@@ -1,93 +1,97 @@
+// src/app/modules/admin/orders/order.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgApexchartsModule } from 'ng-apexcharts';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../../shared/shared.module';
 
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+// Angular Material Modules
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatStepperModule } from '@angular/material/stepper';
 
+// Components
+
+// Services
+import { BaseService } from '../../shared/services/base.service';
+import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { UserService } from './services';
 import { UserRoutingModule } from './user-routing.module';
-import { SharedModule } from '../../shared/shared.module';
-import { DeleteUserPopupComponent } from './popups';
+import { UserAddComponent } from './containers/user-add/user-add.component';
+import { UserListComponent } from './containers/user-list/users-list.component';
+import { ConfirmDialogComponent } from './containers/confirm-dialog/confirm-dialog.component';
+import { AdminListComponent } from './containers/admin-list/admin-list.component';
+import { AdminAddComponent } from './containers/admin-add/admin-add.component';
+import { PromoteDialogComponent } from './containers/promote-dialog/promote-dialog.component';
 
-import {
-  ListPageComponent,
-  EditPageComponent,
-  AddPageComponent,
-  ProfilePageComponent
-} from './containers';
 
-import {
-  AccountEditFormComponent,
-  ProfileEditFormComponent,
-  PasswordEditFormComponent,
-  SettingsEditFormComponent,
-  AccountCreateFormComponent,
-  UserArticleComponent,
-  UserFilesComponent,
-  UserInfoComponent,
-  UserMediaComponent,
-  UserProjectsComponent,
-  UserTasksComponent
-} from './components';
-import {MatMenuModule} from '@angular/material/menu';
-import {CalendarModule} from 'angular-calendar';
+
+
+
 
 @NgModule({
   declarations: [
-    ListPageComponent,
-    AddPageComponent,
-    EditPageComponent,
-    AccountEditFormComponent,
-    ProfileEditFormComponent,
-    PasswordEditFormComponent,
-    SettingsEditFormComponent,
-    DeleteUserPopupComponent,
-    AccountCreateFormComponent,
-    ProfilePageComponent,
-    UserArticleComponent,
-    UserFilesComponent,
-    UserInfoComponent,
-    UserMediaComponent,
-    UserProjectsComponent,
-    UserTasksComponent
+
+    UserListComponent,
+    UserAddComponent,
+    ConfirmDialogComponent,
+    AdminListComponent,
+    AdminAddComponent,
+    PromoteDialogComponent
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     UserRoutingModule,
     SharedModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
+
+    // Material Modules
     MatCardModule,
+    MatIconModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatNativeDateModule,
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    MatButtonModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatDividerModule,
     MatCheckboxModule,
     MatSortModule,
-    MatTableModule,
+    MatProgressSpinnerModule,
     MatPaginatorModule,
-    MatChipsModule,
-    MatSelectModule,
-    MatTabsModule,
-    MatSlideToggleModule,
     MatDialogModule,
-    MatStepperModule,
-    ReactiveFormsModule,
-    NgApexchartsModule,
-    MatMenuModule,
-    CalendarModule
+
+
+
+  ],
+  providers: [
+    UserService,
+    BaseService,
+    CloudinaryService
   ]
 })
-export class UserModule { }
+export class UserModule { } 

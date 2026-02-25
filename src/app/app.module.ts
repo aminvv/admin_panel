@@ -12,7 +12,6 @@ import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { AuthModule } from './modules/auth/auth.module';
-import { CrudModule } from './modules/CRUD/crud.module';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,7 +32,6 @@ import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
     BrowserModule,
     SharedModule,
     AuthModule,
-    CrudModule,
     BrowserAnimationsModule,
     RouterModule,
     DashboardModule,
@@ -85,25 +83,3 @@ export class AppModule { }
 
 
 
-
-// providers: [
-//   {
-//     provide: HTTP_INTERCEPTORS,
-//     useClass: HttpInterceptorService,
-//     multi: true,
-//   },
-//   { provide: DateAdapter, useClass: JalaliDateAdapter },
-//   { provide: MAT_DATE_LOCALE, useValue: 'fa-IR' },
-//   {
-//     provide: MAT_DATE_FORMATS,
-//     useValue: {
-//       parse: { dateInput: 'jYYYY/jMM/jDD' },
-//       display: {
-//         dateInput: 'jYYYY/jMM/jDD',
-//         monthYearLabel: 'jMMMM jYYYY',
-//         dateA11yLabel: 'jYYYY/jMM/jDD',
-//         monthYearA11yLabel: 'jMMMM jYYYY',
-//       },
-//     },
-//   },
-// ],

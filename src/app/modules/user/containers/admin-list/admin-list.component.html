@@ -1,0 +1,176 @@
+<div class="admin-list-container">
+  <!-- هدر -->
+  <div class="header">
+    <div class="header-title">
+      <mat-icon class="header-icon">admin_panel_settings</mat-icon>
+      <h1>مدیریت ادمین‌ها</h1>
+      <span class="badge">{{ totalItems }} ادمین فعال</span>
+    </div>
+    <button mat-raised-button color="primary" (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+      ادمین جدید
+    </button>
+  </div>
+
+  <!-- کارت‌های آمار -->
+  <div class="stats-cards">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon total">
+          <mat-icon>admin_panel_settings</mat-icon>
+        </div>
+        <div class="stat-details">
+          <span class="stat-value">{{ totalAdmins }}</span>
+          <span class="stat-label">کل ادمین‌ها</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon active">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-details">
+          <span class="stat-value">{{ activeAdmins }}</span>
+          <span class="stat-label">فعال</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon super">
+          <mat-icon>star</mat-icon>
+        </div>
+        <div class="stat-details">
+          <span class="stat-value">{{ superAdmins }}</span>
+          <span class="stat-label">سوپر ادمین</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- جستجو -->
+  <div class="search-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>جستجوی ادمین</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (keyup.enter)="applyFilter()" placeholder="نام، ایمیل">
+      <button mat-icon-button matSuffix (click)="applyFilter()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <!-- کارت جدول -->
+  <mat-card class="table-card">
+    <div *ngIf="loading" class="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>در حال بارگذاری...</p>
+    </div>
+
+    <div *ngIf="!loading" class="table-responsive">
+      <table mat-table [dataSource]="dataSource" matSort class="admin-table">
+
+        <!-- شماره -->
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let i = index">{{ (currentPage * pageSize) + i + 1 }}</td>
+        </ng-container>
+
+        <!-- نام کامل -->
+        <ng-container matColumnDef="fullName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>نام و نام خانوادگی</th>
+          <td mat-cell *matCellDef="let admin">
+            <div class="admin-name">
+              <img *ngIf="admin.avatar" [src]="admin.avatar" class="avatar-img">
+              <mat-icon *ngIf="!admin.avatar" class="avatar-icon">admin_panel_settings</mat-icon>
+              {{ admin.fullName }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- ایمیل -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ایمیل</th>
+          <td mat-cell *matCellDef="let admin">{{ admin.email }}</td>
+        </ng-container>
+
+        <!-- نقش -->
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>نقش</th>
+          <td mat-cell *matCellDef="let admin">
+            <span class="role-badge" [ngClass]="admin.role === 'superAdmin' ? 'role-super' : 'role-admin'">
+              {{ getRoleLabel(admin.role) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- وضعیت -->
+        <ng-container  matColumnDef="isActive">
+          <th mat-header-cell *matHeaderCellDef>وضعیت</th>
+          <td mat-cell *matCellDef="let admin">
+            <mat-slide-toggle *ngIf="isSuperAdmin" [checked]="admin.isActive" (change)="toggleStatus(admin)"></mat-slide-toggle>
+          </td>
+        </ng-container>
+
+        <!-- تاریخ ثبت -->
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>تاریخ ثبت</th>
+          <td mat-cell *matCellDef="let admin">{{ formatDate(admin.createdAt) }}</td>
+        </ng-container>
+
+        <!-- عملیات -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>عملیات</th>
+          <td mat-cell *matCellDef="let admin">
+            <button *ngIf="isSuperAdmin || admin.id === currentUserId" mat-icon-button color="primary"
+              (click)="openEditDialog(admin)" matTooltip="ویرایش">
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <!-- دکمه تغییر نقش فقط برای سوپرادمین‌ها -->
+            <button *ngIf="isSuperAdmin" mat-icon-button [matMenuTriggerFor]="roleMenu" matTooltip="تغییر نقش">
+              <mat-icon>admin_panel_settings</mat-icon>
+            </button>
+
+            <!-- دکمه حذف فقط برای سوپرادمین‌ها -->
+            <button *ngIf="isSuperAdmin" mat-icon-button color="warn" (click)="openDeleteDialog(admin)"
+              matTooltip="حذف">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+            <mat-menu #roleMenu="matMenu">
+              <button mat-menu-item (click)="changeRole(admin, 'admin')" [disabled]="admin.role === 'admin'">
+                <mat-icon>person</mat-icon>
+                <span>ادمین</span>
+              </button>
+              <button mat-menu-item (click)="changeRole(admin, 'superAdmin')" [disabled]="admin.role === 'superAdmin'">
+                <mat-icon>star</mat-icon>
+                <span>سوپر ادمین</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- خالی -->
+        <tr *ngIf="dataSource.data.length === 0">
+          <td colspan="7" class="empty-cell">
+            <div class="empty-state">
+              <mat-icon>admin_panel_settings</mat-icon>
+              <p>ادمینی یافت نشد</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- صفحه‌بندی -->
+    <div *ngIf="!loading && dataSource.data.length > 0" class="pagination">
+      <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="currentPage" (page)="onPageChange($event)" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </mat-card>
+</div>

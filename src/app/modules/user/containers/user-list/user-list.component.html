@@ -1,0 +1,172 @@
+<div class="user-list-container">
+  <!-- هدر -->
+  <div class="header">
+    <div class="header-title">
+      <mat-icon class="header-icon">people</mat-icon>
+      <h1>مدیریت کاربران</h1>
+      <span class="badge">{{ totalItems }} کاربر فعال</span>
+    </div>
+    <button mat-raised-button color="primary" (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+      کاربر جدید
+    </button>
+  </div>
+
+  <!-- کارت‌های آمار -->
+  <div class="stats-cards">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon total">
+          <mat-icon>people</mat-icon>
+        </div>
+        <div class="stat-details">
+          <span class="stat-value">{{ totalUsers }}</span>
+          <span class="stat-label">کل کاربران</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon active">
+          <mat-icon>online_prediction</mat-icon>
+        </div>
+        <div class="stat-details">
+          <span class="stat-value">{{ activeToday }}</span>
+          <span class="stat-label">فعال امروز</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon new">
+          <mat-icon>person_add</mat-icon>
+        </div>
+        <div class="stat-details">
+          <span class="stat-value">{{ newThisMonth }}</span>
+          <span class="stat-label">جدید این ماه</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- جستجو -->
+  <div class="search-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>جستجوی کاربر</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (keyup.enter)="applyFilter()" placeholder="نام، موبایل، آدرس...">
+      <button mat-icon-button matSuffix (click)="applyFilter()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <!-- کارت جدول -->
+  <mat-card class="table-card">
+    <div *ngIf="loading" class="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>در حال بارگذاری...</p>
+    </div>
+
+    <div *ngIf="!loading" class="table-responsive">
+      <table mat-table [dataSource]="dataSource" matSort class="user-table">
+
+        <!-- شماره -->
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let i = index">{{ (currentPage * pageSize) + i + 1 }}</td>
+        </ng-container>
+
+        <!-- نام کامل -->
+        <ng-container matColumnDef="fullName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>نام و نام خانوادگی</th>
+          <td mat-cell *matCellDef="let user">
+            <div class="user-name">
+              <mat-icon class="avatar-icon">person</mat-icon>
+              {{ user.firstName }} {{ user.lastName }}
+            </div>
+          </td> 
+        </ng-container>
+
+        <!-- موبایل -->
+        <ng-container matColumnDef="mobile">
+          <th mat-header-cell *matHeaderCellDef>شماره موبایل</th>
+          <td mat-cell *matCellDef="let user">
+            <span class="mobile" [matTooltip]="user.mobile">{{ maskMobile(user.mobile) }}</span>
+          </td>
+        </ng-container>
+
+        <!-- آدرس -->
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>آدرس</th>
+          <td mat-cell *matCellDef="let user">
+            <div  [matTooltip]="getFullAddress(user)" matTooltipPosition="above" matTooltipClass="tooltip">
+              {{ getPrimaryAddress(user) }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- آخرین ورود -->
+        <ng-container matColumnDef="lastLogin">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>آخرین ورود</th>
+          <td mat-cell *matCellDef="let user">
+            <div class="last-login">
+              <span class="status-indicator" [class.online]="getUserStatus(user.last_login) === 'online'"></span>
+              {{ formatLastLogin(user.last_login) }}
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- نقش -->
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>نقش</th>
+          <td mat-cell *matCellDef="let user">
+            <span class="role-badge" [ngClass]="user.role === 'admin' ? 'role-admin' : 'role-user'">
+              {{ user.role === 'admin' ? 'مدیر' : 'کاربر' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- تاریخ ثبت‌نام -->
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>تاریخ ثبت‌نام</th>
+          <td mat-cell *matCellDef="let user">{{ formatDate(user.create_at) }}</td>
+        </ng-container>
+ 
+        <!-- عملیات -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>عملیات</th>
+          <td mat-cell *matCellDef="let user">
+            <button mat-icon-button color="primary" (click)="openEditDialog(user)" matTooltip="ویرایش">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="openDeleteDialog(user)" matTooltip="حذف">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- خالی -->
+        <tr *ngIf="dataSource.data.length === 0">
+          <td colspan="8" class="empty-cell">
+            <div class="empty-state">
+              <mat-icon>people_alt</mat-icon>
+              <p>کاربری یافت نشد</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- صفحه‌بندی -->
+    <div *ngIf="!loading && dataSource.data.length > 0" class="pagination">
+      <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+        [pageIndex]="currentPage" (page)="onPageChange($event)" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </mat-card>
+</div>

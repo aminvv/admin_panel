@@ -1,0 +1,105 @@
+<div class="admin-dialog">
+  <div class="dialog-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <mat-icon>{{ isEdit ? 'edit' : 'person_add' }}</mat-icon>
+      </div>
+      <div class="header-text">
+        <h2>{{ isEdit ? 'ویرایش ادمین' : 'افزودن ادمین جدید' }}</h2>
+        <p>{{ isEdit ? 'اطلاعات ادمین را ویرایش کنید' : 'اطلاعات ادمین جدید را وارد کنید' }}</p>
+      </div>
+    </div>
+    <button mat-icon-button class="close-btn" (click)="close()" [disabled]="loading">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="admin-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>نام و نام خانوادگی</mat-label>
+          <input matInput formControlName="fullName" placeholder="مثال: علی محمدی">
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="form.get('fullName')?.hasError('required')">
+            نام و نام خانوادگی الزامی است
+          </mat-error>
+          <mat-error *ngIf="form.get('fullName')?.hasError('minlength')">
+            حداقل ۳ کاراکتر وارد کنید
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>ایمیل</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="example@domain.com">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="form.get('email')?.hasError('required')">
+            ایمیل الزامی است
+          </mat-error>
+          <mat-error *ngIf="form.get('email')?.hasError('email')">
+            ایمیل نامعتبر است
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>رمز عبور {{ isEdit ? '(اختیاری)' : '' }}</mat-label>
+          <input matInput formControlName="password" type="password" placeholder="******">
+          <mat-icon matSuffix>lock</mat-icon>
+          <mat-error *ngIf="form.get('password')?.hasError('required') && !isEdit">
+            رمز عبور الزامی است
+          </mat-error>
+          <mat-error *ngIf="form.get('password')?.hasError('minlength')">
+            حداقل ۶ کاراکتر
+          </mat-error>
+          <mat-hint *ngIf="isEdit">برای تغییر ندادن، خالی بگذارید</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row" *ngIf="!isEdit || isSuperAdmin">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>نقش</mat-label>
+          <mat-select formControlName="role" [disabled]="!isSuperAdmin && isEdit">
+            <mat-option value="admin">
+              <span>ادمین</span>
+            </mat-option>
+            <mat-option value="superAdmin">
+              <span>سوپر ادمین</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row" *ngIf="isEdit && !isSuperAdmin">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>نقش</mat-label>
+          <input matInput [value]="getRoleLabel(form.get('role')?.value)" readonly>
+          <mat-icon matSuffix>admin_panel_settings</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>آدرس تصویر (اختیاری)</mat-label>
+          <input matInput formControlName="avatar" placeholder="https://...">
+          <mat-icon matSuffix>image</mat-icon>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="close()" [disabled]="loading" class="cancel-btn">
+      انصراف
+    </button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading" class="submit-btn"
+      (click)="submit()">
+      <mat-icon>{{ isEdit ? 'save' : 'add' }}</mat-icon>
+      <span>{{ isEdit ? 'ذخیره تغییرات' : 'ایجاد ادمین' }}</span>
+      <mat-spinner *ngIf="loading" diameter="20" class="btn-spinner"></mat-spinner>
+    </button>
+  </mat-dialog-actions>
+</div>

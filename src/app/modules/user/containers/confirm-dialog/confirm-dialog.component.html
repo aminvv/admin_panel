@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>{{ data.title || 'تأیید عملیات' }}</h2>
+<mat-dialog-content>
+  <p>{{ data.message || 'آیا از انجام این عملیات اطمینان دارید؟' }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">
+    {{ data.cancelText || 'خیر' }}
+  </button>
+  <button mat-raised-button color="warn" (click)="onConfirm()">
+    {{ data.confirmText || 'بله، حذف شود' }}
+  </button>
+</mat-dialog-actions>

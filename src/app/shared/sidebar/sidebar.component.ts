@@ -45,9 +45,9 @@ const TREE_DATA: any = [
   {
     name: 'کاربران',
     children: [
-      { name: 'لیست کاربران', route: routes.Users, active: 'active' },
-      { name: 'افزودن کاربر', route: routes.Users_CREATE, active: 'active' },
-      { name: 'ویرایش کاربر', route: routes.Users_EDIT, active: 'active' },
+      { name: 'لیست کاربران', route: routes.USER_LIST, active: 'active' },
+      { name: 'افزودن کاربر', route: routes.USER_ADD, active: 'active' },
+      { name: 'لیست ادمین', route: routes.ADMIN_LIST, active: 'active' },
     ]
   }
 ];

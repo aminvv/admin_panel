@@ -18,11 +18,11 @@ export class DeletePopupComponent implements OnInit {
   delete() {
     this.deleteConfirmed.emit();
     console.log('✅ کاربر تایید کرد - ارسال true');
-    this.dialogRef.close();
+    this.dialogRef.close(true);
   }
 
   cancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
       console.log('❌ کاربر لغو کرد - ارسال false');
   }
 
