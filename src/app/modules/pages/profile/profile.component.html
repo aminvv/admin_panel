@@ -1,92 +1,188 @@
-<app-breadcrumb [path]="routes.PROFILE"></app-breadcrumb>
+<div class="profile-container">
+  <div class="profile-background"></div>
 
-<mat-card class="card">
-  <mat-card-title>
-    <h4 class="h4">Edit Profile</h4>
-  </mat-card-title>
+  <div class="profile-content">
+    <!-- هدر پروفایل -->
+    <div class="profile-header">
+      <div class="header-cover"></div>
 
-  <mat-card-content [formGroup]="form">
-    <div class="input-wrapper">
-      <p class="input-title">First Name</p>
-      <mat-form-field appearance="legacy" class="input-field">
-        <input
-          matInput
-          formControlName="firstName"
-          placeholder="First Name"
-          class="input-text"
-        />
-      </mat-form-field>
-    </div>
+      <div class="profile-info-wrapper">
+        <div class="avatar-section">
+          <div class="avatar-wrapper">
+            <img *ngIf="profile?.avatar" [src]="profile.avatar" [alt]="profile?.fullName" class="avatar-image">
+            <div *ngIf="!profile?.avatar" class="avatar-placeholder">
+              <span class="initials">{{ getInitials() }}</span>
+            </div>
+          </div>
+          <div class="role-badge" [class.super]="profile?.role === 'superAdmin'">
+            <mat-icon>{{ getRoleIcon(profile?.role || 'admin') }}</mat-icon>
+            <span>{{ getRoleLabel(profile?.role || 'admin') }}</span>
+          </div>
+        </div>
 
-    <div class="input-wrapper">
-      <p class="input-title">Last Name</p>
-      <mat-form-field appearance="legacy" class="input-field">
-        <input
-          matInput
-          formControlName="lastName"
-          placeholder="Last Name"
-          class="input-text"
-        />
-      </mat-form-field>
-    </div>
+        <div class="user-info">
+          <h1>{{ profile?.fullName || 'در حال بارگذاری...' }}</h1>
+          <p class="user-email">
+            <mat-icon>email</mat-icon>
+            {{ profile?.email }}
+          </p>
+          <div class="user-stats">
+            <div class="stat-item">
+              <div class="stat-value"></div>
+              <div class="stat-label"></div>
+            </div>
+          </div>
+        </div>
 
-    <div class="input-wrapper">
-      <p class="input-title">Phone Number</p>
-      <mat-form-field appearance="legacy" class="input-field">
-        <input
-          matInput
-          formControlName="phoneNumber"
-          placeholder="Phone Number"
-          class="input-text"
-        />
-      </mat-form-field>
-    </div>
-
-    <div class="input-wrapper">
-      <p class="input-title">E-Mail</p>
-      <mat-form-field appearance="legacy" class="input-field">
-        <input
-          matInput
-          formControlName="email"
-          placeholder="E-Mail"
-          class="input-text"
-        />
-      </mat-form-field>
-    </div>
-
-    <p class="input-title">Role</p>
-
-    <div class="checkbox-wrapper">
-      <mat-radio-group formControlName="role">
-        <mat-radio-button color="primary" [value]="'admin'">
-          admin
-        </mat-radio-button>
-      </mat-radio-group>
-
-      <mat-radio-group formControlName="role">
-        <mat-radio-button color="primary" [value]="'user'">
-          user
-        </mat-radio-button>
-      </mat-radio-group>
-    </div>
-
-    <div class="checkbox-wrapper">
-      <div class="checkbox-item">
-        <p class="checkbox-item-title">Disabled</p>
-        <mat-checkbox color="primary" formControlName="disabled"></mat-checkbox>
+        <div class="action-buttons">
+          <button *ngIf="!editMode" mat-raised-button color="primary" class="edit-profile-btn"
+            (click)="toggleEditMode()">
+            <mat-icon>edit</mat-icon>
+            ویرایش پروفایل
+          </button>
+          <div *ngIf="editMode" class="edit-actions">
+            <button mat-stroked-button (click)="onCancel()">
+              <mat-icon>close</mat-icon>
+              انصراف
+            </button>
+            <button mat-raised-button color="primary" (click)="onSave()" [disabled]="profileForm.invalid || saving">
+              <mat-icon>save</mat-icon>
+              ذخیره تغییرات
+              <mat-spinner *ngIf="saving" diameter="18" class="btn-spinner"></mat-spinner>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <app-image-uploader
-      (imageUploaded)="avatarAdd($event)"
-      (imageDeleted)="avatarDel($event)"
-      [imageList]="form.value.avatar"
-      [entityName]="'users'"
-      [propertyName]="'avatar'"
-    >
-    </app-image-uploader>
+    <!-- تب‌های پروفایل -->
+    <div class="profile-tabs">
+      <button class="tab-btn" [class.active]="activeTab === 'info'" (click)="activeTab = 'info'">
+        <mat-icon>person</mat-icon>
+        <span>اطلاعات شخصی</span>
+      </button>
 
-    <button (click)="onSave()" mat-flat-button color="success">Save</button>
-    <button (click)="onCancel()" mat-flat-button color="default">Cancel</button>
-  </mat-card-content>
-</mat-card>
+      <button class="tab-btn" [class.active]="activeTab === 'security'" (click)="activeTab = 'security'">
+        <mat-icon>security</mat-icon>
+        <span>امنیت</span>
+      </button>
+    </div>
+
+    <!-- محتوای تب‌ها -->
+    <div class="tab-content">
+      <!-- تب اطلاعات شخصی -->
+      <div *ngIf="activeTab === 'info'" class="info-tab">
+        <div *ngIf="loading" class="loading-state">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>در حال بارگذاری اطلاعات...</p>
+        </div>
+
+        <div *ngIf="!loading && profile && !editMode" class="info-grid">
+          <div class="info-card">
+            <div class="card-icon">
+              <mat-icon>person_outline</mat-icon>
+            </div>
+            <div class="card-content">
+              <label>نام و نام خانوادگی</label>
+              <span>{{ profile.fullName }}</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="card-icon">
+              <mat-icon>email_outline</mat-icon>
+            </div>
+            <div class="card-content">
+              <label>آدرس ایمیل</label>
+              <span>{{ profile.email }}</span>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="card-icon">
+              <mat-icon>verified_user</mat-icon>
+            </div>
+            <div class="card-content">
+              <label>نقش کاربری</label>
+              <span>
+                <span class="role-chip" [class.super]="profile.role === 'superAdmin'">
+                  <mat-icon>{{ getRoleIcon(profile.role) }}</mat-icon>
+                  {{ getRoleLabel(profile.role) }}
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="card-icon">
+              <mat-icon>history</mat-icon>
+            </div>
+            <div class="card-content">
+              <label>تاریخ عضویت</label>
+              <span>{{ formatDate(profile.create_at || profile.createdAt) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- فرم ویرایش -->
+        <div *ngIf="editMode" class="edit-form">
+          <h3 class="form-title">
+            <mat-icon>edit_note</mat-icon>
+            ویرایش اطلاعات شخصی
+          </h3>
+          <form [formGroup]="profileForm">
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>نام و نام خانوادگی</mat-label>
+                <input matInput formControlName="fullName">
+                <mat-error *ngIf="profileForm.get('fullName')?.hasError('required')">
+                  نام الزامی است
+                </mat-error>
+                <mat-error *ngIf="profileForm.get('fullName')?.hasError('minlength')">
+                  حداقل ۳ کاراکتر
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>آدرس ایمیل</mat-label>
+                <input matInput formControlName="email" disabled>
+                <mat-hint>ایمیل قابل تغییر نیست</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>آدرس آواتار</mat-label>
+                <input matInput formControlName="avatar" placeholder="https://...">
+                <mat-hint>لینک مستقیم تصویر پروفایل</mat-hint>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+
+      <!-- تب امنیت -->
+      <div *ngIf="activeTab === 'security'" class="security-tab">
+        <div class="security-card">
+          <h3>
+            <mat-icon>lock</mat-icon>
+            تغییر رمز عبور
+          </h3>
+          <div class="password-form">
+            <mat-form-field appearance="outline">
+              <mat-label>رمز عبور جدید</mat-label>
+              <input matInput type="password" [(ngModel)]="newPassword" placeholder="********">
+              <mat-hint>حداقل ۶ کاراکتر</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>تکرار رمز عبور</mat-label>
+              <input matInput type="password" [(ngModel)]="confirmPassword" placeholder="********">
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="changePassword()"
+              [disabled]="!newPassword || newPassword !== confirmPassword">
+              <mat-icon>vpn_key</mat-icon>
+              تغییر رمز عبور
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

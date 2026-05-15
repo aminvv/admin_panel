@@ -6,7 +6,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { PagesRoutingModule } from './pages-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { ProfileComponent } from './profile/profile.component';
-import { ChangePasswordComponent } from './change-password/change-password.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatCardModule } from '@angular/material/card';
@@ -23,10 +22,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
-  declarations: [DashboardComponent, ChangePasswordComponent, ProfileComponent],
+  declarations: [ ProfileComponent],
   imports: [
     CommonModule,
     PagesRoutingModule,
@@ -50,6 +49,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     MatSlideToggleModule,
     MatCardModule,
     MatCheckboxModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class PagesModule {}

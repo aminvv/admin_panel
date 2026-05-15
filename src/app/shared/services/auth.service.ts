@@ -209,4 +209,13 @@ export class AuthService {
       },
     );
   }
+
+
+
+
+updateProfile(dto: any): Observable<any> {
+  const headers = this.baseService.getAuthHeader();
+  return this.http.patch('/Admin/profile', dto, { headers });
+}
+
 }

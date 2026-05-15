@@ -23,7 +23,7 @@ export class LoginFormComponent implements OnInit {
   public ngOnInit(): void {
     this.form = new UntypedFormGroup({
       email: new UntypedFormControl(this.email, [
-        Validators.required, 
+        Validators.required,
         Validators.email,
       ]),
       password: new UntypedFormControl(this.password, [Validators.required]),
