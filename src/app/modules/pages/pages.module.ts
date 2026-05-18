@@ -23,9 +23,10 @@ import { FormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
-  declarations: [ ProfileComponent],
+  declarations: [ProfileComponent],
   imports: [
     CommonModule,
     PagesRoutingModule,
@@ -48,8 +49,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatRadioModule,
     MatSlideToggleModule,
     MatCardModule,
+    MatProgressBarModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
   ],
 })
-export class PagesModule {}
+export class PagesModule { }

@@ -9,11 +9,22 @@
       <div class="profile-info-wrapper">
         <div class="avatar-section">
           <div class="avatar-wrapper">
-            <img *ngIf="profile?.avatar" [src]="profile.avatar" [alt]="profile?.fullName" class="avatar-image">
-            <div *ngIf="!profile?.avatar" class="avatar-placeholder">
+            <img *ngIf="previewAvatar" [src]="previewAvatar" class="avatar-image">
+            <div *ngIf="!previewAvatar" class="avatar-placeholder">
               <span class="initials">{{ getInitials() }}</span>
             </div>
+
+            <button *ngIf="editMode" class="upload-avatar-btn" (click)="fileInput.click()" [disabled]="uploading">
+              <mat-icon>photo_camera</mat-icon>
+            </button>
+            <input #fileInput type="file" accept="image/*" style="display: none" (change)="onFileSelected($event)">
           </div>
+
+          <div *ngIf="uploading" class="upload-progress">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <span>در حال آپلود...</span>
+          </div>
+
           <div class="role-badge" [class.super]="profile?.role === 'superAdmin'">
             <mat-icon>{{ getRoleIcon(profile?.role || 'admin') }}</mat-icon>
             <span>{{ getRoleLabel(profile?.role || 'admin') }}</span>
@@ -28,8 +39,8 @@
           </p>
           <div class="user-stats">
             <div class="stat-item">
-              <div class="stat-value"></div>
-              <div class="stat-label"></div>
+              <div class="stat-value">{{ getMemberDays() }}</div>
+              <div class="stat-label">روز عضویت</div>
             </div>
           </div>
         </div>
@@ -61,7 +72,6 @@
         <mat-icon>person</mat-icon>
         <span>اطلاعات شخصی</span>
       </button>
-
       <button class="tab-btn" [class.active]="activeTab === 'security'" (click)="activeTab = 'security'">
         <mat-icon>security</mat-icon>
         <span>امنیت</span>
@@ -124,8 +134,8 @@
         <!-- فرم ویرایش -->
         <div *ngIf="editMode" class="edit-form">
           <h3 class="form-title">
-            <mat-icon>edit_note</mat-icon>
-            ویرایش اطلاعات شخصی
+            <mat-icon>edit</mat-icon>
+            <div>ویرایش اطلاعات شخصی</div>
           </h3>
           <form [formGroup]="profileForm">
             <div class="form-row">
@@ -145,18 +155,10 @@
                 <input matInput formControlName="email" disabled>
                 <mat-hint>ایمیل قابل تغییر نیست</mat-hint>
               </mat-form-field>
-
-              <mat-form-field appearance="outline">
-                <mat-label>آدرس آواتار</mat-label>
-                <input matInput formControlName="avatar" placeholder="https://...">
-                <mat-hint>لینک مستقیم تصویر پروفایل</mat-hint>
-              </mat-form-field>
             </div>
           </form>
         </div>
       </div>
-
-
 
       <!-- تب امنیت -->
       <div *ngIf="activeTab === 'security'" class="security-tab">

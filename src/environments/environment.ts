@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   hmr: true,
   backend: true,
+  apiUrl: 'http://localhost:4000',
   cloudinary: {
     cloudName: 'dxzacddiw',
     uploadPreset: 'unsignedPreset',
