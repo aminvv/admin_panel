@@ -157,20 +157,18 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-
-                <!-- تاریخ انقضا -->
-                <div class="form-field">
-                  <mat-form-field appearance="fill">
-                    <mat-label>تاریخ انقضا *</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="expires_in" [min]="minDate">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-icon matPrefix>event</mat-icon>
-                    <mat-error *ngIf="discountForm.get('expires_in')?.touched">
-                      {{ getFieldError('expires_in') }}
-                    </mat-error>
-                  </mat-form-field>
-                </div>
+<div class="form-field">
+  <mat-form-field appearance="fill">
+    <mat-label>تاریخ انقضا *</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="expires_in">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-icon matPrefix>event</mat-icon>
+    <mat-error *ngIf="discountForm.get('expires_in')?.touched && discountForm.get('expires_in')?.errors">
+      تاریخ انقضا الزامی است
+    </mat-error>
+  </mat-form-field>
+</div>
               </div>
 
               <!-- هشدار -->
@@ -206,193 +204,182 @@
 
 
       <!-- بخش لیست تخفیفات محصول -->
-<div class="discounts-list-section" *ngIf="productId && !loading">
-  <mat-card class="discounts-card">
-    <mat-card-header class="card-header">
-      <div class="header-content">
-        <div class="header-icon">
-          <mat-icon>discount</mat-icon>
-        </div>
-        <div class="header-text">
-          <mat-card-title>تخفیف‌های این محصول</mat-card-title>
-          <mat-card-subtitle>
-            <span class="badge" [class.has-data]="productDiscounts.length > 0">
-             تخفیف {{ productDiscounts.length  |persianNumber}} 
-            </span>
-          </mat-card-subtitle>
-        </div>
-      </div>
-    </mat-card-header>
-
-    <mat-divider></mat-divider>
-
-    <mat-card-content>
-      <!-- اگر داده داریم -->
-      <div *ngIf="productDiscounts.length > 0">
-        <!-- دکمه‌های اصلی -->
-        <div class="main-actions" *ngIf="!showDiscountList">
-          <button 
-            mat-raised-button 
-            color="primary" 
-            class="action-btn primary-btn"
-            (click)="onShowDiscountList()">
-            <div class="btn-content">
-              <mat-icon class="btn-icon">visibility</mat-icon>
-              <div class="btn-text">
-                <span class="btn-title">مشاهده تخفیفات</span>
-                <span class="btn-subtitle">{{ productDiscounts.length |persianNumber }} تخفیف موجود</span>
+      <div class="discounts-list-section" *ngIf="productId && !loading">
+        <mat-card class="discounts-card">
+          <mat-card-header class="card-header">
+            <div class="header-content">
+              <div class="header-icon">
+                <mat-icon>discount</mat-icon>
+              </div>
+              <div class="header-text">
+                <mat-card-title>تخفیف‌های این محصول</mat-card-title>
+                <mat-card-subtitle>
+                  <span class="badge" [class.has-data]="productDiscounts.length > 0">
+                    تخفیف {{ productDiscounts.length |persianNumber}}
+                  </span>
+                </mat-card-subtitle>
               </div>
             </div>
-          </button>
-          
-          <button 
-            mat-stroked-button 
-            color="accent" 
-            class="action-btn secondary-btn"
-            (click)="scrollToForm(); onCreateNewDiscount()">
-            <div class="btn-content">
-              <mat-icon class="btn-icon">add_circle</mat-icon>
-              <div class="btn-text">
-                <span class="btn-title">ایجاد تخفیف جدید</span>
-                <span class="btn-subtitle">افزودن به این محصول</span>
-              </div>
-            </div>
-          </button>
-        </div>
+          </mat-card-header>
 
-        <!-- لیست تخفیفات -->
-        <div *ngIf="showDiscountList" class="discounts-container">
-          <div class="list-header">
-            <div class="header-left">
-              <mat-icon class="header-icon">list</mat-icon>
-              <h3>لیست تخفیف‌ها</h3>
-            </div>
-            <div class="header-right">
-              <button 
-                mat-stroked-button 
-                (click)="showDiscountList = false"
-                class="close-btn">
-                <mat-icon>close</mat-icon>
-                بستن لیست
-              </button>
-              <button 
-                mat-raised-button 
-                color="primary" 
-                (click)="scrollToForm(); onCreateNewDiscount()"
-                class="add-btn">
-                <mat-icon>add</mat-icon>
-                تخفیف جدید
-              </button>
-            </div>
-          </div>
+          <mat-divider></mat-divider>
 
-          <div class="discounts-grid">
-            <div class="discount-card" *ngFor="let discount of productDiscounts; let i = index">
-              <div class="card-header">
-                <div class="card-type">
-                  <div class="type-icon" [class.has-code]="discount.code">
-                    <mat-icon>{{ discount.code ? 'qr_code' : 'inventory_2' }}</mat-icon>
-                  </div>
-                  <span class="type-text">{{ getDiscountTypeLabel(discount) }}</span>
-                </div>
-                <span class="card-number">{{ i + 1 | persianNumber }}</span>
-              </div>
-              
-              <div class="card-content">
-                <div class="info-row">
-                  <div class="info-item">
-                    <mat-icon class="info-icon">tag</mat-icon>
-                    <div class="info-content">
-                      <span class="info-label">کد تخفیف</span>
-                      <span class="info-value code" *ngIf="discount.code">{{ discount.code }}</span>
-                      <span class="info-value no-code" *ngIf="!discount.code">بدون کد</span>
+          <mat-card-content>
+            <!-- اگر داده داریم -->
+            <div *ngIf="productDiscounts.length > 0">
+              <!-- دکمه‌های اصلی -->
+              <div class="main-actions" *ngIf="!showDiscountList">
+                <button mat-raised-button color="primary" class="action-btn primary-btn" (click)="onShowDiscountList()">
+                  <div class="btn-content">
+                    <mat-icon class="btn-icon">visibility</mat-icon>
+                    <div class="btn-text">
+                      <span class="btn-title">مشاهده تخفیفات</span>
+                      <span class="btn-subtitle">{{ productDiscounts.length |persianNumber }} تخفیف موجود</span>
                     </div>
                   </div>
-                  
-                  <div class="info-item">
-                    <mat-icon class="info-icon">percent</mat-icon>
-                    <div class="info-content">
-                      <span class="info-label">مقدار تخفیف</span>
-                      <span class="info-value amount">
-                        {{ discount.percent ? (discount.percent | persianNumber) + '%' : (discount.amount | persianNumber) + ' تومان' }}
-                      </span>
+                </button>
+
+                <button mat-stroked-button color="accent" class="action-btn secondary-btn"
+                  (click)="scrollToForm(); onCreateNewDiscount()">
+                  <div class="btn-content">
+                    <mat-icon class="btn-icon">add_circle</mat-icon>
+                    <div class="btn-text">
+                      <span class="btn-title">ایجاد تخفیف جدید</span>
+                      <span class="btn-subtitle">افزودن به این محصول</span>
                     </div>
+                  </div>
+                </button>
+              </div>
+
+              <!-- لیست تخفیفات -->
+              <div *ngIf="showDiscountList" class="discounts-container">
+                <div class="list-header">
+                  <div class="header-left">
+                    <mat-icon class="header-icon">list</mat-icon>
+                    <h3>لیست تخفیف‌ها</h3>
+                  </div>
+                  <div class="header-right">
+                    <button mat-stroked-button (click)="showDiscountList = false" class="close-btn">
+                      <mat-icon>close</mat-icon>
+                      بستن لیست
+                    </button>
+                    <button mat-raised-button color="primary" (click)="scrollToForm(); onCreateNewDiscount()"
+                      class="add-btn">
+                      <mat-icon>add</mat-icon>
+                      تخفیف جدید
+                    </button>
                   </div>
                 </div>
-                
-                <div class="info-row">
-                  <div class="info-item">
-                    <mat-icon class="info-icon">event</mat-icon>
-                    <div class="info-content">
-                      <span class="info-label">تاریخ انقضا</span>
-                      <span class="info-value date">{{ formatDate(discount.expires_in) }}</span>
+
+                <div class="discounts-grid">
+                  <div class="discount-card" *ngFor="let discount of productDiscounts; let i = index">
+                    <div class="card-header">
+                      <div class="card-type">
+                        <div class="type-icon" [class.has-code]="discount.code">
+                          <mat-icon>{{ discount.code ? 'qr_code' : 'inventory_2' }}</mat-icon>
+                        </div>
+                        <span class="type-text">{{ getDiscountTypeLabel(discount) }}</span>
+                      </div>
+                      <span class="card-number">{{ i + 1 | persianNumber }}</span>
                     </div>
-                  </div>
-                  
-                  <div class="info-item">
-                    <mat-icon class="info-icon">info</mat-icon>
-                    <div class="info-content">
-                      <span class="info-label">وضعیت</span>
-                      <span class="status" [class.active]="isDiscountActive(discount)">
-                        {{ isDiscountActive(discount) ? 'فعال' : 'منقضی' }}
-                      </span>
+
+                    <div class="card-content">
+                      <div class="info-row">
+                        <div class="info-item">
+                          <mat-icon class="info-icon">tag</mat-icon>
+                          <div class="info-content">
+                            <span class="info-label">کد تخفیف</span>
+                            <span class="info-value code" *ngIf="discount.code">{{ discount.code }}</span>
+                            <span class="info-value no-code" *ngIf="!discount.code">بدون کد</span>
+                          </div>
+                        </div>
+
+                        <div class="info-item">
+                          <mat-icon class="info-icon">percent</mat-icon>
+                          <div class="info-content">
+                            <span class="info-label">مقدار تخفیف</span>
+                            <span class="info-value amount">
+                              {{ discount.percent ? (discount.percent | persianNumber) + '%' : (discount.amount |
+                              persianNumber) + ' تومان' }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="info-row">
+                        <div class="info-item">
+                          <mat-icon class="info-icon">event</mat-icon>
+                          <div class="info-content">
+                            <span class="info-label">تاریخ انقضا</span>
+                            <span class="info-value date">{{ formatDate(discount.expires_in) }}</span>
+                          </div>
+                        </div>
+
+                        <div class="info-item">
+                          <mat-icon class="info-icon">info</mat-icon>
+                          <div class="info-content">
+                            <span class="info-label">وضعیت</span>
+                            <span class="status" [class.active]="isDiscountActive(discount)">
+                              {{ isDiscountActive(discount) ? 'فعال' : 'منقضی' }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="card-actions">
+                      <button mat-raised-button color="accent" class="edit-btn"
+                        (click)="onSelectDiscount(discount); scrollToForm()">
+                        <mat-icon>edit</mat-icon>
+                        ویرایش
+                      </button>
+
+                      <button mat-raised-button color="warn" class="delete-btn"
+                        (click)="onDeleteDiscount(discount.id, $event)">
+                        <mat-icon>delete</mat-icon>
+                        حذف
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-              
-              <div class="card-actions">
-                <button 
-                  mat-raised-button 
-                  color="accent" 
-                  class="edit-btn"
-                  (click)="onSelectDiscount(discount); scrollToForm()">
-                  <mat-icon>edit</mat-icon>
-                  ویرایش
+            </div>
+
+            <!-- اگر داده نداریم -->
+            <div *ngIf="productDiscounts.length === 0" class="empty-state">
+              <div class="empty-content">
+                <div class="empty-icon">
+                  <mat-icon>local_offer</mat-icon>
+                </div>
+                <h3>هنوز تخفیفی ثبت نشده</h3>
+                <p>شما می‌توانید اولین تخفیف را برای این محصول ایجاد کنید</p>
+                <button mat-raised-button color="primary" class="create-btn"
+                  (click)="scrollToForm(); onCreateNewDiscount()">
+                  <mat-icon>add_circle</mat-icon>
+                  ایجاد اولین تخفیف
                 </button>
               </div>
             </div>
-          </div>
-        </div>
+
+            <!-- اگر لیست بسته است -->
+            <div *ngIf="!showDiscountList && productDiscounts.length > 0" class="collapsed-state">
+              <div class="collapsed-content">
+                <mat-icon>keyboard_arrow_up</mat-icon>
+                <p>برای مشاهده {{ productDiscounts.length | persianNumber }} تخفیف موجود، روی دکمه "مشاهده تخفیفات" کلیک
+                  کنید</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
 
-      <!-- اگر داده نداریم -->
-      <div *ngIf="productDiscounts.length === 0" class="empty-state">
-        <div class="empty-content">
-          <div class="empty-icon">
-            <mat-icon>local_offer</mat-icon>
-          </div>
-          <h3>هنوز تخفیفی ثبت نشده</h3>
-          <p>شما می‌توانید اولین تخفیف را برای این محصول ایجاد کنید</p>
-          <button 
-            mat-raised-button 
-            color="primary" 
-            class="create-btn"
-            (click)="scrollToForm(); onCreateNewDiscount()">
-            <mat-icon>add_circle</mat-icon>
-            ایجاد اولین تخفیف
-          </button>
+      <!-- نمایش وضعیت بارگذاری -->
+      <div *ngIf="loading" class="loading-state">
+        <div class="loading-content">
+          <mat-spinner diameter="60"></mat-spinner>
+          <p>در حال دریافت اطلاعات تخفیفات...</p>
         </div>
       </div>
-
-      <!-- اگر لیست بسته است -->
-      <div *ngIf="!showDiscountList && productDiscounts.length > 0" class="collapsed-state">
-        <div class="collapsed-content">
-          <mat-icon>keyboard_arrow_up</mat-icon>
-          <p>برای مشاهده {{ productDiscounts.length | persianNumber }} تخفیف موجود، روی دکمه "مشاهده تخفیفات" کلیک کنید</p>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-</div>
-
-<!-- نمایش وضعیت بارگذاری -->
-<div *ngIf="loading" class="loading-state">
-  <div class="loading-content">
-    <mat-spinner diameter="60"></mat-spinner>
-    <p>در حال دریافت اطلاعات تخفیفات...</p>
-  </div>
-</div>
 
 
 
@@ -413,6 +400,7 @@
                 <div class="help-text">
                   <h4>تخفیف محصول (بدون کد)</h4>
                   <p>مستقیماً روی محصول خاص اعمال می‌شود - نیازی به کد ندارد</p>
+                  <p>هر محصول فقط میتواند یک تخفیف بدون کد داشته باشد</p>
                 </div>
               </div>
 

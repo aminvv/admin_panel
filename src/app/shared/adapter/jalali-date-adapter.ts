@@ -12,6 +12,7 @@ export class JalaliDateAdapter extends MomentDateAdapter {
 
   override format(date: moment.Moment, displayFormat: string): string {
     if (displayFormat === 'input') {
+      // تبدیل تاریخ میلادی به شمسی برای نمایش
       return moment(date).format('jYYYY/jMM/jDD');
     }
     return super.format(date, displayFormat);
@@ -19,8 +20,14 @@ export class JalaliDateAdapter extends MomentDateAdapter {
 
   override parse(value: any, parseFormat: string | string[]): moment.Moment | null {
     if (value) {
-      // فرمت ورودی شمسی را پشتیبانی کن
-      return moment(value, 'jYYYY/jMM/jDD', true);
+      // اگر مقدار ورودی یک تاریخ شمسی است
+      if (typeof value === 'string' && value.includes('/')) {
+        // پارس تاریخ شمسی و تبدیل به moment میلادی
+        const jalaliMoment = moment(value, 'jYYYY/jMM/jDD', true);
+        if (jalaliMoment.isValid()) {
+          return jalaliMoment;
+        }
+      }
     }
     return null;
   }

@@ -27,9 +27,26 @@ import { DiscountDetailComponent } from './containers/discount-deatails/discount
 import { ManagementDiscountComponent } from './containers/management-discount/management-discount.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { DiscountBasketComponent } from './containers/discount-basket/discount-basket.component';
+import * as moment from 'moment-jalaali';
+import { DateAdapter } from 'angular-calendar';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+
+
+
+export const JALALI_FORMATS = {
+  parse: { dateInput: 'jYYYY/jMM/jDD' },
+  display: {
+    dateInput: 'jYYYY/jMM/jDD',
+    monthYearLabel: 'jYYYY jMMMM',
+    dateA11yLabel: 'jYYYY/jMM/jDD',
+    monthYearA11yLabel: 'jYYYY jMMMM'
+  }
+};
+
+
 
 @NgModule({
   declarations: [
@@ -40,6 +57,8 @@ import { DiscountBasketComponent } from './containers/discount-basket/discount-b
 
   ],
   imports: [
+    MatDatepickerModule,
+    MatNativeDateModule,
     CommonModule,
     DiscountRoutingModule,
     SharedModule,
@@ -68,7 +87,9 @@ import { DiscountBasketComponent } from './containers/discount-basket/discount-b
     ReactiveFormsModule
   ],
   providers: [
-
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: JALALI_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'fa' },
     BaseService,
   ]
 })

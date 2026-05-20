@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { DiscountService } from '../../services';
 import { routes } from 'src/app/consts';
+import * as moment from 'moment-jalaali';
 
 export enum DiscountType {
   PRODUCT_WITH_CODE = 'PRODUCT_WITH_CODE',
@@ -60,18 +61,6 @@ export class DiscountDetailComponent implements OnInit {
   ngOnInit(): void {
     this.initializeForm();
     this.loadPageData();
-
-
-
-
-    setTimeout(() => {
-      console.log("وضعیت نهایی بعد ۲ ثانیه:");
-      console.log("productDiscounts.length →", this.productDiscounts.length);
-      console.log("productDiscounts →", this.productDiscounts);
-    }, 2000);
-
-
-
   }
 
   initializeForm(): void {
@@ -85,10 +74,9 @@ export class DiscountDetailComponent implements OnInit {
       productId: [null]
     });
 
-    this.discountForm.get('type')?.valueChanges
-      .subscribe(type => {
-        this.handleTypeChange(type);
-      });
+    this.discountForm.get('type')?.valueChanges.subscribe(type => {
+      this.handleTypeChange(type);
+    });
 
     this.discountForm.get('percent')?.valueChanges.subscribe(() => {
       this.clearOtherValue('percent');
@@ -150,10 +138,28 @@ export class DiscountDetailComponent implements OnInit {
     }
   }
 
+  onDeleteDiscount(id: number, event: Event): void {
+    event.stopPropagation();
+
+    if (confirm('آیا از حذف این تخفیف اطمینان دارید؟')) {
+      this.loading = true;
+      this.discountService.deleteDiscount(id).subscribe({
+        next: () => {
+          this.loading = false;
+          this.toastr.success('تخفیف با موفقیت حذف شد');
+          this.loadProductDiscounts();
+        },
+        error: (error) => {
+          console.error('خطا در حذف تخفیف:', error);
+          this.loading = false;
+          this.toastr.error('خطا در حذف تخفیف');
+        }
+      });
+    }
+  }
+
   loadPageData(): void {
     this.route.params.subscribe(params => {
-      console.log("پارام‌های route:", params);
-
       const productIdParam = params['productId'];
       const discountIdParam = params['discountId'];
 
@@ -163,27 +169,22 @@ export class DiscountDetailComponent implements OnInit {
       this.selectedDiscountId = null;
       this.showDiscountList = false;
 
-      // اولویت ۱: اگر productId مستقیم در URL بود
       if (productIdParam) {
         this.productId = +productIdParam;
+        this.loadProductInfo();
+        this.loadProductDiscounts();
       }
-
-      // اولویت ۲: اگر فقط discountId بود، اول تخفیف رو بگیر تا productId رو ازش استخراج کنی
       else if (discountIdParam) {
         this.discountId = +discountIdParam;
         this.isEditMode = true;
         this.selectedDiscountId = this.discountId;
 
-        // تخفیف رو بگیر تا productId رو پیدا کنیم
         this.discountService.getDiscount(this.discountId).subscribe({
           next: (discount) => {
             if (discount?.productId) {
               this.productId = discount.productId;
-              console.log("productId از تخفیف استخراج شد:", this.productId);
               this.loadProductInfo();
-              this.loadProductDiscounts();   // حالا لیست رو لود کن
-            } else {
-              console.warn("این تخفیف productId ندارد!");
+              this.loadProductDiscounts();
             }
             this.populateFormWithDiscountData(discount);
           },
@@ -191,12 +192,6 @@ export class DiscountDetailComponent implements OnInit {
             this.toastr.error("خطا در دریافت اطلاعات تخفیف");
           }
         });
-      }
-
-      // اگر productId داشتیم (از هر راهی)، اطلاعات محصول و لیست تخفیف رو لود کن
-      if (this.productId) {
-        this.loadProductInfo();
-        this.loadProductDiscounts();
       }
     });
   }
@@ -217,44 +212,24 @@ export class DiscountDetailComponent implements OnInit {
   }
 
   loadProductDiscounts(): void {
-
-    console.log("loadProductDiscounts شروع شد، productId =", this.productId);
     if (!this.productId) {
-      console.log("productId نیست → لود نمی‌کنم");
       return;
     }
 
-    console.log("===== شروع درخواست برای productId:", this.productId, " =====");
-
     this.loading = true;
-    this.productDiscounts = []; // ریست
+    this.productDiscounts = [];
 
     this.discountService.getProductDiscounts(this.productId).subscribe({
-
       next: (data) => {
-        console.log("NEXT بلوک اجرا شد! داده خام:", data);
-        console.log("طول داده:", data?.length ?? "نامعلوم");
-
         this.productDiscounts = Array.isArray(data) ? [...data] : [];
-
-        console.log("بعد از ست کردن → طول:", this.productDiscounts.length);
-        console.log("محتویات:", this.productDiscounts);
-
         this.loading = false;
       },
       error: (err) => {
-        console.log("ERROR بلوک اجرا شد!");
-        console.error("جزئیات خطا:", err);
-        console.error("status:", err.status);
-        console.error("message:", err.message);
+        console.error('خطا:', err);
         this.loading = false;
-      },
-      complete: () => {
-        console.log("===== درخواست کامل شد (complete) =====");
       }
     });
   }
-
 
   loadDiscountData(): void {
     if (this.discountId) {
@@ -276,17 +251,20 @@ export class DiscountDetailComponent implements OnInit {
   }
 
   populateFormWithDiscountData(discount: any): void {
-    let expiresDate: Date | null = null;
+    let expiresDate: string = '';
+
     if (discount.expires_in) {
-      const date = new Date(discount.expires_in);
-      if (!isNaN(date.getTime())) {
-        expiresDate = date;
+      const m = moment(discount.expires_in);
+      if (m.isValid()) {
+        expiresDate = m.format('jYYYY/jMM/jDD');
       }
     }
 
     let formType: DiscountType;
     if (discount.type === 'product') {
       formType = discount.code ? DiscountType.PRODUCT_WITH_CODE : DiscountType.PRODUCT_WITHOUT_CODE;
+    } else {
+      formType = DiscountType.PRODUCT_WITHOUT_CODE;
     }
 
     const percentValue = discount.percent ? Number(discount.percent) : null;
@@ -327,12 +305,12 @@ export class DiscountDetailComponent implements OnInit {
     this.handleTypeChange(formType);
   }
 
-  // ============ متدهای جدید ============
   onSelectDiscount(discount: any): void {
     this.selectedDiscountId = discount.id;
     this.isEditMode = true;
     this.discountId = discount.id;
     this.loadDiscountData();
+    this.scrollToForm();
   }
 
   onShowDiscountList(): void {
@@ -343,11 +321,11 @@ export class DiscountDetailComponent implements OnInit {
     this.selectedDiscountId = null;
     this.discountId = null;
     this.isEditMode = false;
-   
 
     this.discountForm.reset({
       type: DiscountType.PRODUCT_WITHOUT_CODE,
-      productId: this.productId
+      productId: this.productId,
+      expires_in: ''
     });
     this.handleTypeChange(DiscountType.PRODUCT_WITHOUT_CODE);
   }
@@ -392,7 +370,7 @@ export class DiscountDetailComponent implements OnInit {
           },
           error: (error) => {
             console.error('خطا در ویرایش تخفیف:', error);
-            this.toastr.error('خطا در ویرایش تخفیف');
+            this.handleError(error, 'ویرایش');
             this.loading = false;
           }
         });
@@ -405,7 +383,7 @@ export class DiscountDetailComponent implements OnInit {
           },
           error: (error) => {
             console.error('خطا در ایجاد تخفیف:', error);
-            this.toastr.error('خطا در ایجاد تخفیف');
+            this.handleError(error, 'ایجاد');
             this.loading = false;
           }
         });
@@ -416,15 +394,59 @@ export class DiscountDetailComponent implements OnInit {
     }
   }
 
+  private handleError(error: any, action: string): void {
+    if (action === 'ویرایش') {
+      if (error.status === 409) {
+        const code = this.discountForm.get('code')?.value;
+        if (code) {
+          this.toastr.error(`کد تخفیف "${code}" قبلاً استفاده شده است`, 'کد تکراری');
+        } else {
+          this.toastr.warning('این محصول قبلاً دارای تخفیف بدون کد است!', 'تخفیف تکراری');
+        }
+      } else if (error.error?.message) {
+        this.toastr.error(error.error.message);
+      } else {
+        this.toastr.error('خطا در ویرایش تخفیف');
+      }
+      return;
+    }
+
+    if (error.status === 409) {
+      const code = this.discountForm.get('code')?.value;
+      if (!code || code === '') {
+        this.toastr.warning('این محصول قبلاً دارای تخفیف بدون کد است!', 'تخفیف تکراری');
+      } else {
+        this.toastr.error(`کد تخفیف "${code}" قبلاً استفاده شده است`, 'کد تکراری');
+      }
+    } else if (error.error?.message) {
+      this.toastr.error(error.error.message);
+    } else {
+      this.toastr.error(`خطا در ${action} تخفیف`);
+    }
+  }
+
   prepareFormData(): any {
     const rawData = this.discountForm.getRawValue();
 
-    if (rawData.expires_in) {
-      rawData.expires_in = new Date(rawData.expires_in).toISOString();
+    if (rawData.expires_in && rawData.expires_in !== '') {
+      const jalaliMoment = moment(rawData.expires_in, 'jYYYY/jMM/jDD');
+      if (jalaliMoment.isValid()) {
+        const gregorianDate = jalaliMoment.toDate();
+        gregorianDate.setHours(23, 59, 59, 999);
+        rawData.expires_in = gregorianDate.toISOString();
+      } else {
+        delete rawData.expires_in;
+      }
+    } else {
+      delete rawData.expires_in;
     }
 
     if (rawData.type === DiscountType.PRODUCT_WITH_CODE || rawData.type === DiscountType.PRODUCT_WITHOUT_CODE) {
       rawData.type = 'product';
+    }
+
+    if (rawData.code === '' || rawData.code === null || rawData.code === undefined) {
+      delete rawData.code;
     }
 
     Object.keys(rawData).forEach(key => {
@@ -470,12 +492,12 @@ export class DiscountDetailComponent implements OnInit {
 
   shouldShowCodeField(): boolean {
     const type = this.discountForm.get('type')?.value;
-    return type !== DiscountType.PRODUCT_WITHOUT_CODE;
+    return type === DiscountType.PRODUCT_WITH_CODE;
   }
 
   shouldShowProductIdField(): boolean {
     const type = this.discountForm.get('type')?.value;
-    return type
+    return type === DiscountType.PRODUCT_WITH_CODE || type === DiscountType.PRODUCT_WITHOUT_CODE;
   }
 
   isProductIdReadonly(): boolean {
@@ -484,8 +506,9 @@ export class DiscountDetailComponent implements OnInit {
 
   formatDate(dateString: string): string {
     if (!dateString) return '-';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fa-IR');
+    const m = moment(dateString);
+    if (!m.isValid()) return '-';
+    return m.format('jYYYY/jMM/jDD');
   }
 
   getDiscountTypeLabel(discount: any): string {
@@ -506,12 +529,10 @@ export class DiscountDetailComponent implements OnInit {
 
   isDiscountActive(discount: any): boolean {
     if (!discount.expires_in) return true;
-
     const now = new Date();
     const expiresDate = new Date(discount.expires_in);
     return expiresDate > now;
   }
-
 
   scrollToForm(): void {
     const formElement = document.querySelector('.discount-card');
@@ -521,9 +542,5 @@ export class DiscountDetailComponent implements OnInit {
         block: 'start'
       });
     }
-
-    this.onCreateNewDiscount();
   }
-
-
 }

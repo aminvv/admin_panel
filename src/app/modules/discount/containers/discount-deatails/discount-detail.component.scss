@@ -971,9 +971,6 @@
 
 
 
-
-
-
 .discounts-list-section {
   margin: 30px 0;
 
@@ -1136,7 +1133,7 @@
       gap: 12px;
     }
 
-    .close-btn{
+    .close-btn {
       border-radius: 10px;
     }
   }
@@ -1305,13 +1302,17 @@
     .card-actions {
       margin-top: 20px;
       text-align: left;
+      display: flex;
+      justify-content: space-between;
+    }
 
-      .edit-btn {
-        mat-icon {
-          margin-left: 8px;
-        }
+    .edit-btn {
+      mat-icon {
+        margin-left: 8px;
       }
     }
+
+
   }
 }
 

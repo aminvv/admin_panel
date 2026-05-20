@@ -80,11 +80,11 @@ export class DiscountBasketComponent implements OnInit {
 
   handleTypeChange(type: DiscountType): void {
     const codeControl = this.discountForm.get('code');
-  
+
 
     // پاک کردن validators قبلی
     codeControl?.clearValidators();
-   
+
 
     // تنظیم validators بر اساس نوع
 
@@ -96,7 +96,7 @@ export class DiscountBasketComponent implements OnInit {
     }
 
     codeControl?.updateValueAndValidity();
-  
+
 
     // مقادیر فیلدها را بر اساس نوع به‌روزرسانی کن
     this.updateFieldVisibility();
@@ -286,6 +286,35 @@ export class DiscountBasketComponent implements OnInit {
       this.toastr.error('لطفا تمام فیلدهای ضروری را پر کنید');
     }
   }
+
+
+
+
+  private handleDiscountError(error: any, action: string): void {
+    if (error.status === 409) {
+      // برای سبد خرید، خطای 409 یعنی کد تکراری
+      const code = this.discountForm.get('code')?.value;
+      if (code) {
+        this.toastr.error(`کد تخفیف "${code}" قبلاً استفاده شده است`, 'کد تکراری', {
+          timeOut: 5000,
+          closeButton: true
+        });
+        this.toastr.info('لطفاً از کد دیگری استفاده کنید');
+      } else {
+        this.toastr.warning('تخفیف بدون کد برای سبد خرید قبلاً ایجاد شده است', 'تخفیف تکراری');
+      }
+    } else if (error.status === 400) {
+      this.toastr.error('اطلاعات ارسال شده صحیح نیست. لطفاً مقادیر را بررسی کنید');
+    } else if (error.error?.message) {
+      this.toastr.error(error.error.message);
+    } else {
+      this.toastr.error(`خطا در ${action} تخفیف. لطفاً دوباره تلاش کنید`);
+    }
+  }
+
+
+
+
   prepareFormData(): any {
     const rawData = this.discountForm.getRawValue();
 

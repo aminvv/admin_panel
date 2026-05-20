@@ -1,4 +1,3 @@
-// management-discount.component.ts
 import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
@@ -45,7 +44,6 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   public tableLoading = false;
   public minDate: Date = new Date();
 
-
   public stats = {
     active: 0,
     expired: 0,
@@ -56,8 +54,6 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   public searchText = '';
   public filterType = 'all';
   public filterStatus = 'all';
-
-
 
   public products: ProductDetails[] = [];
   public productsLoading = false;
@@ -72,17 +68,15 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   ) { 
   }
 
-
   ngOnDestroy(): void {
     if (this.deleteConfirmSubscription) {
       this.deleteConfirmSubscription.unsubscribe();
     }
   }
 
-
   ngOnInit(): void {
     this.initializeForm();
-    this.loadProducts(); // بارگذاری محصولات از دیتابیس
+    this.loadProducts();
     this.loadDiscounts();
   }
 
@@ -106,7 +100,6 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
       this.updateValidatorsBasedOnType(type);
     });
 
-
     this.discountForm.get('percent')?.valueChanges.subscribe(value => {
       if (value) {
         this.discountForm.get('amount')?.setValue('');
@@ -126,16 +119,13 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     const codeControl = this.discountForm.get('code');
     const productIdControl = this.discountForm.get('productId');
 
-    // پاک کردن validators قبلی
     codeControl?.clearValidators();
     productIdControl?.clearValidators();
 
     if (type === 'product') {
-      // تخفیف محصول - کد اختیاری، productId اجباری
       productIdControl?.setValidators([Validators.required, Validators.min(1)]);
       codeControl?.setValidators([Validators.maxLength(50)]);
     } else if (type === 'basket') {
-      // تخفیف سبد خرید - کد اجباری
       codeControl?.setValidators([Validators.required, Validators.maxLength(50)]);
     }
 
@@ -143,18 +133,16 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     productIdControl?.updateValueAndValidity();
   }
 
-  // بارگذاری محصولات واقعی از دیتابیس
   private loadProducts(): void {
     this.productsLoading = true;
 
     this.productService.getProducts().subscribe({
       next: (products: ProductDetails[]) => {
-        // تبدیل ProductDetails[] به {id: number, name: string}[]
-        this.products = products
+        this.products = products;
         this.productsLoading = false;
       },
       error: (error) => {
-        console.error('خطا در دریافت محصولات از دیتابیس:', error);
+        console.error('خطا در دریافت محصولات:', error);
         this.toastr.error('خطا در دریافت لیست محصولات');
         this.productsLoading = false;
       }
@@ -167,14 +155,12 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   }
 
   private loadDiscounts(preservePosition: boolean = false): void {
-    // ذخیره صفحه فعلی
     const currentPage = this.paginator?.pageIndex || 0;
 
     this.tableLoading = true;
 
     this.discountService.getDiscounts().subscribe({
       next: (discounts: DiscountDetails[]) => {
-        // مرتب‌سازی: جدیدترین اول (بر اساس expires_in)
         const processedDiscounts = discounts
           .map(discount => ({
             ...discount,
@@ -183,25 +169,20 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
             limit: discount.limit || 0,
             productId: discount.productId || 0,
             expires_in: discount.expires_in,
-            
           }))
           .sort((a, b) => {
-            // جدیدترین اول (بیشترین تاریخ)
             return new Date(b.expires_in).getTime() - new Date(a.expires_in).getTime();
           });
 
-
-          
         this.dataSource.data = processedDiscounts;
         this.calculateStats(processedDiscounts);
         this.tableLoading = false;
 
-        // اگر preservePosition true بود، صفحه قبلی رو نگه دار
         if (preservePosition && this.paginator) {
           setTimeout(() => {
             this.paginator.pageIndex = currentPage;
             this.dataSource.paginator = this.paginator;
-          }, 50); // تاخیر کوتاه
+          }, 50);
         }
 
         this.cdr.detectChanges();
@@ -215,20 +196,13 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     });
   }
 
-
-
-
-
   getProductImage(productId: number): string {
     const product = this.products.find(p => p.id === productId);
     if (product?.image && product.image.length > 0 && product.image[0].url) {
       return product.image[0].url;
     }
-
-    return null
-
+    return null;
   }
-
 
   private calculateStats(discounts: DiscountDetails[]): void {
     const now = new Date();
@@ -243,7 +217,6 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
 
         if (expiry > now) {
           if (discount.limit > 0 && discount.usage >= discount.limit) {
-            // تکمیل ظرفیت
           } else {
             active++;
           }
@@ -265,7 +238,6 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     };
   }
 
-  // ==================== توابع نمایش ====================
   getStatus(discount: DiscountDetails): string {
     try {
       const now = new Date();
@@ -311,7 +283,7 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   }
 
   getTypeIcon(type: string): string {
-    return type === 'product' ? 'packed' : 'shopping_cart';
+    return type === 'product' ? 'inventory_2' : 'shopping_cart';
   }
 
   getTypeColor(type: string): string {
@@ -328,24 +300,14 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     return '---';
   }
 
-
-
-formatDate(dateInput: Date | string | null): string {
-  if (!dateInput) return '—';
-
-  const raw = dateInput instanceof Date ? dateInput.toISOString() : dateInput;
-
-  const m = moment(raw);  
-
-  if (!m.isValid()) {
-    console.warn('تاریخ نامعتبر:', raw);
-    return 'نامعتبر';
+  formatDate(dateInput: Date | string | null): string {
+    if (!dateInput) return '—';
+    const m = moment(dateInput);
+    if (!m.isValid()) {
+      return 'نامعتبر';
+    }
+    return m.format('jYYYY/jMM/jDD');
   }
-
-  return m.format('jYYYY/jMM/jDD');
-}
-
-
 
   getRemainingDays(date: Date): string {
     try {
@@ -371,13 +333,11 @@ formatDate(dateInput: Date | string | null): string {
     return Math.min((discount.usage / discount.limit) * 100, 100);
   }
 
-  // این تابع تغییر نکرده، فقط products از دیتابیس می‌آید
   getProductName(productId: number): string {
     const product = this.products.find(p => p.id === productId);
     return product?.productName || `محصول ${productId}`;
   }
 
-  // ==================== فیلترینگ ====================
   applyFilter(): void {
     let filteredData = this.dataSource.data;
 
@@ -411,13 +371,11 @@ formatDate(dateInput: Date | string | null): string {
     this.toastr.success('فیلترها پاک شدند');
   }
 
-  // ==================== عملیات CRUD ====================
   openCreateModal(): void {
     this.isEditMode = false;
     this.modalTitle = 'ایجاد تخفیف جدید';
     this.selectedDiscountId = null;
 
-    // اگر محصولات هنوز لود نشده، لود کنیم
     if (this.products.length === 0 && !this.productsLoading) {
       this.loadProducts();
     }
@@ -435,88 +393,105 @@ formatDate(dateInput: Date | string | null): string {
     this.showModal = true;
   }
 
-  // تغییر در متد prepareFormData
-  private prepareFormData(): any {
-    const formValue = this.discountForm.getRawValue();
+  prepareFormData(): any {
+    const rawData = this.discountForm.getRawValue();
 
-    const payload: any = {
-      type: formValue.type,
-      limit: formValue.limit || 0,
-      expires_in: new Date(formValue.expires_in).toISOString()
-    };
-
-    // ارسال کد - مهمترین تغییر اینجاست
-    if (formValue.code !== undefined && formValue.code !== null) {
-      if (formValue.code.trim() === '') {
-        // اگر کد خالی است، null ارسال کن
-        payload.code = null;
+    if (rawData.expires_in) {
+      let gregorianDate: Date;
+      
+      if (typeof rawData.expires_in === 'string' && rawData.expires_in.includes('/')) {
+        const jalaliParts = rawData.expires_in.split('/');
+        const jalaliMoment = moment(`${jalaliParts[0]}/${jalaliParts[1]}/${jalaliParts[2]}`, 'jYYYY/jMM/jDD');
+        gregorianDate = jalaliMoment.toDate();
       } else {
-        // اگر کد دارد، trim شده ارسال کن
-        payload.code = formValue.code.trim();
+        gregorianDate = new Date(rawData.expires_in);
       }
-    } else {
-      // اگر کد undefined یا null است
-      payload.code = null;
+      
+      const year = gregorianDate.getFullYear();
+      const month = String(gregorianDate.getMonth() + 1).padStart(2, '0');
+      const day = String(gregorianDate.getDate()).padStart(2, '0');
+      rawData.expires_in = `${year}-${month}-${day}`;
     }
 
-    // ارسال productId - فقط برای تخفیف محصول
-    if (formValue.type === 'product') {
-      payload.productId = formValue.productId || null;
-    } else {
-      // برای سبد خرید، productId باید null باشد
-      payload.productId = null;
+    if (rawData.type === 'product') {
+      if (!rawData.code || rawData.code.trim() === '') {
+        delete rawData.code;
+      }
+      if (!rawData.productId || rawData.productId === 0) {
+        delete rawData.productId;
+      }
+    } else if (rawData.type === 'basket') {
+      delete rawData.productId;
+      if (!rawData.code || rawData.code.trim() === '') {
+        delete rawData.code;
+      }
     }
 
-    // مقدار تخفیف
-    if (formValue.percent && formValue.percent > 0) {
-      payload.percent = formValue.percent.toString();
-      payload.amount = null;
-    } else if (formValue.amount && formValue.amount.trim() !== '') {
-      payload.amount = formValue.amount;
-      payload.percent = null;
-    } else {
-      // اگر هیچکدام پر نشده
-      payload.percent = null;
-      payload.amount = null;
+    Object.keys(rawData).forEach(key => {
+      if (rawData[key] === null || rawData[key] === undefined || rawData[key] === '') {
+        delete rawData[key];
+      }
+    });
+
+    if (rawData.amount === '0' || rawData.amount === 0) {
+      delete rawData.amount;
     }
 
-    console.log('Payload for save:', payload);
-    return payload;
+    if (rawData.percent === 0) {
+      delete rawData.percent;
+    }
+
+    if (rawData.percent && rawData.amount) {
+      delete rawData.amount;
+    }
+
+    return rawData;
   }
-  // همچنین در متد openEditModal این تغییر را اعمال کنید:
+
+  populateFormWithDiscountData(discount: any): void {
+    let expiresDate: Date | null = null;
+    
+    if (discount.expires_in) {
+      const date = new Date(discount.expires_in);
+      if (!isNaN(date.getTime())) {
+        date.setHours(0, 0, 0, 0);
+        expiresDate = date;
+      }
+    }
+
+    const percentValue = discount.percent ? Number(discount.percent) : null;
+    const amountValue = discount.amount ? (typeof discount.amount === 'string' ? discount.amount : String(discount.amount)) : '';
+    const codeValue = discount.code === null || discount.code === undefined ? '' : discount.code;
+    const productIdValue = discount.productId || 0;
+    const limitValue = discount.limit || 0;
+
+    let expiresInValue: any = expiresDate;
+    if (expiresDate) {
+      expiresInValue = moment(expiresDate).format('jYYYY/jMM/jDD');
+    }
+
+    this.discountForm.patchValue({
+      code: codeValue,
+      type: discount.type || 'product',
+      percent: percentValue,
+      amount: amountValue,
+      limit: limitValue,
+      expires_in: expiresInValue,
+      productId: productIdValue
+    });
+
+    this.updateValidatorsBasedOnType(discount.type || 'product');
+  }
+
   openEditModal(discount: DiscountDetails): void {
     this.isEditMode = true;
     this.modalTitle = 'ویرایش تخفیف';
     this.selectedDiscountId = discount.id || null;
-
-    let formattedDate = '';
-    try {
-      const expiryDate = new Date(discount.expires_in);
-      formattedDate = expiryDate.toISOString().slice(0, 16);
-    } catch (error) {
-      console.error('خطا در فرمت تاریخ:', error);
-    }
-
-    // پر کردن فرم - بسیار مهم: کد را دقیقاً به همان صورت که از سرور آمده قرار دهید
-    this.discountForm.patchValue({
-      code: discount.code === null ? '' : discount.code, // این خط بسیار مهم است
-      type: discount.type || 'product',
-      percent: discount.percent || null,
-      amount: discount.amount || '',
-      limit: discount.limit || 0,
-      expires_in: formattedDate,
-      productId: discount.productId || 0
-    });
-
-    // validators را بر اساس نوع به‌روزرسانی کن
-    this.updateValidatorsBasedOnType(discount.type || 'product');
-
+    this.populateFormWithDiscountData(discount);
     this.showModal = true;
   }
 
   openDeleteModal(id: number): void {
-    console.log('🔴 openDeleteModal فراخوانی شد! ID:', id);
-
     const dialogRef = this.dialog.open(DeletePopupComponent, {
       width: '512px',
       data: {
@@ -525,9 +500,7 @@ formatDate(dateInput: Date | string | null): string {
       }
     });
 
-    // این خط مهمه
     this.deleteConfirmSubscription = dialogRef.componentInstance.deleteConfirmed.subscribe(() => {
-      console.log('🟢 Event deleteConfirmed دریافت شد');
       this.deleteDiscount(id);
     });
   }
@@ -546,7 +519,6 @@ formatDate(dateInput: Date | string | null): string {
     });
   }
 
-  // ==================== متد onSubmit ====================
   onSubmit(): void {
     if (this.discountForm.invalid) {
       this.markFormGroupTouched(this.discountForm);
@@ -558,7 +530,6 @@ formatDate(dateInput: Date | string | null): string {
     const code = this.discountForm.get('code')?.value;
     const productId = this.discountForm.get('productId')?.value;
 
-    // اعتبارسنجی خاص بر اساس نوع
     if (type === 'basket' && (!code || code.trim() === '')) {
       this.toastr.error('برای تخفیف سبد خرید، کد الزامی است');
       return;
@@ -587,15 +558,24 @@ formatDate(dateInput: Date | string | null): string {
     }
   }
 
-
-
   private createDiscount(discountData: any): void {
     this.discountService.creatediscount(discountData).subscribe({
-      next: (response) => {
+      next: () => {
         this.handleSuccess('تخفیف با موفقیت ایجاد شد');
       },
       error: (error) => {
-        this.handleError('خطا در ایجاد تخفیف', error);
+        if (error.status === 409) {
+          this.toastr.warning('تخفیف تکراری!', 'امکان ایجاد تخفیف جدید وجود ندارد', { timeOut: 4000 });
+          
+          if (discountData.code) {
+            this.toastr.error(`کد "${discountData.code}" قبلاً استفاده شده است`);
+          } else if (discountData.type === 'product' && discountData.productId) {
+            this.toastr.info('این محصول قبلاً دارای تخفیف بدون کد است. لطفاً آن را ویرایش کنید');
+          }
+        } else {
+          this.handleError('خطا در ایجاد تخفیف', error);
+        }
+        this.loading = false;
       }
     });
   }
@@ -605,7 +585,7 @@ formatDate(dateInput: Date | string | null): string {
 
     discountData.id = this.selectedDiscountId;
     this.discountService.saveChangeddiscount(discountData).subscribe({
-      next: (response) => {
+      next: () => {
         this.handleSuccess('تخفیف با موفقیت ویرایش شد');
       },
       error: (error) => {
@@ -615,23 +595,13 @@ formatDate(dateInput: Date | string | null): string {
   }
 
   private deleteDiscount(id: number): void {
-    console.log('🔴 deleteDiscount شروع شد. ID:', id);
-
     this.discountService.deleteDiscount(id).subscribe({
-      next: (response) => {
-        console.log('🟢 پاسخ موفق از سرور:', response);
+      next: () => {
         this.toastr.success('تخفیف با موفقیت حذف شد');
         this.loadDiscounts();
       },
       error: (error) => {
-        console.error('🔴 خطای کامل:', {
-          name: error.name,
-          message: error.message,
-          status: error.status,
-          statusText: error.statusText,
-          error: error.error,
-          url: error.url
-        });
+        console.error('خطا در حذف تخفیف:', error);
         this.toastr.error('خطا در حذف تخفیف');
       }
     });
