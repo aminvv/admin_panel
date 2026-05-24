@@ -47,6 +47,7 @@ import { ProductService } from '../e-commerce/services';
     MatSelectModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatChipsModule,
     MatInputModule,
     MatTableModule,
     MatTooltipModule,

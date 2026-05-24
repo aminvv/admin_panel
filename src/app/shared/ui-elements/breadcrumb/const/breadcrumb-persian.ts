@@ -16,12 +16,13 @@ export const BREADCRUMB_LABELS: Record<string, string> = {
 
   // --- E-commerce ---
   'e-commerce': 'فروشگاه',
-  management: 'مدیریت محصولات',
+  management: 'مدیریت ',
   products: 'محصولات',
   product: 'جزئیات محصول',
   create: 'ایجاد',
-  
+
   // --- Content ---
+  'content-management': "مدریت وبلاگ",
   content: 'محتوا',
   blogs: 'وبلاگ‌ها',
   blog: 'جزئیات وبلاگ',

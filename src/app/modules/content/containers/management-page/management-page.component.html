@@ -4,11 +4,12 @@
   <mat-card-title class="card-title-wrapper">
     <p class="card-title">وبلاگ <span class="card-subtitle">{{ (blogs$ | async)?.length || 0 }} مقاله</span></p>
 
-    <mat-form-field appearance="outline" class="search-field mat-form-field-should-float">
-      <mat-label>جست‌وجو</mat-label>
-      <input matInput (keyup)="applyFilter($event)" #input class="search-title">
-      <mat-icon matPrefix class="search-icon">search</mat-icon>
-    </mat-form-field>
+    <div class="custom-search">
+      <mat-icon class="custom-search-icon">search</mat-icon>
+      <input type="text" class="custom-search-input" placeholder="جستجوی مقاله..." (keyup)="applyFilter($event)"
+        #input />
+      <mat-icon *ngIf="input.value" class="custom-clear-icon" (click)="clearSearch(input)">close</mat-icon>
+    </div>
   </mat-card-title>
 
   <mat-card-content class="card-content">
@@ -16,7 +17,6 @@
 
     <div class="table-title-wrapper">
       <p class="table-title">Blogs</p>
-      <mat-icon class="table-title-icon" matTooltip="Filter list" matTooltipPosition="above">filter_list</mat-icon>
     </div>
 
     <div class="table-wrapper">
@@ -25,21 +25,13 @@
         <!-- Checkbox Column -->
         <ng-container matColumnDef="select">
           <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox
-              (change)="$event ? masterToggle() : null"
-              [checked]="selection.hasValue() && isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()"
-              [aria-label]="checkboxLabel()"
-              color="warn">
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()" color="warn">
             </mat-checkbox>
           </th>
           <td mat-cell *matCellDef="let row">
-            <mat-checkbox
-              (click)="$event.stopPropagation()"
-              (change)="$event ? selection.toggle(row) : null"
-              [checked]="selection.isSelected(row)"
-              [aria-label]="checkboxLabel(row)"
-              color="warn">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)" color="warn">
             </mat-checkbox>
           </td>
         </ng-container>
@@ -101,8 +93,10 @@
           <th mat-header-cell *matHeaderCellDef class="table-header"> عملیات </th>
           <td mat-cell *matCellDef="let element" class="table-body">
             <div class="table-buttons-wrapper">
-              <button mat-flat-button color="success" class="table-button" [routerLink]="[routes.BLOG_EDIT, element.id]">ویرایش</button>
-              <button mat-flat-button color="warn" class="table-button" (click)="openDeleteModal(element.id)">حذف</button>
+              <button mat-flat-button color="success" class="table-button"
+                [routerLink]="[routes.BLOG_EDIT, element.id]">ویرایش</button>
+              <button mat-flat-button color="warn" class="table-button"
+                (click)="openDeleteModal(element.id)">حذف</button>
             </div>
           </td>
         </ng-container>
@@ -111,11 +105,11 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
         <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" colspan="9">No data matching the filter "{{input.value}}"</td>
+          <td class="mat-cell" colspan="9">"هیچ اطلاعاتی با این فیلتر همخوانی ندارد"{{input.value}}"</td>
         </tr>
       </table>
     </div>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> 
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </mat-card-content>
 </mat-card>

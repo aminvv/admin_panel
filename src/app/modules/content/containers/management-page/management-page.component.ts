@@ -22,12 +22,19 @@ export class ManagementPageComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   public routes: typeof routes = routes;
   public blogs$: Observable<BlogDetails[]>;
-  public displayedColumns: string[] = ['id', 'thumbnail',  'title','description',  'slug', 'category', 'status','actions'];
+  public displayedColumns: string[] = ['select', 'id', 'thumbnail', 'title', 'category', 'status', 'actions'];
   public dataSource: MatTableDataSource<BlogDetails>;
   deleteConfirmSubscription;
   selectedId: number;
 
   selection = new SelectionModel<any>(true, []);
+
+  clearSearch(input: HTMLInputElement): void {
+    input.value = '';
+    this.dataSource.filter = '';
+  }
+
+
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -54,6 +61,26 @@ export class ManagementPageComponent implements OnInit {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+
+  filterByStatus(status: string): void {
+    if (status === 'all') {
+      this.dataSource.data = this.dataSource.data;
+    } else {
+      this.dataSource.data = this.dataSource.data.filter(item => item.status === status);
+    }
+    this.selection.clear();
+  }
+
+  clearFilters(): void {
+    this.blogs$.pipe(take(1)).subscribe((blogs: BlogDetails[]) => {
+      this.dataSource.data = blogs;
+      const searchInput = document.querySelector('.search-field input') as HTMLInputElement;
+      if (searchInput) {
+        searchInput.value = '';
+        this.dataSource.filter = '';
+      }
+    });
   }
 
   constructor(private service: BlogService,
@@ -84,13 +111,11 @@ export class ManagementPageComponent implements OnInit {
     });
   }
 
-
-
   public delete(id: number) {
     this.service.deleteBlog(id).pipe(
       switchMap((response: any) => {
 
-        const message = response && response.message? String(response.message): 'وبلاگ با موفقیت حذف شد';
+        const message = response && response.message ? String(response.message) : 'وبلاگ با موفقیت حذف شد';
         this.toastr.success(message);
         return this.service.getBlogs();
       }),
@@ -105,20 +130,17 @@ export class ManagementPageComponent implements OnInit {
     });
   }
 
+  public getFirstImage(thumbnail: any): string {
+    if (!thumbnail) return '';
 
-public getFirstImage(thumbnail: any): string {
-  if (!thumbnail) return '';
+    if (Array.isArray(thumbnail) && typeof thumbnail[0] === 'string') {
+      return thumbnail[0];
+    }
 
-  if (Array.isArray(thumbnail) && typeof thumbnail[0] === 'string') {
-    return thumbnail[0];
+    if (Array.isArray(thumbnail) && thumbnail[0]?.url) {
+      return thumbnail[0].url;
+    }
+
+    return '';
   }
-
-  if (Array.isArray(thumbnail) && thumbnail[0]?.url) {
-    return thumbnail[0].url;
-  }
-
-  return '';
-}
-
-
 }

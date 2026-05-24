@@ -28,15 +28,12 @@
             ],
             "styles": [
               "node_modules/roboto-fontface-material/fonts/roboto-fontface-material.css",
-              "node_modules/persian-datepicker/dist/css/persian-datepicker.min.css",
               "node_modules/material-design-icons/iconfont/material-icons.css",
               "./node_modules/font-awesome/scss/font-awesome.scss",
               "./node_modules/ngx-toastr/toastr.css",
               "src/custom-theme.scss"
             ],
             "scripts": [
-              "node_modules/persian-date/dist/persian-date.min.js",
-              "node_modules/persian-datepicker/dist/js/persian-datepicker.min.js"
             ]
           },
           "configurations": {

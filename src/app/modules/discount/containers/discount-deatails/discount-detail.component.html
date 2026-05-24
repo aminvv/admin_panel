@@ -157,18 +157,19 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-<div class="form-field">
-  <mat-form-field appearance="fill">
-    <mat-label>تاریخ انقضا *</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="expires_in">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-    <mat-icon matPrefix>event</mat-icon>
-    <mat-error *ngIf="discountForm.get('expires_in')?.touched && discountForm.get('expires_in')?.errors">
-      تاریخ انقضا الزامی است
-    </mat-error>
-  </mat-form-field>
-</div>
+                <div class="form-field">
+                  <mat-form-field appearance="fill">
+                    <mat-label>تاریخ انقضا *</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="expires_in">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-icon matPrefix>event</mat-icon>
+                    <mat-error
+                      *ngIf="discountForm.get('expires_in')?.touched && discountForm.get('expires_in')?.errors">
+                      تاریخ انقضا الزامی است
+                    </mat-error>
+                  </mat-form-field>
+                </div>
               </div>
 
               <!-- هشدار -->
