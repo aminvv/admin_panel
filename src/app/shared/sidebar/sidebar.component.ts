@@ -3,6 +3,7 @@ import { routes } from '../../consts';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../services/auth.service';
 
 
 const TREE_DATA: any = [
@@ -10,8 +11,7 @@ const TREE_DATA: any = [
     name: 'فروشگاه',
     children: [
       { name: 'مدیریت محصولات', route: routes.MANAGEMENT, active: 'active' },
-      { name: 'جدول محصولات', route: routes.PRODUCTS, active: 'active' },
-      { name: 'صفحه محصول', route: routes.PRODUCT, active: 'active' },
+      { name: ' ایجاد محصولات', route: routes.PRODUCT_CREATE, active: 'active' },
     ]
   },
 
@@ -19,8 +19,7 @@ const TREE_DATA: any = [
     name: 'محتوا',
     children: [
       { name: 'مدیریت بلاگ', route: routes.MANAGEMENT_BLOG, active: 'active' },
-      { name: 'جدول بلاگ‌ها', route: routes.BLOGS, active: 'active' },
-      { name: 'صفحه بلاگ', route: routes.BLOG, active: 'active' },
+      { name: 'ایجاد وبلاگ', route: routes.BLOG_CREATE, active: 'active' },
     ]
   },
   {
@@ -36,7 +35,6 @@ const TREE_DATA: any = [
     name: 'تخفیفات',
     children: [
       { name: 'لیست تخفیفات', route: routes.DISCOUNT_LIST, active: 'active' },
-      { name: 'جزئیات تخفیف', route: routes.DISCOUNT_DETAILS, active: 'active' },
       { name: ' تخفیف سبدخرید', route: routes.DISCOUNT_BASKET, active: 'active' },
     ]
   },
@@ -45,47 +43,14 @@ const TREE_DATA: any = [
     name: 'کاربران',
     children: [
       { name: 'لیست کاربران', route: routes.USER_LIST, active: 'active' },
-      { name: 'افزودن کاربر', route: routes.USER_ADD, active: 'active' },
       { name: 'لیست ادمین', route: routes.ADMIN_LIST, active: 'active' },
     ]
   }
 ];
 
-const TemplateNode: any = [
-  {
-    name: 'فرم‌ها',
-    children: [
-      { name: 'عناصر فرم', route: routes.FORMS_ELEMENTS, active: 'active' },
-      { name: 'اعتبارسنجی فرم', route: routes.FORMS_VALIDATION, active: 'active' },
-    ]
-  },
-  {
-    name: 'نمودارها',
-    children: [
-      { name: 'مرور نمودارها', route: routes.OVERVIEW_CHARTS, active: 'active' },
-      { name: 'نمودار خطی', route: routes.LINE_CHARTS, active: 'active' },
-      { name: 'نمودار میله‌ای', route: routes.BAR_CHARTS, active: 'active' },
-      { name: 'نمودار دایره‌ای', route: routes.PIE_CHARTS, active: 'active' },
-    ]
-  },
-  {
-    name: 'نقشه‌ها',
-    children: [
-      { name: 'نقشه گوگل', route: routes.GOOGLE_MAP, active: 'active' },
-      { name: 'نقشه برداری', route: routes.VECTOR_MAP, active: 'active' }
-    ]
-  },
-  {
-    name: 'اضافی',
-    children: [
-      { name: 'تقویم', route: routes.CALENDAR, active: 'active' },
-      { name: 'فاکتور', route: routes.INVOICE, active: 'active' },
-    ]
-  },
-];
 
 
-/** Flat node with expandable and level information */
+
 interface ExampleFlatNode {
   expandable: boolean;
   name: string;
@@ -101,6 +66,8 @@ interface ExampleFlatNode {
 export class SidebarComponent {
   public routes: typeof routes = routes;
   public isOpenUiElements = false;
+
+
 
 
   private _transformer = (node: any, level: number) => {
@@ -123,15 +90,24 @@ export class SidebarComponent {
   templateDataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
 
-  constructor(public dialog: MatDialog) {
+  constructor(
+    public dialog: MatDialog,
+    private authService: AuthService
+  ) {
     this.dataSource.data = TREE_DATA;
-    this.templateDataSource.data = TemplateNode;
+
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   public openUiElements() {
     this.isOpenUiElements = !this.isOpenUiElements;
+  }
+
+
+
+  logout(): void {
+    this.authService.logoutUser();  // همان متدی که در AuthService دارید
   }
 
 }

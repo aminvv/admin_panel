@@ -5,7 +5,6 @@ import {
   ManagementPageComponent,
   ProductCreatePageComponent,
   ProductPageComponent,
-  ProductsPageComponent,
   ProductEditPageComponent
 } from './containers';
 
@@ -25,10 +24,6 @@ const routes: Routes = [
   {
     path: 'create',
     component: ProductCreatePageComponent,
-  },
-  {
-    path: 'products',
-    component: ProductsPageComponent,
   },
   {
     path: 'product',

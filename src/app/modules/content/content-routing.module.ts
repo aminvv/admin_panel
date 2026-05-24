@@ -5,7 +5,6 @@ import {
   BlogCreatePageComponent,
   BlogEditPageComponent,
   BlogPageComponent,
-  BlogsPageComponent,
   ManagementPageComponent,
 
 } from './containers';
@@ -26,10 +25,6 @@ const routes: Routes = [
   {
     path: 'create',
     component: BlogCreatePageComponent,
-  },
-  {
-    path: 'blogs',
-    component: BlogsPageComponent,
   },
   {
     path: 'blog/:id',

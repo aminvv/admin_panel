@@ -70,90 +70,17 @@
     </mat-tree-node>
 
   </mat-tree>
-
-  <mat-list-item routerLink="{{routes.OVERVIEW}}">
-    <mat-icon>description</mat-icon> مستندات
-  </mat-list-item>
+  
+  
+  
+  
 </mat-list>
 
-<mat-list>
-  <p class="sidebar-title">قالب‌ها</p>
-
-  <mat-tree [dataSource]="templateDataSource" [treeControl]="treeControl">
-
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding routerLink="{{node.route}}"
-      routerLinkActive="{{node.active}}">
-      <div class="mat-tree-second-item">
-        <div class="circle"></div>
-        <p>{{node.name}}</p>
-      </div>
-    </mat-tree-node>
-
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" class="mat-node">
-
-      <div *ngIf="node.name === 'فرم‌ها'" class="mat-tree-item" matTreeNodeToggle>
-        <div>
-          <mat-icon>description</mat-icon>
-          <p>{{node.name}}</p>
-        </div>
-        <mat-icon
-          [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">keyboard_arrow_down
-        </mat-icon>
-      </div>
-
-      <div *ngIf="node.name === 'نمودارها'" class="mat-tree-item" matTreeNodeToggle>
-        <div>
-          <mat-icon>equalizer</mat-icon>
-          <p>{{node.name}}</p>
-        </div>
-        <mat-icon
-          [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">keyboard_arrow_down
-        </mat-icon>
-      </div>
-
-      <div *ngIf="node.name === 'نقشه‌ها'" class="mat-tree-item" matTreeNodeToggle>
-        <div>
-          <mat-icon>map</mat-icon>
-          <p>{{node.name}}</p>
-        </div>
-        <mat-icon
-          [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">keyboard_arrow_down
-        </mat-icon>
-      </div>
-
-      <div *ngIf="node.name === 'اضافی'" class="mat-tree-item" matTreeNodeToggle>
-        <div>
-          <mat-icon>star_border</mat-icon>
-          <p>{{node.name}}</p>
-        </div>
-        <mat-icon
-          [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">keyboard_arrow_down
-        </mat-icon>
-      </div>
-
-      <div *ngIf="node.name === 'Menu Levels'" class="mat-tree-item" matTreeNodeToggle>
-        <div>
-          <mat-icon>folder_open</mat-icon>
-          <p>{{node.name}}</p>
-        </div>
-        <mat-icon
-          [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">keyboard_arrow_down
-        </mat-icon>
-      </div>
-
-      <div *ngIf="node.name === 'Level 1.2' || node.name === 'Level 2.2'" class="mat-tree-item" matTreeNodeToggle>
-        <div>
-          <mat-icon>inbox</mat-icon>
-          <p>{{node.name}}</p>
-        </div>
-        <mat-icon
-          [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">keyboard_arrow_down
-        </mat-icon>
-      </div>
-
-    </mat-tree-node>
-
-  </mat-tree>
-</mat-list>
-
-<div class="space"></div>
+<div class="space">
+  <div class="mat-tree-item logout-node" (click)="logout()">
+    <div>
+      <mat-icon>exit_to_app</mat-icon>
+      <p>خروج</p>
+    </div>
+  </div>
+</div>

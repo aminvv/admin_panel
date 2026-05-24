@@ -19,7 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ContentRoutingModule } from './content-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { BlogEditFormComponent, BlogCardComponent  } from './components';
-import { ManagementPageComponent ,  BlogPageComponent, BlogsPageComponent, BlogEditPageComponent, BlogCreatePageComponent } from './containers';
+import { ManagementPageComponent ,  BlogPageComponent, BlogEditPageComponent, BlogCreatePageComponent } from './containers';
 import { BaseService } from 'src/app/shared/services/base.service';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
@@ -28,7 +28,6 @@ import { ProductService } from '../e-commerce/services';
 @NgModule({
   declarations: [
     ManagementPageComponent,
-    BlogsPageComponent,
     BlogPageComponent,
     BlogCardComponent,
     BlogEditPageComponent,

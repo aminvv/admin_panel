@@ -22,13 +22,12 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ECommerceRoutingModule } from './e-commerce-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { ProductEditFormComponent, ProductCardComponent } from './components';
-import { ManagementPageComponent, ProductsPageComponent, ProductPageComponent, ProductEditPageComponent, ProductCreatePageComponent } from './containers';
+import { ManagementPageComponent,  ProductPageComponent, ProductEditPageComponent, ProductCreatePageComponent } from './containers';
 import { BaseService } from 'src/app/shared/services/base.service';
 
 @NgModule({
   declarations: [
     ManagementPageComponent,
-    ProductsPageComponent,
     ProductPageComponent,
     ProductCardComponent,
     ProductEditPageComponent,
