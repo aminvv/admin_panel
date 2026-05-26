@@ -104,10 +104,7 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  onPageChange(event: any): void {
-    this.currentPage = event.pageIndex;
-    this.pageSize = event.pageSize;
-  }
+
 
   openAddDialog(): void {
     const dialogRef = this.dialog.open(UserAddComponent, {

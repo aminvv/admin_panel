@@ -614,33 +614,7 @@
         }
       }
 
-      /* Paginator */
-      ::ng-deep .mat-paginator {
-        background: #f8fafc;
-        border-top: 1px solid #e2e8f0;
-        border-radius: 0 0 12px 12px;
 
-        .mat-paginator-container {
-          padding: 16px;
-          justify-content: space-between;
-        }
-
-        .mat-paginator-page-size-label {
-          color: #718096;
-        }
-
-        .mat-select-value {
-          color: #2d3748;
-        }
-
-        .mat-paginator-range-label {
-          color: #718096;
-        }
-
-        button {
-          color: #4f46e5;
-        }
-      }
     }
 
     /* Empty State */

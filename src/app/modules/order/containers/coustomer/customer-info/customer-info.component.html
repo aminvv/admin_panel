@@ -137,11 +137,6 @@
       </table>
     </div>
 
-    <!-- PAGINATION -->
-    <div *ngIf="!loading && dataSource.data.length > 0" class="pagination-container">
-      <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-        [pageIndex]="currentPage" (page)="onPageChange($event)" showFirstLastButtons>
-      </mat-paginator>
-    </div>
+
   </mat-card>
 </div>

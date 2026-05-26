@@ -6,7 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent {
-  public flatlogic: string = 'https://flatlogic.com/';
-  public flatlogicAbout: string = 'https://flatlogic.com/about';
-  public flatlogicBlog: string = 'https://flatlogic.com/blog';
+
 }

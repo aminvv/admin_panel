@@ -489,22 +489,7 @@
   }
 }
 
-/* Paginator */
-mat-paginator {
-  margin: 24px auto;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
-  direction: rtl;
 
-  ::ng-deep {
-    .mat-paginator-container {
-      justify-content: space-between;
-      flex-direction: row-reverse;
-      padding: 0 16px;
-    }
-  }
-}
 
 /* RTL Fixes */
 ::ng-deep {

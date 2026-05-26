@@ -1,6 +1,5 @@
 @import "palettes";
 @import "mat-card";
-@import "mat-paginator";
 @import "mat-table";
 @import "breadcrumb";
 @import "mat-select";
@@ -48,7 +47,6 @@ $blue-theme: ama-light-theme(
 
     @include header();
     @include mat-card();
-    @include mat-paginator();
     @include mat-table();
     @include mat-toolbar();
     @include mat-button();
@@ -95,7 +93,6 @@ $pink-theme: ama-light-theme(
 
     @include header();
     @include mat-card();
-    @include mat-paginator();
     @include mat-table();
     @include mat-toggle();
     @include mat-spinner;
@@ -141,7 +138,6 @@ $green-theme: ama-light-theme(
 
     @include header();
     @include mat-card();
-    @include mat-paginator();
     @include mat-table();
     @include mat-tab-without-border();
     @include mat-toggle();
@@ -172,7 +168,6 @@ $green-theme: ama-light-theme(
     @include sidebar-dark();
     @include scrollbar-dark();
     @include breadcrumb-dark();
-    @include mat-paginator-dark();
     @include mat-table-dark();
     @include mat-tab-without-border();
     @include mat-toggle();
