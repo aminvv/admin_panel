@@ -21,6 +21,7 @@ export class BlogEditFormComponent implements OnInit, OnChanges {
 
   blogForm!: UntypedFormGroup;
   imagePreviews: string[] = [];
+  existingCategories: string[] = [];
   public router = routes;
   public Editor = DecoupledEditor;
   public editorConfig: any = {};
@@ -33,6 +34,7 @@ export class BlogEditFormComponent implements OnInit, OnChanges {
     private fb: UntypedFormBuilder,
     private blogService: BlogService,
     private cloudinaryService: CloudinaryService,
+    
   ) { }
 
   ngOnInit(): void {
@@ -50,6 +52,7 @@ export class BlogEditFormComponent implements OnInit, OnChanges {
       cloudinaryService: this.cloudinaryService,
       extraPlugins: [MyCustomUploadAdapterPlugin],
     }
+    this.loadDistinctCategories();
   }
 
 
@@ -92,6 +95,21 @@ export class BlogEditFormComponent implements OnInit, OnChanges {
   }
 
 
+
+
+
+
+
+loadDistinctCategories(): void {
+  this.blogService.getBlogs().subscribe({
+    next: (blogs) => {
+      // استخراج دسته‌بندی‌های یکتا از مقالات موجود
+      const cats = blogs.map(blog => blog.category).filter(c => c);
+      this.existingCategories = [...new Set(cats)];
+    },
+    error: () => this.existingCategories = []
+  });
+}
 
 
 

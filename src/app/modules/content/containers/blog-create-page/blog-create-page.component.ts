@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { routes } from '../../../../consts';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { BlogDetails } from '../../models/blog-details';
 import { BlogService } from '../../services';
