@@ -1,9 +1,10 @@
 .admin-list-container {
   padding: 24px;
-  background-color: #f5f7fa;
-  min-height: calc(100vh - 64px);
+  background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
+  min-height: 100vh;
   direction: rtl;
-  font-family: 'Vazir', 'Roboto', sans-serif;
+  /* راست چین کردن کل محتوا */
+  text-align: right;
 }
 
 .header {
@@ -64,12 +65,12 @@
 
   .stat-card {
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s;
 
     &:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
     }
 
     .mat-card-content {
@@ -94,9 +95,17 @@
         height: 28px;
       }
 
-      &.total { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-      &.active { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-      &.super { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+      &.total {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      &.active {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      }
+
+      &.super {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      }
     }
 
     .stat-details {
@@ -106,6 +115,7 @@
         color: #2c3e50;
         line-height: 1.2;
       }
+
       .stat-label {
         font-size: 0.9rem;
         color: #7f8c8d;
@@ -120,12 +130,13 @@
   .search-field {
     width: 100%;
     max-width: 400px;
-  }
+    direction: ltr;
+  }  
 }
 
 .table-card {
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 
   .loading {
@@ -147,32 +158,36 @@
 
   .admin-table {
     width: 100%;
+    min-width: 900px;
 
     .mat-header-row {
-      background: linear-gradient(to right, #f8f9fa, #ffffff);
-      height: 56px;
+      background: #f8fafc;
+      height: 52px;
+      border-bottom: 1px solid #e2e8f0;
+    }
 
-      .mat-header-cell {
-        color: #34495e;
-        font-weight: 600;
-        font-size: 0.85rem;
-        padding: 0 16px;
-      }
+    .mat-header-cell {
+      color: #1e293b;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 0 16px;
+      text-align: right;
     }
 
     .mat-row {
-      height: 64px;
-      transition: background 0.2s;
+      height: 72px;
+      transition: background 0.15s;
 
       &:hover {
-        background: #f5f8ff;
+        background: #fefce8;
       }
 
       .mat-cell {
         padding: 0 16px;
-        color: #2c3e50;
-        font-size: 0.9rem;
-        border-bottom: 1px solid #ecf0f1;
+        font-size: 0.85rem;
+        color: #334155;
+        border-bottom: 1px solid #f1f5f9;
+        text-align: right;
       }
     }
 
@@ -182,27 +197,31 @@
       gap: 12px;
 
       .avatar-img {
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         object-fit: cover;
+        border: 2px solid #e2e8f0;
       }
 
       .avatar-icon {
         color: #5c6bc0;
         background: #e8eaf6;
         border-radius: 50%;
-        padding: 6px;
+        padding: 8px;
+        display: flex;
         font-size: 20px;
+        align-items: center;
+        justify-content: center;
       }
     }
 
     .role-badge {
       display: inline-block;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
 
       &.role-super {
         background: #ede7f6;
@@ -244,10 +263,51 @@
     padding: 16px 24px;
     border-top: 1px solid #ecf0f1;
     background: #fafcff;
+    direction: ltr;
+    /* برای صفحه‌بندی */
   }
 }
 
+.mat-cell:has(.actions-cell),
+.mat-column-actions {
+  width: 160px !important;
+  min-width: 160px !important;
+  max-width: 160px !important;
+}
+
+.actions-cell {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+
+  button {
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+    transition: all 0.2s;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &[mat-icon-button] {
+      pointer-events: auto;
+    }
+  }
+}
+
+.mat-menu-trigger {
+  position: relative;
+  z-index: 1;
+}
+
 @media (max-width: 768px) {
+  .admin-list-container {
+    padding: 16px;
+  }
+
   .header {
     flex-direction: column;
     align-items: flex-start;
@@ -260,4 +320,14 @@
   .stats-cards {
     grid-template-columns: 1fr;
   }
-} 
+
+  .mat-column-actions {
+    width: 140px !important;
+    min-width: 140px !important;
+    max-width: 140px !important;
+  }
+
+  .actions-cell {
+    gap: 4px !important;
+  }
+}

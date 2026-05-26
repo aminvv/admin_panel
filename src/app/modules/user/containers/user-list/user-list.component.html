@@ -93,7 +93,7 @@
         <ng-container matColumnDef="mobile">
           <th mat-header-cell *matHeaderCellDef>شماره موبایل</th>
           <td mat-cell *matCellDef="let user">
-            <span class="mobile" [matTooltip]="user.mobile">{{ maskMobile(user.mobile) }}</span>
+             <span dir="ltr" class="mobile" [matTooltip]="user.mobile">{{ maskMobile(user.mobile) }}</span>
           </td>
         </ng-container>
 

@@ -126,11 +126,11 @@
 
 .search-section {
   margin-bottom: 24px;
-  direction: ltr !important;
-
+  
   .search-field {
     width: 100%;
     max-width: 400px;
+    direction: ltr ;
   }
 }
 
@@ -157,7 +157,7 @@
     overflow-x: auto;
   }
 
-  .user-table {
+  .user-table { 
     width: 100%;
 
     .mat-header-row {

@@ -8,6 +8,7 @@ import { AdminService, Admin } from '../../services/admin.service';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { AdminAddComponent } from '../admin-add/admin-add.component';
 import { DeletePopupComponent } from 'src/app/shared/popups/delete-popup/delete-popup.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-admin-list',
@@ -50,8 +51,9 @@ export class AdminListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+
     this.isSuperAdmin = this.authService.isSuperAdmin();
-     this.currentUserId = this.authService.getCurrentUser()?.id || null;
+    this.currentUserId = this.authService.getCurrentUser()?.id || null;
     this.loadAdmins();
   }
 
@@ -116,15 +118,28 @@ export class AdminListComponent implements OnInit, OnDestroy {
   openEditDialog(admin: Admin): void {
     const dialogRef = this.dialog.open(AdminAddComponent, {
       width: '600px',
-      maxWidth: '95vw',
-      data: { mode: 'edit', admin }
+      data: { mode: 'edit', admin: { ...admin } }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) this.loadAdmins();
     });
   }
-
   openDeleteDialog(admin: Admin): void {
+    if (admin.id === this.currentUserId) {
+      this.snackBar.open('شما نمی‌توانید حساب کاربری خودتان را حذف کنید', 'بستن', { duration: 3000 });
+      return;
+    }
+
+    if (!this.isSuperAdmin) {
+      this.snackBar.open('فقط سوپرادمین می‌تواند ادمین‌ها را حذف کند', 'بستن', { duration: 3000 });
+      return;
+    }
+
+    if (admin.role === 'superAdmin') {
+      this.snackBar.open('شما نمی‌توانید یک سوپرادمین دیگر را حذف کنید', 'بستن', { duration: 3000 });
+      return;
+    }
+
     const dialogRef = this.dialog.open(DeletePopupComponent, {
       width: '400px',
       disableClose: true
@@ -137,8 +152,7 @@ export class AdminListComponent implements OnInit, OnDestroy {
             this.snackBar.open('ادمین با موفقیت حذف شد', 'بستن', { duration: 2000 });
             this.loadAdmins();
           },
-          error: (err) => {
-            console.error('خطا در حذف:', err);
+          error: () => {
             this.snackBar.open('خطا در حذف ادمین', 'بستن', { duration: 3000 });
           }
         });
@@ -188,4 +202,21 @@ export class AdminListComponent implements OnInit, OnDestroy {
   getRoleLabel(role: string): string {
     return role === 'superAdmin' ? 'سوپر ادمین' : 'ادمین';
   }
+
+
+
+
+
+
+
+  getAvatarUrl(avatar: string): string {
+    if (!avatar) return '';
+    if (avatar.startsWith('http')) return avatar;
+    // مسیر ذخیره‌سازی خود را بر اساس پروژه تنظیم کنید
+    const baseUrl = environment.apiUrl; // یا از ApiService استفاده کنید
+    return `${baseUrl}/${avatar.replace(/\\/g, '/')}`;
+  }
+
+
+
 } 
