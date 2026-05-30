@@ -1,20 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ProductDetails } from '../../models/product-details';
@@ -36,7 +19,7 @@ export class ProductEditFormComponent implements OnChanges {
   public router = routes;
   public form!: UntypedFormGroup;
   public selectedFiles: SelectedFile[] = [];
-  public isDragOver = false; 
+  public isDragOver = false;
 
   constructor(
     private cloudinaryService: CloudinaryService,
@@ -56,7 +39,15 @@ export class ProductEditFormComponent implements OnChanges {
       description: new UntypedFormControl(''),
       image: new UntypedFormControl([]),
       status: new UntypedFormControl(true),
-      details: new UntypedFormArray([])
+      details: new UntypedFormArray([]),
+      lifespan: new UntypedFormControl(''),
+      weight: new UntypedFormControl(''),
+      thickness: new UntypedFormControl(''),
+      saleType: new UntypedFormControl('CASH'),
+      deliveryTime: new UntypedFormControl(""),
+      deliveryCost: new UntypedFormControl(""),
+      returnable: new UntypedFormControl(true),
+      insurance: new UntypedFormControl(false),
     });
   }
 
@@ -77,7 +68,15 @@ export class ProductEditFormComponent implements OnChanges {
       quantity: this.product.quantity,
       description: this.product.description,
       status: this.product.status,
-      image: this.product.image || []
+      image: this.product.image || [],
+      lifespan: this.product.lifespan || '',
+      weight: this.product.weight ?? null,
+      thickness: this.product.thickness ?? '',
+      saleType: this.product.saleType || 'CASH',
+      deliveryTime: this.product.deliveryTime ?? null,
+      deliveryCost: this.product.deliveryCost ?? null,
+      returnable: this.product.returnable ?? true,
+      insurance: this.product.insurance ?? false,
     });
 
     this.details.clear();
@@ -123,7 +122,6 @@ export class ProductEditFormComponent implements OnChanges {
     return this.form.get('details') as UntypedFormArray;
   }
 
-  // ================= ADD FEATURE =================
   addFeature(): void {
     this.details.push(
       new UntypedFormGroup({
@@ -133,20 +131,16 @@ export class ProductEditFormComponent implements OnChanges {
     );
   }
 
-  // ================= REMOVE FEATURE =================
   removeFeature(index: number): void {
     this.details.removeAt(index);
   }
 
-  // ================= DRAG & DROP METHODS =================
   onFileDrop(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
     this.isDragOver = false;
-    
     if (event.dataTransfer?.files) {
-      const files = event.dataTransfer.files;
-      this.handleFiles(files);
+      this.handleFiles(event.dataTransfer.files);
     }
   }
 
@@ -162,7 +156,6 @@ export class ProductEditFormComponent implements OnChanges {
     this.isDragOver = false;
   }
 
-  // ================= FILE UPLOAD =================
   onFileChange(event: any): void {
     const files: FileList = event.target.files;
     if (!files?.length) return;
@@ -170,12 +163,8 @@ export class ProductEditFormComponent implements OnChanges {
     event.target.value = '';
   }
 
-  // پردازش فایل‌ها (برای کلیک و کشیدن)
   private handleFiles(files: FileList): void {
-    const fileArray = Array.from(files).filter(file => 
-      file.type.match('image.*')
-    );
-
+    const fileArray = Array.from(files).filter(file => file.type.match('image.*'));
     if (fileArray.length === 0) {
       alert('لطفاً فقط فایل‌های تصویری انتخاب کنید');
       return;
@@ -211,7 +200,6 @@ export class ProductEditFormComponent implements OnChanges {
         });
       },
       error: () => {
-        // علامت‌گذاری خطا برای فایل‌های جدید
         for (let i = this.selectedFiles.length - fileArray.length; i < this.selectedFiles.length; i++) {
           if (this.selectedFiles[i]) {
             this.selectedFiles[i].isUploading = false;
@@ -223,29 +211,26 @@ export class ProductEditFormComponent implements OnChanges {
     });
   }
 
-  // ================= REMOVE FILE =================
   removeFile(index: number): void {
     const img = this.selectedFiles[index];
     if (img.isUploading && img.controller) {
       img.controller.abort();
     }
     this.selectedFiles.splice(index, 1);
-
     if (img.publicId) {
       this.productService.removeUploadedImage(img.publicId).subscribe();
     }
   }
 
-  // ================= GET FILE SIZE =================
   getFileSize(size: number): string {
     return size > 1024 * 1024
       ? (size / (1024 * 1024)).toFixed(1) + ' MB'
       : (size / 1024).toFixed(1) + ' KB';
   }
 
-  // ================= SAVE =================
   public save(): void {
-    if (this.form.invalid ) {
+    
+    if (this.form.invalid) {
       alert('لطفاً همه فیلدها را پر کنید');
       return;
     }

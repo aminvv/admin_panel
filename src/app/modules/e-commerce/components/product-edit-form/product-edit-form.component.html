@@ -1,18 +1,13 @@
 <section class="add-product">
-<h2 class="add-product__title">
-  {{ product?.id ? 'ویرایش محصول' : 'افزودن محصول جدید' }}
-</h2>
+    <h2 class="add-product__title">
+        {{ product?.id ? 'ویرایش محصول' : 'افزودن محصول جدید' }}
+    </h2>
     <form [formGroup]="form" (ngSubmit)="save()" class="product__form">
 
-
-
- <div class="form-group">
+        <div class="form-group">
             <label class="form-label">آپلود تصاویر</label>
-
-            <label class="upload-wrapper" 
-                    (drop)="onFileDrop($event)" 
-                    (dragover)="onDragOver($event)"
-                    (dragleave)="onDragLeave($event)"> <!-- اضافه کردن dragleave -->
+            <label class="upload-wrapper" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)">
                 <div class="upload-area" [class.drag-over]="isDragOver">
                     <div class="upload-content">
                         <i>📁</i>
@@ -20,15 +15,14 @@
                         <span>فرمت‌های مجاز: JPG, PNG, GIF, WebP</span>
                     </div>
                 </div>
-                <input id="imageUpload" type="file" multiple accept="image/*" class="file-input" 
-                       (change)="onFileChange($event)" /> <!-- اضافه کردن event change -->
+                <input id="imageUpload" type="file" multiple accept="image/*" class="file-input"
+                    (change)="onFileChange($event)" />
             </label>
         </div>
 
         <div class="preview-list" *ngIf="selectedFiles.length > 0">
             <div class="preview-item" *ngFor="let file of selectedFiles; let i = index">
                 <img [src]="file.preview" class="preview-thumb" [class.blur]="file.isUploading" alt="preview" />
-
                 <div *ngIf="file.isUploading" class="loading-overlay">
                     <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" width="40px" height="40px"
                         viewBox="0 0 50 50">
@@ -39,17 +33,14 @@
                         </path>
                     </svg>
                 </div>
-
                 <div *ngIf="file.uploadError" class="status error">
                     ❌ خطا در آپلود
                 </div>
-
                 <button type="button" class="btn btn--remove" (click)="removeFile(i)">
                     ×
                 </button>
             </div>
         </div>
-
 
         <div class="form-group">
             <label class="form-label">نام محصول</label>
@@ -72,16 +63,62 @@
         </div>
 
         <div class="form-group">
+            <label class="form-label">طول عمر</label>
+            <input class="form-input" formControlName="lifespan" placeholder="مثال: ۲ سال" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">وزن (کیلوگرم)</label>
+            <input step="0.01" class="form-input" formControlName="weight" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">ضخامت (میلی‌متر)</label>
+            <input step="0.01" class="form-input" formControlName="thickness" placeholder="مثال: ۴ میلی‌متر" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">نوع فروش</label>
+            <select class="form-input" formControlName="saleType">
+                <option value="CASH">نقدی،مدت‌دار</option>
+                <option value="CREDIT">مدت‌دار</option>
+                <option value="BOTH">نقدی</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">زمان ارسال (روز)</label>
+            <input class="form-input" formControlName="deliveryTime" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">هزینه ارسال (تومان)</label>
+            <input class="form-input" formControlName="deliveryCost" />
+        </div>
+
+        <div class="form-group form-group--inline">
+            <label class="form-label form-label--checkbox">
+                <input type="checkbox" formControlName="returnable" />
+                <span>امکان مرجوعی</span>
+            </label>
+        </div>
+
+        <div class="form-group form-group--inline">
+            <label class="form-label form-label--checkbox">
+                <input type="checkbox" formControlName="insurance" />
+                <span>بیمه</span>
+            </label>
+        </div>
+
+        <div class="form-group">
             <label class="form-label">تعداد</label>
             <input type="number" class="form-input" formControlName="quantity" />
         </div>
-
 
         <div class="form-group">
             <label class="form-label">توضیحات</label>
             <textarea class="form-textarea" formControlName="description"></textarea>
         </div>
-
 
         <div class="form-group">
             <label class="form-label">وضعیت محصول</label>
@@ -108,7 +145,6 @@
                     ×
                 </button>
             </div>
-
             <button type="button" class="btn btn--add" (click)="addFeature()">
                 افزودن ویژگی
             </button>
@@ -116,8 +152,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn btn--primary">ذخیره</button>
-            <button type="button " routerLink="{{router.MANAGEMENT}}" class="btn btn--secondary">انصراف</button>
+            <button type="button" routerLink="{{router.MANAGEMENT}}" class="btn btn--secondary">انصراف</button>
         </div>
-
     </form>
 </section>

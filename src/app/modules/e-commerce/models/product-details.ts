@@ -1,6 +1,4 @@
 
-
-
 export interface ProductDetails {
   id?: number;
   productName: string;
@@ -11,7 +9,16 @@ export interface ProductDetails {
   active_discount: boolean;
   description?: string;
   image?: { url: string; publicId: string }[];
-  details?: { key: string; value: string }[]
-  status: boolean
+  details?: { key: string; value: string }[];
+  status: boolean;
   _initialDetailIds?: number[];
+
+  lifespan?: string;            
+  weight?: string;            
+  thickness?: string;          
+  saleType?: 'CASH' | 'CREDIT' | 'BOTH';  
+  deliveryTime?: string;        
+  deliveryCost?: string;        
+  returnable?: boolean;     
+  insurance?: boolean;        
 }

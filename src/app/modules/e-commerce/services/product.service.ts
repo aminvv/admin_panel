@@ -21,7 +21,8 @@ export const products: ProductDetails[] = [
     image: [
       { url: './assets/e-commerce/products/3.png', publicId: null }
     ],
-status: false  },
+    status: false
+  },
   {
     id: 2,
     productCode: '135264',
@@ -34,7 +35,8 @@ status: false  },
     image: [
       { url: './assets/e-commerce/products/3.png', publicId: null }
     ],
-status: false  },
+    status: false
+  },
   {
     id: 3,
     productCode: '125234',
@@ -150,7 +152,15 @@ export class ProductService {
       quantity: product.quantity,
       description: product.description || '',
       status: product.status,
-      image: product.image
+      image: product.image,
+      lifespan: product.lifespan ?? '',
+      weight: product.weight ?? null,
+      thickness: product.thickness ?? null,
+      saleType: product.saleType ?? 'CASH',
+      deliveryTime: product.deliveryTime ?? null,
+      deliveryCost: product.deliveryCost ?? null,
+      returnable: product.returnable ?? true,
+      insurance: product.insurance ?? false,
     };
 
     const headers = this.baseServe.getAuthHeader();
@@ -212,7 +222,15 @@ export class ProductService {
       description: product.description,
       rating: product.rating,
       status: product.status,
-      image: uploadedUrls
+      image: uploadedUrls,
+      lifespan: product.lifespan ?? '',
+      weight: product.weight ?? null,
+      thickness: product.thickness ?? null,
+      saleType: product.saleType ?? 'CASH',
+      deliveryTime: product.deliveryTime ?? null,
+      deliveryCost: product.deliveryCost ?? null,
+      returnable: product.returnable ?? true,
+      insurance: product.insurance ?? false,
     };
 
     return this.http.patch(`${this.productEditUrl}/${productId}`, productPayload, { headers }).pipe(
