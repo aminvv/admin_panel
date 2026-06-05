@@ -24,6 +24,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { ProductEditFormComponent, ProductCardComponent } from './components';
 import { ManagementPageComponent,  ProductPageComponent, ProductEditPageComponent, ProductCreatePageComponent } from './containers';
 import { BaseService } from 'src/app/shared/services/base.service';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { BaseService } from 'src/app/shared/services/base.service';
     MatTooltipModule,
     MatCheckboxModule,
     MatSortModule,
+     CKEditorModule,
     MatPaginatorModule,
     ReactiveFormsModule,
     MatTabsModule, 

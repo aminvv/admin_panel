@@ -5,6 +5,8 @@ import { routes } from '../../../../consts';
 import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
 import { ProductService } from '../../services';
 import { SelectedFile } from '../../models/selectedFile';
+import { MyUploadAdapter } from 'src/app/modules/content/components/Blog-edit-form/upload-adapter';
+import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 
 @Component({
   selector: 'app-product-edit-form',
@@ -20,10 +22,13 @@ export class ProductEditFormComponent implements OnChanges {
   public form!: UntypedFormGroup;
   public selectedFiles: SelectedFile[] = [];
   public isDragOver = false;
+    public Editor = DecoupledEditor;
+    public editorConfig: any = {};
 
   constructor(
     private cloudinaryService: CloudinaryService,
     private productService: ProductService,
+    
   ) {
     this.initForm();
   }
@@ -78,6 +83,7 @@ export class ProductEditFormComponent implements OnChanges {
       returnable: this.product.returnable ?? true,
       insurance: this.product.insurance ?? false,
     });
+    
 
     this.details.clear();
 
@@ -254,4 +260,22 @@ export class ProductEditFormComponent implements OnChanges {
 
     this.editProduct.emit(productData);
   }
+
+
+
+
+
+
+
+    onReady(editor: any) {
+      const editable = editor.ui.getEditableElement();
+      editable.parentElement.insertBefore(
+        editor.ui.view.toolbar.element,
+        editable
+      );
+      editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
+        return new MyUploadAdapter(loader, this.cloudinaryService);
+      };
+    }
+  
 }
