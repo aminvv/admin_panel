@@ -1,0 +1,168 @@
+<div class="settings-page" dir="rtl">
+
+  <div class="page-header">
+    <h2 class="page-title">تنظیمات سایت</h2>
+    <button class="save-btn" (click)="save()" [disabled]="saving">
+      <i class="ti ti-device-floppy"></i>
+      {{ saving ? 'در حال ذخیره...' : 'ذخیره تغییرات' }}
+    </button>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>در حال دریافت تنظیمات...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab === 'general'" (click)="activeTab = 'general'">
+        <i class="ti ti-info-circle"></i> اطلاعات عمومی
+      </button>
+      <button class="tab" [class.active]="activeTab === 'social'" (click)="activeTab = 'social'">
+        <i class="ti ti-brand-instagram"></i> شبکه‌های اجتماعی
+      </button>
+      <button class="tab" [class.active]="activeTab === 'trust'" (click)="activeTab = 'trust'">
+        <i class="ti ti-shield-check"></i> اعتماد و پرداخت
+      </button>
+      <button class="tab" [class.active]="activeTab === 'links'" (click)="activeTab = 'links'">
+        <i class="ti ti-link"></i> لینک‌های فوتر
+      </button>
+      <button class="tab" [class.active]="activeTab === 'newsletter'" (click)="activeTab = 'newsletter'">
+        <i class="ti ti-mail"></i> خبرنامه
+      </button>
+    </div>
+
+    <!-- General -->
+    <div class="tab-content" *ngIf="activeTab === 'general'">
+      <div class="card">
+        <div class="card-title">اطلاعات عمومی سایت</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>نام سایت</label>
+            <input [(ngModel)]="settings.siteName" placeholder="نام فروشگاه" />
+          </div>
+          <div class="field">
+            <label>ایمیل</label>
+            <input [(ngModel)]="settings.email" placeholder="info@example.com" />
+          </div>
+          <div class="field">
+            <label>تلفن</label>
+            <input [(ngModel)]="settings.phone" placeholder="021-00000000" />
+          </div>
+          <div class="field full">
+            <label>آدرس</label>
+            <input [(ngModel)]="settings.address" placeholder="آدرس دفتر یا فروشگاه" />
+          </div>
+          <div class="field full">
+            <label>توضیحات سایت</label>
+            <textarea [(ngModel)]="settings.siteDescription" rows="3" placeholder="توضیح کوتاه درباره سایت"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social -->
+    <div class="tab-content" *ngIf="activeTab === 'social'">
+      <div class="card">
+        <div class="card-title">شبکه‌های اجتماعی</div>
+        <div class="form-grid">
+          <div class="field">
+            <label><i class="ti ti-brand-instagram social-icon instagram"></i> اینستاگرام</label>
+            <input [(ngModel)]="settings.instagram" placeholder="https://instagram.com/..." />
+          </div>
+          <div class="field">
+            <label><i class="ti ti-brand-telegram social-icon telegram"></i> تلگرام</label>
+            <input [(ngModel)]="settings.telegram" placeholder="https://t.me/..." />
+          </div>
+          <div class="field">
+            <label><i class="ti ti-brand-whatsapp social-icon whatsapp"></i> واتساپ</label>
+            <input [(ngModel)]="settings.whatsapp" placeholder="https://wa.me/..." />
+          </div>
+          <div class="field">
+            <label><i class="ti ti-brand-linkedin social-icon linkedin"></i> لینکدین</label>
+            <input [(ngModel)]="settings.linkedin" placeholder="https://linkedin.com/..." />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trust -->
+    <div class="tab-content" *ngIf="activeTab === 'trust'">
+      <div class="card">
+        <div class="card-title">نمادهای اعتماد</div>
+        <div class="form-grid">
+          <div class="field full">
+            <label>کد HTML نماد اعتماد الکترونیکی</label>
+            <textarea [(ngModel)]="settings.enamad" rows="4" placeholder="کد HTML نماد اعتماد را اینجا وارد کنید"></textarea>
+          </div>
+          <div class="field full">
+            <label>کد HTML ساماندهی</label>
+            <textarea [(ngModel)]="settings.samandehi" rows="4" placeholder="کد HTML ساماندهی را اینجا وارد کنید"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">درگاه‌های پرداخت</div>
+        <div class="gateway-list">
+          <div class="gateway-item" *ngFor="let gw of gatewayOptions">
+            <label class="checkbox-label">
+              <input type="checkbox" [checked]="hasGateway(gw.value)" (change)="toggleGateway(gw.value)" />
+              <span>{{ gw.label }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="tab-content" *ngIf="activeTab === 'links'">
+      <div class="card" *ngFor="let col of settings.footerLinks; let ci = index">
+        <div class="card-head">
+          <input class="col-title-input" [(ngModel)]="col.title" placeholder="عنوان ستون" />
+          <button class="remove-col-btn" (click)="removeColumn(ci)">
+            <i class="ti ti-trash"></i>
+          </button>
+        </div>
+        <div class="links-list">
+          <div class="link-row" *ngFor="let link of col.links; let li = index">
+            <input [(ngModel)]="link.label" placeholder="عنوان لینک" class="link-input" />
+            <input [(ngModel)]="link.url" placeholder="آدرس لینک (/products)" class="link-input" />
+            <button class="remove-link-btn" (click)="removeLink(ci, li)">
+              <i class="ti ti-x"></i>
+            </button>
+          </div>
+        </div>
+        <button class="add-link-btn" (click)="addLink(ci)">
+          <i class="ti ti-plus"></i> افزودن لینک
+        </button>
+      </div>
+
+      <button class="add-col-btn" (click)="addColumn()">
+        <i class="ti ti-plus"></i> افزودن ستون جدید
+      </button>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="tab-content" *ngIf="activeTab === 'newsletter'">
+      <div class="card">
+        <div class="card-title">تنظیمات خبرنامه</div>
+        <div class="form-grid">
+          <div class="field full">
+            <label class="checkbox-label toggle">
+              <input type="checkbox" [(ngModel)]="settings.newsletterEnabled" />
+              <span>فعال بودن خبرنامه</span>
+            </label>
+          </div>
+          <div class="field full" *ngIf="settings.newsletterEnabled">
+            <label>متن خبرنامه</label>
+            <input [(ngModel)]="settings.newsletterText" placeholder="برای دریافت آخرین اخبار و تخفیف‌ها ایمیل خود را وارد کنید" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

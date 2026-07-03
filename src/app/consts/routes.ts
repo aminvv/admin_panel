@@ -47,6 +47,12 @@ export enum routes {
   DISCOUNT_DETAILS='/discount/detail',
 
 
+
+  // --- footer ---//
+
+  SITE_SETTING = '/site-settings',
+
+
   // --- Documentation ---//
 
 

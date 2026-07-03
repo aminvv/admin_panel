@@ -38,14 +38,16 @@ const TREE_DATA: any = [
       { name: ' تخفیف سبدخرید', route: routes.DISCOUNT_BASKET, active: 'active' },
     ]
   },
-
   {
     name: 'کاربران',
     children: [
       { name: 'لیست کاربران', route: routes.USER_LIST, active: 'active' },
       { name: 'لیست ادمین', route: routes.ADMIN_LIST, active: 'active' },
     ]
-  }
+  },
+  {
+    name: 'پانویس', route: routes.SITE_SETTING, active: 'active'
+  },
 ];
 
 
