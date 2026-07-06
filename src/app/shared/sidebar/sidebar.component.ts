@@ -48,6 +48,12 @@ const TREE_DATA: any = [
   {
     name: 'پانویس', route: routes.SITE_SETTING, active: 'active'
   },
+  {
+    name: 'درباره ما', route: routes.ABOUT, active: 'active'
+  },
+  {
+    name: 'تماس با ما', route: routes.CONTACT, active: 'active'
+  },
 ];
 
 

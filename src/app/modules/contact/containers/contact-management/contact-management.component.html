@@ -1,0 +1,65 @@
+<form [formGroup]="form" (ngSubmit)="save()" class="contact-management">
+  <!-- آدرس -->
+  <div class="form-group">
+    <label>آدرس</label>
+    <input formControlName="address" placeholder="آدرس" />
+  </div>
+
+  <!-- تلفن ثابت -->
+  <div class="form-group">
+    <label>تلفن ثابت</label>
+    <input formControlName="phone" placeholder="تلفن ثابت" />
+  </div>
+
+  <!-- موبایل -->
+  <div class="form-group">
+    <label>موبایل</label>
+    <input formControlName="mobile" placeholder="موبایل" />
+  </div>
+
+  <!-- ایمیل -->
+  <div class="form-group">
+    <label>ایمیل</label>
+    <input formControlName="email" placeholder="ایمیل" />
+  </div>
+
+  <!-- ساعات کاری -->
+  <div class="form-group">
+    <label>ساعات کاری</label>
+    <input formControlName="workHours" placeholder="ساعات کاری" />
+  </div>
+
+  <!-- عرض جغرافیایی -->
+  <div class="form-group">
+    <label>عرض جغرافیایی</label>
+    <input type="number" formControlName="mapLat" placeholder="عرض جغرافیایی" />
+  </div>
+
+  <!-- طول جغرافیایی -->
+  <div class="form-group">
+    <label>طول جغرافیایی</label>
+    <input type="number" formControlName="mapLng" placeholder="طول جغرافیایی" />
+  </div>
+
+  <!-- شبکه‌های اجتماعی -->
+  <h4>شبکه‌های اجتماعی</h4>
+  <div formArrayName="socialLinks">
+    <div *ngFor="let s of socialLinks.controls; let i = index" [formGroupName]="i" class="social-row">
+      <div class="form-group">
+        <label>نام پلتفرم</label>
+        <input formControlName="platform" placeholder="نام پلتفرم" />
+      </div>
+      <div class="form-group">
+        <label>لینک</label>
+        <input formControlName="url" placeholder="لینک" />
+      </div>
+      <div class="content-btn-remove">
+        <button type="button" class="btn-remove" (click)="removeSocial(i)">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="btn-add" (click)="addSocial()">+ افزودن شبکه اجتماعی</button>
+
+  <button type="submit" class="btn-submit" [disabled]="loading">ذخیره</button>
+</form>

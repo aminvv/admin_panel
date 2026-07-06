@@ -1,0 +1,53 @@
+<form [formGroup]="form" (ngSubmit)="save()" class="blog-form">
+  <div>
+    <label>عنوان</label>
+    <input type="text" formControlName="title" placeholder="عنوان صفحه درباره ما" />
+  </div>
+
+  <div>
+    <label>توضیحات</label>
+    <ckeditor [editor]="Editor" [config]="editorConfig" formControlName="description" (ready)="onReady($event)">
+    </ckeditor>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">آپلود تصویر</label>
+    <input #fileInput id="imageUpload" type="file" accept="image/*" class="form-input"
+      (change)="onFileChange($event)" />
+  </div>
+
+<div class="preview-list" *ngIf="selectedFiles.length === 1">
+  <div class="preview-item">
+    <img
+      *ngIf="selectedFiles[0].preview"
+      [src]="selectedFiles[0].preview"
+      class="preview-thumb"
+      alt="preview"
+    />
+
+    <div *ngIf="selectedFiles[0].isUploading" class="loading-overlay">
+      <!-- همون SVG spinner -->
+    </div>
+
+    <div *ngIf="selectedFiles[0].uploadError" class="status error">
+      ❌ خطا در آپلود
+    </div>
+
+    <button type="button" class="btn btn--remove" (click)="removeFile()">×</button>
+  </div>
+</div>
+
+  <h4>آمار و ارقام</h4>
+  <div formArrayName="stats">
+    <div *ngFor="let s of stats.controls; let i = index" [formGroupName]="i" class="stat-row">
+      <input formControlName="label" placeholder="عنوان" />
+      <input formControlName="value" placeholder="مقدار" />
+      <button type="button" class="btn btn--remove" (click)="removeStat(i)">×</button>
+    </div>
+  </div>
+  <button type="button" class="btn btn--secondary" (click)="addStat()">افزودن آمار</button>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn--primary" [disabled]="loading">ذخیره</button>
+  </div>
+</form>

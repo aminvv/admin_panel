@@ -10,20 +10,34 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
   <!-- ======== برگ‌ها ======== -->
-  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [routerLink]="node.route">
-    <div *ngIf="node.name === 'پانویس'" class="mat-tree-item">
+<mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [routerLink]="node.route">
+  <ng-container [ngSwitch]="node.name">
+    <!-- گره‌های خاص با آیکون -->
+    <div *ngSwitchCase="'پانویس'" class="mat-tree-item">
       <div>
         <mat-icon>web</mat-icon>
         <p>{{ node.name }}</p>
       </div>
     </div>
-    
-    <!-- اگر پانویس نباشد، با کلاس mat-tree-second-item (زیرمجموعه) -->
-    <div *ngIf="node.name !== 'پانویس'" class="mat-tree-second-item">
+    <div *ngSwitchCase="'درباره ما'" class="mat-tree-item">
+      <div>
+        <mat-icon>info</mat-icon>   <!-- یا about اگر وجود دارد -->
+        <p>{{ node.name }}</p>
+      </div>
+    </div>
+    <div *ngSwitchCase="'تماس با ما'" class="mat-tree-item">
+      <div>
+        <mat-icon>phone</mat-icon>  <!-- یا contact -->
+        <p>{{ node.name }}</p>
+      </div>
+    </div>
+    <!-- حالت پیش‌فرض برای سایر گره‌ها -->
+    <div *ngSwitchDefault class="mat-tree-second-item">
       <div class="circle"></div>
       <p>{{ node.name }}</p>
     </div>
-  </mat-tree-node>
+  </ng-container>
+</mat-tree-node>
 
   <!-- ======== گره‌های والد ======== -->
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" class="mat-node">

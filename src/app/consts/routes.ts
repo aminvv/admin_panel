@@ -1,6 +1,6 @@
 export enum routes {
   DASHBOARD = '/dashboard',
-  PROFILE = '/app/profile',       
+  PROFILE = '/app/profile',
   CHANGE_PASSWORD = '/app/change-password',
   LOGIN = '/login',
 
@@ -44,13 +44,15 @@ export enum routes {
   DISCOUNT_PRODUCT = '/discount/product',
   DISCOUNT_BASKET = '/discount/basket',
   DISCOUNT_EDIT = '/discount/edit',
-  DISCOUNT_DETAILS='/discount/detail',
+  DISCOUNT_DETAILS = '/discount/detail',
 
 
 
   // --- footer ---//
 
   SITE_SETTING = '/site-settings',
+  ABOUT = '/about',
+  CONTACT = '/contact',
 
 
   // --- Documentation ---//

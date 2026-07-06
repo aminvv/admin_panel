@@ -13,6 +13,7 @@ import { LoginFormComponent } from './components';
 import { AuthGuard } from './guards';
 import { HomeComponent } from '../pages/home/home.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
     MatButtonModule,
     MatInputModule,
     MatIconModule,
+    MatFormFieldModule,
     ReactiveFormsModule,
     FormsModule,
   ],

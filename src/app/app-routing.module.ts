@@ -32,7 +32,8 @@ const route: Routes = [
         path: 'dashboard',
         pathMatch: 'full',
         canActivate: [AuthGuard],
-        children: [{path: '',component: DashboardPageComponent}]},
+        children: [{ path: '', component: DashboardPageComponent }]
+      },
       {
         path: 'e-commerce',
         canActivate: [AuthGuard],
@@ -55,13 +56,13 @@ const route: Routes = [
         loadChildren: () => import('./modules/discount/discount.module').then(m => m.DiscountModule)
       },
 
-   
+
       {
         path: 'user',
         canActivate: [AuthGuard],
         loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule)
       },
-   
+
       {
         path: 'site-settings',
         canActivate: [AuthGuard],
@@ -71,6 +72,17 @@ const route: Routes = [
         path: 'app',
         loadChildren: () =>
           import('./modules/pages/pages.module').then((m) => m.PagesModule),
+      },
+
+      {
+        path: 'about',
+        loadChildren: () =>
+          import('./modules/about/about.module').then((m) => m.AboutModule),
+      },
+      {
+        path: 'contact',
+        loadChildren: () =>
+          import('./modules/contact/contact.module').then((m) => m.ContactModule),
       },
     ],
   },
@@ -90,4 +102,4 @@ const route: Routes = [
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
