@@ -1,223 +1,292 @@
-// ===== VARIABLES =====
-$primary: #5b6bf7;
-$primary-dark: #3f4ec9;
-$danger: #ef4444;
-$gray-50: #f9fafb;
-$gray-100: #f3f4f6;
-$gray-200: #e5e7eb;
-$gray-300: #d1d5db;
-$gray-400: #9ca3af;
-$gray-500: #6b7280;
-$gray-700: #374151;
-$gray-800: #1f2937;
-$white: #ffffff;
-$shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.10);
-$border-radius: 10px;
-$transition: 0.2s ease;
-$font-family: 'Vazir', 'Tahoma', sans-serif;
-
-// ===== MAIN FORM =====
 .contact-management {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: $white;
-  border-radius: 16px;
-  box-shadow: $shadow-lg;
-  font-family: $font-family;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 20px;
   direction: rtl;
-  text-align: right;
-}
-
-// ===== هر گروه فرم =====
-.form-group {
-  margin-bottom: 1.2rem;
-
-  label {
-    display: block;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: $gray-700;
-    margin-bottom: 0.3rem;
-  }
-
-  input {
-    width: 100%;
-    padding: 0.7rem 1rem;
-    font-size: 0.95rem;
-    border: 2px solid $gray-200;
-    border-radius: $border-radius;
-    background: $gray-50;
-    color: $gray-800;
-    transition: all $transition;
-    box-sizing: border-box;
-    direction: rtl;
-
-    &:focus {
-      outline: none;
-      border-color: $primary;
-      background: $white;
-      box-shadow: 0 0 0 4px rgba($primary, 0.12);
-    }
-
-    &::placeholder {
-      color: $gray-400;
-    }
-  }
-}
-
-// ===== فیلدهای عددی =====
-input[type="number"] {
-  -moz-appearance: textfield;
-
-  &::-webkit-inner-spin-button,
-  &::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-}
-
-// ===== عنوان بخش =====
-h4 {
-  margin: 2rem 0 1rem 0;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: $gray-800;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid $gray-200;
-}
-
-// ===== ردیف شبکه اجتماعی =====
-.social-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: flex-end;
-  background: $gray-50;
-  padding: 12px;
-  border-radius: $border-radius;
-  margin-bottom: 10px;
-  border: 1px solid $gray-200;
+  font-family: 'Vazirmatn', 'IRANSans', Tahoma, sans-serif;
 
   .form-group {
-    flex: 1;
-    min-width: 120px;
-    margin-bottom: 0;
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #1e293b;
+      font-size: 0.95rem;
+    }
 
     input {
-      background: $white;
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background: #fff;
+      color: #1e293b;
+      box-sizing: border-box;
+
+      &:focus {
+        outline: none;
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+
+      &::placeholder {
+        color: #94a3b8;
+        font-size: 0.9rem;
+      }
+
+      &[type="number"] {
+        -moz-appearance: textfield;
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      }
     }
   }
 
-  .content-btn-remove {
-    margin-bottom: 7px;
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
   }
 
-  .btn-remove {
-    flex-shrink: 0;
-    padding: 0.4rem 0.9rem;
-    border: 2px solid $gray-300;
-    border-radius: 30px;
-    background: transparent;
-    color: $gray-500;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all $transition;
-    font-family: $font-family;
-    line-height: 1;
+  .multi-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
 
-    &:hover {
-      background: $danger;
-      color: $white;
-      border-color: $danger;
-      transform: scale(1.05);
-    }
-  }
-}
-
-// ===== دکمه افزودن =====
-.btn-add {
-  width: 100%;
-  padding: 0.7rem;
-  border: 2px dashed $primary;
-  border-radius: $border-radius;
-  background: $gray-100;
-  color: $primary;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all $transition;
-  font-family: $font-family;
-  margin: 0.5rem 0 0.5rem 0;
-
-  &:hover {
-    background: rgba($primary, 0.08);
-    border-color: $primary-dark;
-    color: $primary-dark;
-  }
-}
-
-// ===== دکمه ذخیره =====
-.btn-submit {
-  width: 100%;
-  padding: 0.8rem;
-  background: $primary;
-  color: $white;
-  border: none;
-  border-radius: $border-radius;
-  font-size: 1.05rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all $transition;
-  font-family: $font-family;
-  margin-top: 1.5rem;
-
-  &:hover:not(:disabled) {
-    background: $primary-dark;
-    box-shadow: 0 6px 20px rgba($primary, 0.35);
-    transform: translateY(-2px);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-  }
-}
-
-// ===== RESPONSIVE =====
-@media (max-width: 600px) {
-  .contact-management {
-    padding: 1rem;
-  }
-
-  .social-row {
-    flex-direction: column;
-    align-items: stretch;
-
-    .form-group {
-      min-width: unset;
+    input {
+      flex: 1;
     }
 
     .btn-remove {
-      align-self: flex-end;
+      flex-shrink: 0;
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background: #fecaca;
+        transform: scale(1.05);
+      }
     }
   }
-}
 
-// ===== ANIMATION =====
-.social-row {
-  animation: fadeIn 0.25s ease;
-}
+  .btn-add-small {
+    background: #e0f2fe;
+    color: #0284c7;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 4px;
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
+    &:hover {
+      background: #bae6fd;
+      transform: translateY(-1px);
+    }
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 30px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f1f5f9;
+  }
+
+  .hint-box {
+    background: #f0f9ff;
+    border-right: 4px solid #0284c7;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: #0c4a6e;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    i {
+      font-size: 1.2rem;
+      color: #0284c7;
+      flex-shrink: 0;
+    }
+
+    code {
+      background: #e2e8f0;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: #1e293b;
+      font-family: monospace;
+    }
+
+    strong {
+      color: #0369a1;
+    }
+  }
+
+  .social-row {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #e2e8f0;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 16px;
+    align-items: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #cbd5e1;
+      background: #f1f5f9;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    .btn-remove {
+      flex-shrink: 0;
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background: #fecaca;
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .btn-add {
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 8px 0 24px;
+    width: 100%;
+
+    &:hover {
+      background: #4338ca;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .btn-submit {
+    background: #0f3d3e;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 32px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+
+    &:hover:not(:disabled) {
+      background: #1a5c5e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(15, 61, 62, 0.3);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+
+    .form-row {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .social-row {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .multi-row {
+      flex-wrap: wrap;
+
+      input {
+        flex: 1 1 100%;
+      }
+
+      .btn-remove {
+        width: 100%;
+        height: 40px;
+        border-radius: 8px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 16px 12px;
+
+    h4 {
+      font-size: 1rem;
+    }
+
+    .hint-box {
+      font-size: 0.8rem;
+      padding: 10px 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-add {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+    }
+
+    .btn-submit {
+      padding: 12px 20px;
+      font-size: 0.95rem;
+    }
   }
 }

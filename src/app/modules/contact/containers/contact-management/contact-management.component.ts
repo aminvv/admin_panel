@@ -20,14 +20,22 @@ export class ContactManagementComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       address: [''],
-      phone: [''],
-      mobile: [''],
+      phone: this.fb.array([]),
+      mobile: this.fb.array([]),
       email: [''],
       workHours: [''],
       mapLat: [null],
       mapLng: [null],
       socialLinks: this.fb.array([]),
     });
+  }
+
+  get phone(): FormArray {
+    return this.form.get('phone') as FormArray;
+  }
+
+  get mobile(): FormArray {
+    return this.form.get('mobile') as FormArray;
   }
 
   get socialLinks(): FormArray {
@@ -44,11 +52,49 @@ export class ContactManagementComponent implements OnInit {
   }
 
   private patchForm(data: ContactPage): void {
-    this.form.patchValue(data);
+    this.form.patchValue({
+      address: data.address,
+      email: data.email,
+      workHours: data.workHours,
+      mapLat: data.mapLat,
+      mapLng: data.mapLng,
+    });
+
+    this.phone.clear();
+    this.normalizeToArray(data.phone).forEach((v) =>
+      this.phone.push(this.fb.control(v)),
+    );
+
+    this.mobile.clear();
+    this.normalizeToArray(data.mobile).forEach((v) =>
+      this.mobile.push(this.fb.control(v)),
+    );
+
     this.socialLinks.clear();
     data.socialLinks?.forEach((s) =>
       this.socialLinks.push(this.fb.group({ platform: [s.platform], url: [s.url] })),
     );
+  }
+
+  // برای سازگاری با دیتای قدیمی که ممکنه هنوز رشته تکی (نه آرایه) باشه
+  private normalizeToArray(value: any): string[] {
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string' && value) return [value];
+    return [];
+  }
+
+  addPhone(): void {
+    this.phone.push(this.fb.control(''));
+  }
+  removePhone(index: number): void {
+    this.phone.removeAt(index);
+  }
+
+  addMobile(): void {
+    this.mobile.push(this.fb.control(''));
+  }
+  removeMobile(index: number): void {
+    this.mobile.removeAt(index);
   }
 
   addSocial(): void {
@@ -59,7 +105,7 @@ export class ContactManagementComponent implements OnInit {
     this.socialLinks.removeAt(index);
   }
 
- save(): void {
+  save(): void {
     this.contactService.update(this.form.value).subscribe({
       next: (response: any) => {
         this.toastr.success(response?.message || 'اطلاعات تماس با ما با موفقیت ذخیره شد');

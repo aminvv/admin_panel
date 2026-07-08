@@ -1,61 +1,69 @@
 <form [formGroup]="form" (ngSubmit)="save()" class="contact-management">
-  <!-- آدرس -->
   <div class="form-group">
     <label>آدرس</label>
     <input formControlName="address" placeholder="آدرس" />
   </div>
 
-  <!-- تلفن ثابت -->
   <div class="form-group">
     <label>تلفن ثابت</label>
-    <input formControlName="phone" placeholder="تلفن ثابت" />
+    <div formArrayName="phone">
+      <div class="multi-row" *ngFor="let p of phone.controls; let i = index">
+        <input [formControlName]="i" placeholder="مثلاً 08644249477" />
+        <button type="button" class="btn-remove" (click)="removePhone(i)">✕</button>
+      </div>
+    </div>
+    <button type="button" class="btn-add-small" (click)="addPhone()">+ افزودن تلفن ثابت</button>
   </div>
 
-  <!-- موبایل -->
   <div class="form-group">
     <label>موبایل</label>
-    <input formControlName="mobile" placeholder="موبایل" />
+    <div formArrayName="mobile">
+      <div class="multi-row" *ngFor="let m of mobile.controls; let i = index">
+        <input [formControlName]="i" placeholder="مثلاً 09190853005" />
+        <button type="button" class="btn-remove" (click)="removeMobile(i)">✕</button>
+      </div>
+    </div>
+    <button type="button" class="btn-add-small" (click)="addMobile()">+ افزودن موبایل</button>
   </div>
 
-  <!-- ایمیل -->
   <div class="form-group">
     <label>ایمیل</label>
     <input formControlName="email" placeholder="ایمیل" />
   </div>
 
-  <!-- ساعات کاری -->
   <div class="form-group">
     <label>ساعات کاری</label>
     <input formControlName="workHours" placeholder="ساعات کاری" />
   </div>
 
-  <!-- عرض جغرافیایی -->
-  <div class="form-group">
-    <label>عرض جغرافیایی</label>
-    <input type="number" formControlName="mapLat" placeholder="عرض جغرافیایی" />
+  <div class="form-row">
+    <div class="form-group">
+      <label>عرض جغرافیایی</label>
+      <input type="number" formControlName="mapLat" placeholder="عرض جغرافیایی" />
+    </div>
+    <div class="form-group">
+      <label>طول جغرافیایی</label>
+      <input type="number" formControlName="mapLng" placeholder="طول جغرافیایی" />
+    </div>
   </div>
 
-  <!-- طول جغرافیایی -->
-  <div class="form-group">
-    <label>طول جغرافیایی</label>
-    <input type="number" formControlName="mapLng" placeholder="طول جغرافیایی" />
-  </div>
-
-  <!-- شبکه‌های اجتماعی -->
   <h4>شبکه‌های اجتماعی</h4>
+  <div class="hint-box">
+    <i class="fa-solid fa-info-circle"></i>
+    <span>نام پلتفرم را فقط با <strong>حروف انگلیسی کوچک</strong> وارد کنید (مثلاً <code>instagram</code>, <code>telegram</code>, <code>whatsapp</code>)</span>
+  </div>
+
   <div formArrayName="socialLinks">
     <div *ngFor="let s of socialLinks.controls; let i = index" [formGroupName]="i" class="social-row">
       <div class="form-group">
         <label>نام پلتفرم</label>
-        <input formControlName="platform" placeholder="نام پلتفرم" />
+        <input formControlName="platform" placeholder="مثلاً instagram" />
       </div>
       <div class="form-group">
-        <label>لینک</label>
-        <input formControlName="url" placeholder="لینک" />
+        <label>نام کاربری یا لینک</label>
+        <input formControlName="url" placeholder="مثلاً amin._.vv" />
       </div>
-      <div class="content-btn-remove">
-        <button type="button" class="btn-remove" (click)="removeSocial(i)">✕</button>
-      </div>
+      <button type="button" class="btn-remove" (click)="removeSocial(i)">✕</button>
     </div>
   </div>
 
