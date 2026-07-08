@@ -129,6 +129,13 @@ export class AuthService {
     this.receiveLogin();
   }
 
+
+
+
+refreshToken(): Observable<any> {
+  return this.http.post(`/auth/refresh`, {}, { withCredentials: true });
+}
+
   logoutUser() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -213,9 +220,9 @@ export class AuthService {
 
 
 
-updateProfile(dto: any): Observable<any> {
-  const headers = this.baseService.getAuthHeader();
-  return this.http.patch('/Admin/profile', dto, { headers });
-}
+  updateProfile(dto: any): Observable<any> {
+    const headers = this.baseService.getAuthHeader();
+    return this.http.patch('/Admin/profile', dto, { headers });
+  }
 
 }

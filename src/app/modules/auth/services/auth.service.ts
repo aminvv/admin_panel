@@ -129,6 +129,9 @@ export class AuthService {
     this.receiveLogin();
   }
 
+
+
+
   logoutUser() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
