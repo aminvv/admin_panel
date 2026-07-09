@@ -84,14 +84,14 @@
             <mat-icon class="stat-icon">attach_money</mat-icon>
             <div class="stat-info">
               <div class="stat-value">{{ orderService.formatPrice(stats.revenue) }}</div>
-              <div class="stat-label" >درآمد کل از سفارش های تحویل داده شده </div>
+              <div class="stat-label">درآمد کل از سفارش های تحویل داده شده </div>
             </div>
           </div>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
-  
+
   <!-- FILTERS -->
   <div class="filters-section" *ngIf="!loading">
     <div class="filter-row">
@@ -275,6 +275,29 @@
                 <mat-icon>{{ orderService.getStatusIcon(order.status) }}</mat-icon>
                 {{ orderService.getStatusLabel(order.status) }}
               </span>
+
+
+
+
+              <div class="refund-status"
+                *ngIf="order.status === 'canceled' && order.payment?.status && !order.payment?.refunded">
+                <span class="refund-warning-table">
+                  ⚠️ بازگشت وجه
+                </span>
+                <button mat-icon-button color="warn" (click)="markRefunded(order.id)" matTooltip="ثبت بازگشت وجه">
+                  <mat-icon>payments</mat-icon>
+                </button>
+              </div>
+
+              <!-- تایید بازگشت وجه -->
+              <div class="refund-status" *ngIf="order.payment?.refunded">
+                <span class="refunded-badge-table">
+                  ✅ وجه بازگشت داده شده
+                </span>
+              </div>
+
+
+
 
               <div class="quick-status-actions">
                 <button mat-icon-button *ngIf="orderService.canAdvance(order.status)" (click)="advanceOrder(order.id)"

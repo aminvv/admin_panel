@@ -187,6 +187,47 @@
             }
           }
         }
+
+
+ .info-field {
+    grid-column: 1 / -1; // مهم‌ترین خط: کل عرض رو می‌گیره
+    margin: 12px 0 0 0;
+
+
+    .refund-button-wrapper{
+      margin: 15px;
+    }
+
+    .refund-warning {
+      background-color: #fef3c7;
+      color: #92400e;
+      padding: 10px 0px;
+      border-radius: 8px;
+      border-right: 4px solid #f59e0b;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .refunded-badge {
+      background-color: #d1fae5;
+      color: #065f46;
+      padding: 10px 0px;
+      border-radius: 8px;
+      border-right: 4px solid #10b981;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+  }
+
+
       }
     }
 
@@ -277,7 +318,17 @@
               }
             }
           }
+
+
+
+
+
         }
+
+
+
+
+
 
         .items-list {
           .item-row {
@@ -633,11 +684,11 @@
   padding: 16px;
   border-bottom: 1px solid #f0f0f0;
   transition: background-color 0.2s;
-  
+
   &:hover {
     background-color: #fafafa;
   }
-  
+
   &:last-child {
     border-bottom: none;
   }
@@ -646,7 +697,7 @@
 .item-image {
   flex-shrink: 0;
   margin-left: 16px;
-  
+
   img {
     width: 60px;
     height: 60px;
@@ -659,7 +710,7 @@
 .item-details {
   flex: 1;
   min-width: 0;
-  
+
   h4 {
     margin: 0 0 6px 0;
     font-size: 16px;
@@ -669,12 +720,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+
   p {
     margin: 0;
     font-size: 13px;
     color: #666;
-    
+
     &.quantity {
       margin-top: 4px;
       color: #2196f3;
@@ -687,13 +738,13 @@
   flex-shrink: 0;
   text-align: left;
   min-width: 120px;
-  
+
   .unit-price {
     font-size: 14px;
     color: #666;
     margin-bottom: 4px;
   }
-  
+
   .total-price {
     font-size: 16px;
     font-weight: 600;
@@ -705,7 +756,7 @@
   text-align: center;
   padding: 40px 20px;
   color: #999;
-  
+
   mat-icon {
     font-size: 48px;
     height: 48px;
@@ -713,7 +764,7 @@
     margin-bottom: 12px;
     color: #ddd;
   }
-  
+
   p {
     margin: 0;
     font-size: 15px;
@@ -724,26 +775,26 @@
   margin-top: 24px;
   padding-top: 16px;
   border-top: 2px solid #eee;
-  
+
   .total-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 8px 0;
     font-size: 15px;
-    
+
     &.final {
       border-top: 1px solid #ddd;
       margin-top: 8px;
       padding-top: 12px;
       font-weight: 700;
       font-size: 18px;
-      
+
       .total {
         color: #4caf50;
       }
     }
-    
+
     .discount {
       color: #f44336;
     }

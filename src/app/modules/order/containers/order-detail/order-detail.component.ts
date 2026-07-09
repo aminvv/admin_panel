@@ -40,9 +40,7 @@ loadOrder(): void {
   
   this.orderService.getOrder(this.orderId).subscribe({
     next: (order) => {
-      console.log('✅ سفارش بارگذاری شد:', order);
-      console.log('📦 آیتم‌ها:', order.items);
-      
+
       this.order = order;
       this.loading = false;
     },
@@ -170,7 +168,7 @@ printInvoice(orderId: number): void {
             verticalPosition: 'top',
             panelClass: 'success-snackbar'
           });
-         
+          this.loadOrder();
         },
         error: (err) => {
           console.error('Cancel order error:', err);
@@ -197,6 +195,20 @@ printInvoice(orderId: number): void {
       });
     }
   }
+
+
+  markRefunded(): void {
+  if (!this.order?.payment?.id) return;
+  if (!confirm('آیا بازگشت وجه رو از پنل زرین‌پال قبلاً انجام دادی؟')) return;
+
+  this.orderService.markPaymentRefunded(this.order.payment.id).subscribe({
+    next: () => {
+      this.showSuccess('وضعیت بازگشت وجه ثبت شد');
+      this.loadOrder();
+    },
+    error: (err) => this.showError('خطا در ثبت وضعیت بازگشت وجه')
+  });
+}
 
   onAdvanceStatus(): void {
     this.orderService.advanceStatus(this.orderId).subscribe({

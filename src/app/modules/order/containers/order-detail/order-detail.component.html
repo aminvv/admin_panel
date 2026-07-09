@@ -85,10 +85,26 @@
               {{ order.payment?.status ? 'پرداخت شده' : 'پرداخت نشده' }}
             </span>
           </div>
+
           <div class="summary-item">
             <span class="label">شماره فاکتور:</span>
             <span class="value">{{ order.payment?.invoice_number || 'ندارد' }}</span>
           </div>
+
+
+
+          <div class="info-field"
+            *ngIf="order.status === 'canceled' && order.payment?.status && !order.payment?.refunded">
+            <span class="refund-warning">⚠️ نیاز به بازگشت وجه دستی از پنل زرین‌پال</span>
+            <button mat-raised-button class="refund-button-wrapper" color="warn" (click)="markRefunded()">
+              بازگشت وجه انجام شد
+            </button>
+          </div>
+
+          <div class="info-field" *ngIf="order.payment?.refunded">
+            <span class="refunded-badge">✅ وجه بازگشت داده شد ({{ formatDate(order.payment.refundedAt) }})</span>
+          </div>
+
         </div>
       </mat-card-content>
     </mat-card>
@@ -211,6 +227,8 @@
                 <p>هیچ محصولی در این سفارش وجود ندارد</p>
               </div>
             </div>
+
+
 
             <!-- جمع کل -->
             <div class="order-totals" *ngIf="order">

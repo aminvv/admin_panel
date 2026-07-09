@@ -482,4 +482,43 @@ private generatePrintHTML(): string {
   refresh(): void {
     this.loadOrders();
   }
+
+
+  
+
+// ============ REFUND ============
+markRefunded(orderId: number): void {
+  const order = this.orders.find(o => o.id === orderId);
+  const paymentId = order?.payment?.id;
+
+  if (!paymentId) {
+    this.snackBar.open('❌ اطلاعات پرداخت این سفارش یافت نشد', 'بستن', {
+      duration: 3000,
+      verticalPosition: 'top'
+    });
+    return;
+  }
+
+  if (!confirm('آیا بازگشت وجه رو از پنل زرین‌پال قبلاً انجام دادی؟')) return;
+
+  this.orderService.markPaymentRefunded(paymentId).subscribe({
+    next: () => {
+      this.snackBar.open('✅ وضعیت بازگشت وجه ثبت شد', 'بستن', {
+        duration: 3000,
+        verticalPosition: 'top'
+      });
+      this.loadOrders();
+    },
+    error: () => {
+      this.snackBar.open('❌ خطا در ثبت وضعیت بازگشت وجه', 'بستن', {
+        duration: 3000,
+        verticalPosition: 'top'
+      });
+    }
+  });
+}
+  
+
+
+
 }

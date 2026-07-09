@@ -118,19 +118,19 @@ export class OrderService {
     private baseService: BaseService
   ) { }
 
-getOrders(filters?: any): Observable<Order[]> {
-  const headers = this.baseService.getAuthHeader();
-  let params = new HttpParams();
-  if (filters?.status) params = params.set('status', filters.status);
-  if (filters?.search) params = params.set('search', filters.search);
+  getOrders(filters?: any): Observable<Order[]> {
+    const headers = this.baseService.getAuthHeader();
+    let params = new HttpParams();
+    if (filters?.status) params = params.set('status', filters.status);
+    if (filters?.search) params = params.set('search', filters.search);
 
-  return this.http.get<any[]>(this.baseUrl, { headers, params }).pipe(
-    map(orders => orders.map(order => ({
-      ...order,
-      street: order.shippingAddress?.street || order.address || ''
-    })))
-  );
-}
+    return this.http.get<any[]>(this.baseUrl, { headers, params }).pipe(
+      map(orders => orders.map(order => ({
+        ...order,
+        street: order.shippingAddress?.street || order.address || ''
+      })))
+    );
+  }
 
   getOrder(id: number): Observable<OrderDetail> {
     const headers = this.baseService.getAuthHeader();
@@ -491,4 +491,19 @@ getOrders(filters?: any): Observable<Order[]> {
       })
     );
   }
+
+
+
+
+
+
+
+
+  markPaymentRefunded(paymentId: number): Observable<any> {
+    const headers = this.baseService.getAuthHeader();
+    return this.http.patch(`/payment/${paymentId}/refund`, {}, { headers });
+  }
+
+
+
 }
