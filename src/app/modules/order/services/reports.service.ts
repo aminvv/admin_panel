@@ -48,14 +48,16 @@ export class ReportsService {
 
         // آمار پایه
         const totalOrders = filtered.length;
-        const totalRevenue = filtered.reduce((sum, o) => sum + (o.final_amount || 0), 0);
-        const totalDiscount = filtered.reduce((sum, o) => sum + (o.discount_amount || 0), 0);
-        const averageOrderValue = totalOrders ? totalRevenue / totalOrders : 0;
+        const deliveredOrders = filtered.filter(o => o.status === 'delivered');
+        const totalRevenue = deliveredOrders.reduce((sum, o) => sum + (o.final_amount || 0), 0);
+        const totalDiscount = deliveredOrders.reduce((sum, o) => sum + (o.discount_amount || 0), 0);
+        const deliveredCount = deliveredOrders.length;
+        const averageOrderValue = deliveredCount ? totalRevenue / deliveredCount : 0;
         const completedOrders = filtered.filter(o => o.status === 'delivered').length;
 
         // بیشترین فروش روزانه
         const dailyMap = new Map<string, number>();
-        filtered.forEach(o => {
+        deliveredOrders.forEach(o => {
           if (!o.create_at) return;
           const date = new Date(o.create_at).toISOString().split('T')[0];
           dailyMap.set(date, (dailyMap.get(date) || 0) + (o.final_amount || 0));
@@ -73,7 +75,7 @@ export class ReportsService {
 
         // فروش هفتگی
         const weeklyMap = new Map<string, number>();
-        filtered.forEach(o => {
+        deliveredOrders.forEach(o => {
           if (!o.create_at) return;
           const d = new Date(o.create_at);
           const weekStart = this.getWeekStart(d);
@@ -109,7 +111,7 @@ export class ReportsService {
         // ----- پرفروش‌ترین محصولات (فعلاً خالی، چون داده نداریم) -----
         // ----- پرفروش‌ترین محصولات (با استفاده از orderItems) -----
         const productMap = new Map<number, { name: string; quantity: number; revenue: number }>();
-        filtered.forEach(order => {
+        deliveredOrders.forEach(order => {
           // دسترسی به orderItems (با توجه به تغییر بک‌اند)
           const items = (order as any).orderItems || [];
           items.forEach((item: any) => {
@@ -138,7 +140,7 @@ export class ReportsService {
         const provinceMap = new Map<string, { total: number; count: number }>();
         const cityMap = new Map<string, { total: number; count: number }>();
 
-        filtered.forEach(order => {
+        deliveredOrders.forEach(order => {
           const shipping = (order as any).shippingAddress; // دسترسی به shippingAddress
           const province = shipping?.province || 'نامشخص';
           const city = shipping?.city || 'نامشخص';
@@ -215,19 +217,19 @@ export class ReportsService {
 
 
 
-async generatePDF(stats: ReportStats, title: string): Promise<void> {
-  try {
-    // ایجاد المان موقت با عرض ثابت و فونت بزرگتر
-    const element = document.createElement('div');
-    element.style.direction = 'rtl';
-    element.style.fontFamily = 'Vazir, Tahoma, Arial, sans-serif';
-    element.style.fontSize = '16px'; // فونت بزرگتر
-    element.style.width = '800px'; // عرض ثابت برای نمایش مناسب
-    element.style.padding = '20px';
-    element.style.background = 'white';
-    element.style.margin = '0 auto';
-    element.style.boxSizing = 'border-box';
-    element.innerHTML = `
+  async generatePDF(stats: ReportStats, title: string): Promise<void> {
+    try {
+      // ایجاد المان موقت با عرض ثابت و فونت بزرگتر
+      const element = document.createElement('div');
+      element.style.direction = 'rtl';
+      element.style.fontFamily = 'Vazir, Tahoma, Arial, sans-serif';
+      element.style.fontSize = '16px'; // فونت بزرگتر
+      element.style.width = '800px'; // عرض ثابت برای نمایش مناسب
+      element.style.padding = '20px';
+      element.style.background = 'white';
+      element.style.margin = '0 auto';
+      element.style.boxSizing = 'border-box';
+      element.innerHTML = `
       <h1 style="text-align:center; color:#2c3e50; font-size:24px;">${title}</h1>
       <hr/>
       <h2 style="font-size:20px;">خلاصه آمار</h2>
@@ -251,79 +253,79 @@ async generatePDF(stats: ReportStats, title: string): Promise<void> {
       ` : ''}
     `;
 
-    document.body.appendChild(element);
-    
-    const canvas = await html2canvas(element, {
-      scale: 2, // کیفیت عالی
-      backgroundColor: '#ffffff',
-      logging: false,
-      allowTaint: false,
-      useCORS: true
-    });
-    
-    document.body.removeChild(element);
-    
-    const JsPDF = (await import('jspdf')).default;
-    const doc = new JsPDF({
-      orientation: 'portrait',
-      unit: 'px',
-      format: 'a4'
-    });
-    
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    
-    // محاسبه اندازه تصویر متناسب با عرض صفحه
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    
-    // اگر ارتفاع تصویر بیشتر از صفحه، می‌توان به صفحه‌های بعد تقسیم کرد
-    if (imgHeight > pageHeight) {
-      // در اینجا می‌توان تصویر را به چند صفحه تقسیم کرد (اختیاری)
-      // برای سادگی، فقط همان صفحه اول قرار می‌گیرد
+      document.body.appendChild(element);
+
+      const canvas = await html2canvas(element, {
+        scale: 2, // کیفیت عالی
+        backgroundColor: '#ffffff',
+        logging: false,
+        allowTaint: false,
+        useCORS: true
+      });
+
+      document.body.removeChild(element);
+
+      const JsPDF = (await import('jspdf')).default;
+      const doc = new JsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: 'a4'
+      });
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      // محاسبه اندازه تصویر متناسب با عرض صفحه
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // اگر ارتفاع تصویر بیشتر از صفحه، می‌توان به صفحه‌های بعد تقسیم کرد
+      if (imgHeight > pageHeight) {
+        // در اینجا می‌توان تصویر را به چند صفحه تقسیم کرد (اختیاری)
+        // برای سادگی، فقط همان صفحه اول قرار می‌گیرد
+      }
+
+      doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgWidth, imgHeight);
+      doc.save(`report-${new Date().toISOString()}.pdf`);
+    } catch (error) {
+      console.error('خطا در تولید PDF:', error);
     }
-    
-    doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgWidth, imgHeight);
-    doc.save(`report-${new Date().toISOString()}.pdf`);
-  } catch (error) {
-    console.error('خطا در تولید PDF:', error);
   }
-}
 
-// Excel
-generateExcel(stats: ReportStats, title: string): void {
-  import('xlsx').then(XLSX => {
-    const wb = XLSX.utils.book_new();
-    const summaryData = [
-      ['شاخص', 'مقدار'],
-      ['تعداد سفارشات', stats.totalOrders],
-      ['مجموع درآمد', stats.totalRevenue],
-      ['مجموع تخفیف', stats.totalDiscount],
-      ['میانگین هر سفارش', stats.averageOrderValue],
-      ['تحویل داده شده', stats.completedOrders],
-      ['بیشترین فروش روز', stats.maxDailySale],
-      ['تاریخ بیشترین فروش', stats.maxDailySaleDate]
-    ];
-    const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
-    XLSX.utils.book_append_sheet(wb, wsSummary, 'خلاصه');
-
-    const dailyData = [
-      ['تاریخ', 'فروش (تومان)'],
-      ...stats.dailySales.map(d => [d.date, d.total])
-    ];
-    const wsDaily = XLSX.utils.aoa_to_sheet(dailyData);
-    XLSX.utils.book_append_sheet(wb, wsDaily, 'فروش روزانه');
-
-    if (stats.salesByProvince.length) {
-      const provinceData = [
-        ['استان', 'تعداد سفارش', 'فروش (تومان)'],
-        ...stats.salesByProvince.map(p => [p.province, p.count, p.total])
+  // Excel
+  generateExcel(stats: ReportStats, title: string): void {
+    import('xlsx').then(XLSX => {
+      const wb = XLSX.utils.book_new();
+      const summaryData = [
+        ['شاخص', 'مقدار'],
+        ['تعداد سفارشات', stats.totalOrders],
+        ['مجموع درآمد', stats.totalRevenue],
+        ['مجموع تخفیف', stats.totalDiscount],
+        ['میانگین هر سفارش', stats.averageOrderValue],
+        ['تحویل داده شده', stats.completedOrders],
+        ['بیشترین فروش روز', stats.maxDailySale],
+        ['تاریخ بیشترین فروش', stats.maxDailySaleDate]
       ];
-      const wsProvince = XLSX.utils.aoa_to_sheet(provinceData);
-      XLSX.utils.book_append_sheet(wb, wsProvince, 'فروش استانی');
-    }
+      const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+      XLSX.utils.book_append_sheet(wb, wsSummary, 'خلاصه');
 
-    XLSX.writeFile(wb, `report-${new Date().toISOString()}.xlsx`);
-  });
-}
+      const dailyData = [
+        ['تاریخ', 'فروش (تومان)'],
+        ...stats.dailySales.map(d => [d.date, d.total])
+      ];
+      const wsDaily = XLSX.utils.aoa_to_sheet(dailyData);
+      XLSX.utils.book_append_sheet(wb, wsDaily, 'فروش روزانه');
+
+      if (stats.salesByProvince.length) {
+        const provinceData = [
+          ['استان', 'تعداد سفارش', 'فروش (تومان)'],
+          ...stats.salesByProvince.map(p => [p.province, p.count, p.total])
+        ];
+        const wsProvince = XLSX.utils.aoa_to_sheet(provinceData);
+        XLSX.utils.book_append_sheet(wb, wsProvince, 'فروش استانی');
+      }
+
+      XLSX.writeFile(wb, `report-${new Date().toISOString()}.xlsx`);
+    });
+  }
 }
