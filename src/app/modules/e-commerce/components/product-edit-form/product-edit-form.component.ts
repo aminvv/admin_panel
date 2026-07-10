@@ -22,16 +22,21 @@ export class ProductEditFormComponent implements OnChanges {
   public form!: UntypedFormGroup;
   public selectedFiles: SelectedFile[] = [];
   public isDragOver = false;
-    public Editor = DecoupledEditor;
-    public editorConfig: any = {};
+  public Editor = DecoupledEditor;
+  public editorConfig: any = {};
 
   constructor(
     private cloudinaryService: CloudinaryService,
     private productService: ProductService,
-    
+
   ) {
     this.initForm();
   }
+
+
+
+
+
 
   private initForm(): void {
     this.form = new UntypedFormGroup({
@@ -41,18 +46,18 @@ export class ProductEditFormComponent implements OnChanges {
       productName: new UntypedFormControl('', Validators.required),
       price: new UntypedFormControl(0, Validators.required),
       quantity: new UntypedFormControl(0, Validators.required),
-      description: new UntypedFormControl(''),
+      description: new UntypedFormControl('', Validators.required),
       image: new UntypedFormControl([]),
       status: new UntypedFormControl(true),
       details: new UntypedFormArray([]),
-      lifespan: new UntypedFormControl(''),
-      weight: new UntypedFormControl(''),
-      thickness: new UntypedFormControl(''),
       saleType: new UntypedFormControl('CASH'),
-      deliveryTime: new UntypedFormControl(""),
-      deliveryCost: new UntypedFormControl(""),
       returnable: new UntypedFormControl(true),
       insurance: new UntypedFormControl(false),
+      lifespan: new UntypedFormControl('', Validators.required),
+      weight: new UntypedFormControl('', Validators.required),
+      thickness: new UntypedFormControl('', Validators.required),
+      deliveryTime: new UntypedFormControl('', Validators.required),
+      deliveryCost: new UntypedFormControl('', Validators.required),
     });
   }
 
@@ -83,7 +88,7 @@ export class ProductEditFormComponent implements OnChanges {
       returnable: this.product.returnable ?? true,
       insurance: this.product.insurance ?? false,
     });
-    
+
 
     this.details.clear();
 
@@ -235,7 +240,17 @@ export class ProductEditFormComponent implements OnChanges {
   }
 
   public save(): void {
-    
+
+    if (this.form.get('description')?.invalid) {
+      alert('لطفاً توضیحات محصول را وارد کنید');
+      return;
+    }
+
+    if (this.selectedFiles.length === 0) {
+      alert('لطفاً حداقل یک تصویر برای محصول انتخاب کنید');
+      return;
+    }
+
     if (this.form.invalid) {
       alert('لطفاً همه فیلدها را پر کنید');
       return;
@@ -266,16 +281,15 @@ export class ProductEditFormComponent implements OnChanges {
 
 
 
+  onReady(editor: any) {
+    const editable = editor.ui.getEditableElement();
+    editable.parentElement.insertBefore(
+      editor.ui.view.toolbar.element,
+      editable
+    );
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
+      return new MyUploadAdapter(loader, this.cloudinaryService);
+    };
+  }
 
-    onReady(editor: any) {
-      const editable = editor.ui.getEditableElement();
-      editable.parentElement.insertBefore(
-        editor.ui.view.toolbar.element,
-        editable
-      );
-      editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
-        return new MyUploadAdapter(loader, this.cloudinaryService);
-      };
-    }
-  
 }

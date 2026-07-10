@@ -81,7 +81,7 @@ export class AuthService {
       window.location.href =
         this.config.baseURLApi + `${this.api}/signin/` + creds.social;
     } else if (creds.email.length > 0 && creds.password.length > 0) {
-      this.http.post(`${this.apiUrl}/login-admin`, creds, { responseType: 'json' })
+      this.http.post(`${this.apiUrl}/login-admin`, creds, { responseType: 'json', withCredentials: true })
         .subscribe(
           (res: any) => {
             this.receiveToken(res);

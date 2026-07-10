@@ -26,7 +26,7 @@ export class HttpInterceptorService implements HttpInterceptor {
       return next.handle(req);
     }
 
-    const clonedReq = req.clone({ url: this.config.baseURLApi + req.url });
+    const clonedReq = req.clone({ url: this.config.baseURLApi + req.url, withCredentials: true });
 
     const token: string = localStorage.getItem('token');
     let authReq = clonedReq;
