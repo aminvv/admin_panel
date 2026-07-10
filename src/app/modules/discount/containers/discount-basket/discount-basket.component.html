@@ -7,7 +7,7 @@
           <mat-icon class="back-icon">arrow_back</mat-icon>
           <span class="back-text">بازگشت</span>
         </button>
-        
+
         <div class="header-info">
           <h1 class="page-title">
             <mat-icon class="title-icon">local_offer</mat-icon>
@@ -43,7 +43,7 @@
                 <mat-icon>settings</mat-icon>
                 تنظیمات نوع تخفیف
               </h3>
-              
+
               <div class="type-selector">
                 <mat-button-toggle-group formControlName="type" class="type-toggle-group">
                   <mat-button-toggle *ngFor="let type of discountTypes" [value]="type.value" class="type-toggle">
@@ -53,7 +53,7 @@
                     </div>
                   </mat-button-toggle>
                 </mat-button-toggle-group>
-                
+
                 <div class="type-description">
                   <mat-icon class="desc-icon">info</mat-icon>
                   <span>{{ getTypeDescription(discountForm.get('type')?.value) }}</span>
@@ -67,7 +67,7 @@
                 <mat-icon>description</mat-icon>
                 اطلاعات تخفیف
               </h3>
-              
+
               <div class="form-grid">
 
 
@@ -87,17 +87,13 @@
                 <!-- انتخاب نوع مقدار تخفیف -->
                 <div class="value-type-selector">
                   <mat-button-toggle-group class="value-toggle-group">
-                    <mat-button-toggle 
-                      [checked]="showPercentField"
-                      (click)="onValueTypeChange(true)">
+                    <mat-button-toggle [checked]="showPercentField" (click)="onValueTypeChange(true)">
                       <div class="toggle-option">
                         <mat-icon>percent</mat-icon>
                         <span>درصدی</span>
                       </div>
                     </mat-button-toggle>
-                    <mat-button-toggle 
-                      [checked]="showAmountField"
-                      (click)="onValueTypeChange(false)">
+                    <mat-button-toggle [checked]="showAmountField" (click)="onValueTypeChange(false)">
                       <div class="toggle-option">
                         <mat-icon>attach_money</mat-icon>
                         <span>مبلغی</span>
@@ -148,17 +144,42 @@
                 </div>
 
                 <!-- تاریخ انقضا -->
-                <div class="form-field">
-                  <mat-form-field appearance="fill">
-                    <mat-label>تاریخ انقضا *</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="expires_in" [min]="minDate">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-icon matPrefix>event</mat-icon>
-                    <mat-error *ngIf="discountForm.get('expires_in')?.touched">
-                      {{ getFieldError('expires_in') }}
-                    </mat-error>
-                  </mat-form-field>
+                <div class="form-field date-field-group">
+                  <label>
+                    <mat-icon>event</mat-icon>
+                    تاریخ انقضا *
+                  </label>
+                  <div class="date-selects-row">
+                    <mat-form-field appearance="fill">
+                      <mat-label>روز</mat-label>
+                      <mat-select formControlName="expires_day">
+                        <mat-option [value]="null">روز</mat-option>
+                        <mat-option *ngFor="let d of jalaliDays" [value]="d">{{ d }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                      <mat-label>ماه</mat-label>
+                      <mat-select formControlName="expires_month">
+                        <mat-option [value]="null">ماه</mat-option>
+                        <mat-option *ngFor="let m of jalaliMonths" [value]="m.value">{{ m.label }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                      <mat-label>سال</mat-label>
+                      <mat-select formControlName="expires_year">
+                        <mat-option [value]="null">سال</mat-option>
+                        <mat-option *ngFor="let y of jalaliYears" [value]="y">{{ y }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <mat-error class="date-error-message"
+                    *ngIf="(discountForm.get('expires_day')?.touched || discountForm.get('expires_month')?.touched || discountForm.get('expires_year')?.touched) &&
+              (discountForm.get('expires_day')?.invalid || discountForm.get('expires_month')?.invalid || discountForm.get('expires_year')?.invalid)">
+                    تاریخ انقضا الزامی است
+                  </mat-error>
                 </div>
               </div>
 
@@ -173,21 +194,13 @@
 
             <!-- دکمه‌های action -->
             <div class="form-actions">
-              <button 
-                mat-stroked-button 
-                type="button" 
-                (click)="onCancel()" 
-                [disabled]="loading"
+              <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="loading"
                 class="action-btn cancel-btn">
                 <mat-icon>close</mat-icon>
                 انصراف
               </button>
-              
-              <button 
-                mat-raised-button 
-                color="primary" 
-                type="submit" 
-                [disabled]="discountForm.invalid || loading"
+
+              <button mat-raised-button color="primary" type="submit" [disabled]="discountForm.invalid || loading"
                 class="action-btn submit-btn">
                 <div class="btn-content">
                   <mat-icon *ngIf="!loading">{{ isEditMode ? 'save' : 'add_circle' }}</mat-icon>
@@ -205,13 +218,13 @@
         <mat-card class="help-card">
           <mat-card-header>
             <mat-icon mat-card-avatar class="help-icon">help_outline</mat-icon>
-            <mat-card-title>راهنمای  تخفیف</mat-card-title>
+            <mat-card-title>راهنمای تخفیف</mat-card-title>
           </mat-card-header>
-          
+
           <mat-card-content>
             <div class="help-items">
 
-              
+
               <div class="help-item">
                 <div class="help-icon-wrapper">
                   <mat-icon>shopping_cart</mat-icon>
@@ -221,7 +234,7 @@
                   <p>تخفیف عمومی برای کل سبد خرید - نیاز به کد دارد</p>
                 </div>
               </div>
-              
+
               <div class="help-item">
                 <div class="help-icon-wrapper">
                   <mat-icon>info</mat-icon>

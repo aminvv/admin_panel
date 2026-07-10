@@ -158,17 +158,43 @@
                   </mat-form-field>
                 </div>
                 <div class="form-field">
-                  <mat-form-field appearance="fill">
-                    <mat-label>تاریخ انقضا *</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="expires_in">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-icon matPrefix>event</mat-icon>
-                    <mat-error
-                      *ngIf="discountForm.get('expires_in')?.touched && discountForm.get('expires_in')?.errors">
-                      تاریخ انقضا الزامی است
-                    </mat-error>
-                  </mat-form-field>
+<div class="date-field-group">
+                  <label>
+                    <mat-icon>event</mat-icon>
+                    تاریخ انقضا *
+                  </label>
+                  <div class="date-selects-row">
+                    <mat-form-field appearance="fill">
+                      <mat-label>روز</mat-label>
+                      <mat-select formControlName="expires_day">
+                        <mat-option [value]="null">روز</mat-option>
+                        <mat-option *ngFor="let d of jalaliDays" [value]="d">{{ d }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                      <mat-label>ماه</mat-label>
+                      <mat-select formControlName="expires_month">
+                        <mat-option [value]="null">ماه</mat-option>
+                        <mat-option *ngFor="let m of jalaliMonths" [value]="m.value">{{ m.label }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                      <mat-label>سال</mat-label>
+                      <mat-select formControlName="expires_year">
+                        <mat-option [value]="null">سال</mat-option>
+                        <mat-option *ngFor="let y of jalaliYears" [value]="y">{{ y }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <mat-error class="date-error-message"
+                    *ngIf="(discountForm.get('expires_day')?.touched || discountForm.get('expires_month')?.touched || discountForm.get('expires_year')?.touched) &&
+                           (discountForm.get('expires_day')?.invalid || discountForm.get('expires_month')?.invalid || discountForm.get('expires_year')?.invalid)">
+                    تاریخ انقضا الزامی است
+                  </mat-error>
+                </div>
                 </div>
               </div>
 

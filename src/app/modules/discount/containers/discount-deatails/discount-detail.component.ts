@@ -48,6 +48,28 @@ export class DiscountDetailComponent implements OnInit {
   selectedDiscountId: number | null = null;
   showDiscountList = false;
 
+
+
+
+
+
+  public jalaliDays: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
+  public jalaliMonths = [
+    { value: 1, label: 'فروردین' }, { value: 2, label: 'اردیبهشت' },
+    { value: 3, label: 'خرداد' }, { value: 4, label: 'تیر' },
+    { value: 5, label: 'مرداد' }, { value: 6, label: 'شهریور' },
+    { value: 7, label: 'مهر' }, { value: 8, label: 'آبان' },
+    { value: 9, label: 'آذر' }, { value: 10, label: 'دی' },
+    { value: 11, label: 'بهمن' }, { value: 12, label: 'اسفند' },
+  ];
+  public jalaliYears: number[] = (() => {
+    const currentJYear = +moment().format('jYYYY');
+    return Array.from({ length: 6 }, (_, i) => currentJYear + i);
+  })();
+
+
+
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -70,7 +92,9 @@ export class DiscountDetailComponent implements OnInit {
       percent: [null],
       amount: [null],
       limit: [null, [Validators.min(1)]],
-      expires_in: ['', [Validators.required]],
+      expires_day: [null, [Validators.required]],
+      expires_month: [null, [Validators.required]],
+      expires_year: [null, [Validators.required]],
       productId: [null]
     });
 
@@ -251,12 +275,13 @@ export class DiscountDetailComponent implements OnInit {
   }
 
   populateFormWithDiscountData(discount: any): void {
-    let expiresDate: string = '';
-
+    let expires_day = null, expires_month = null, expires_year = null;
     if (discount.expires_in) {
       const m = moment(discount.expires_in);
       if (m.isValid()) {
-        expiresDate = m.format('jYYYY/jMM/jDD');
+        expires_day = +m.format('jD');
+        expires_month = +m.format('jM');
+        expires_year = +m.format('jYYYY');
       }
     }
 
@@ -276,7 +301,9 @@ export class DiscountDetailComponent implements OnInit {
       percent: percentValue,
       amount: amountValue,
       limit: discount.limit || null,
-      expires_in: expiresDate,
+      expires_day,
+      expires_month,
+      expires_year,
       productId: discount.productId || null
     }, { emitEvent: false });
 
@@ -325,7 +352,9 @@ export class DiscountDetailComponent implements OnInit {
     this.discountForm.reset({
       type: DiscountType.PRODUCT_WITHOUT_CODE,
       productId: this.productId,
-      expires_in: ''
+      expires_day: null,
+      expires_month: null,
+      expires_year: null
     });
     this.handleTypeChange(DiscountType.PRODUCT_WITHOUT_CODE);
   }
@@ -428,18 +457,21 @@ export class DiscountDetailComponent implements OnInit {
   prepareFormData(): any {
     const rawData = this.discountForm.getRawValue();
 
-    if (rawData.expires_in && rawData.expires_in !== '') {
-      const jalaliMoment = moment(rawData.expires_in, 'jYYYY/jMM/jDD');
+    const day = rawData.expires_day;
+    const month = rawData.expires_month;
+    const year = rawData.expires_year;
+
+    if (day && month && year) {
+      const jalaliMoment = moment(`${year}/${month}/${day}`, 'jYYYY/jM/jD');
       if (jalaliMoment.isValid()) {
         const gregorianDate = jalaliMoment.toDate();
         gregorianDate.setHours(23, 59, 59, 999);
         rawData.expires_in = gregorianDate.toISOString();
-      } else {
-        delete rawData.expires_in;
       }
-    } else {
-      delete rawData.expires_in;
     }
+    delete rawData.expires_day;
+    delete rawData.expires_month;
+    delete rawData.expires_year;
 
     if (rawData.type === DiscountType.PRODUCT_WITH_CODE || rawData.type === DiscountType.PRODUCT_WITHOUT_CODE) {
       rawData.type = 'product';

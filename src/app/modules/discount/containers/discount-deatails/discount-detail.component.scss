@@ -578,7 +578,7 @@
                     }
                   }
 
-                  &.mat-form-field-invalid {
+&.mat-form-field-invalid {
                     ::ng-deep .mat-form-field-flex {
                       border-color: #ef4444;
                     }
@@ -586,6 +586,79 @@
                 }
               }
 
+              .date-field-group {
+                grid-column: 1 / -1;
+              }
+
+              .date-field-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-size: 14px;
+                font-weight: 500;
+                color: #475569;
+              }
+
+              .date-field-group label mat-icon {
+                font-size: 18px;
+                width: 18px;
+                height: 18px;
+                color: #6366f1;
+                vertical-align: middle;
+                margin-left: 4px;
+              }
+
+              .date-selects-row {
+                display: flex;
+                gap: 8px;
+              }
+
+              .date-selects-row mat-form-field {
+                flex: 1;
+                min-width: 0;
+              }
+
+              ::ng-deep .date-selects-row .mat-form-field-flex {
+                background: white;
+                border-radius: 12px;
+                padding: 0 12px;
+                border: 1px solid #e2e8f0;
+                transition: all 0.3s;
+              }
+
+              ::ng-deep .date-selects-row .mat-form-field-flex:hover {
+                border-color: #94a3b8;
+              }
+
+              ::ng-deep .date-selects-row .mat-form-field-underline {
+                display: none;
+              }
+
+              ::ng-deep .date-selects-row .mat-form-field-label {
+                color: #64748b;
+                font-size: 13px;
+              }
+
+              ::ng-deep .date-selects-row .mat-select-value {
+                color: #1e293b;
+                font-size: 14px;
+              }
+
+              ::ng-deep .date-selects-row .mat-select-arrow {
+                color: #6366f1;
+              }
+
+              ::ng-deep .date-selects-row .mat-form-field-invalid .mat-form-field-flex {
+                border-color: #ef4444;
+              }
+
+              .date-error-message {
+                display: block;
+                font-size: 12px;
+                color: #ef4444;
+                margin-top: 6px;
+              }
+
+      
               .value-type-selector {
                 grid-column: 1 / -1;
 
@@ -629,7 +702,7 @@
                         font-size: 20px;
                         color: #64748b;
 
-                        @media (max-width: 480px) {
+                        @media (max-width: 480px) { 
                           font-size: 18px;
                         }
                       }
@@ -702,6 +775,7 @@
                 }
               }
             }
+            
           }
 
           .form-actions {

@@ -65,7 +65,7 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
-  ) { 
+  ) {
   }
 
   ngOnDestroy(): void {
@@ -92,7 +92,9 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
       percent: [null],
       amount: [''],
       limit: [0, [Validators.min(0)]],
-      expires_in: ['', [Validators.required]],
+      expires_day: [null, [Validators.required]],
+      expires_month: [null, [Validators.required]],
+      expires_year: [null, [Validators.required]],
       productId: [0]
     });
 
@@ -101,13 +103,15 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     });
 
     this.discountForm.get('percent')?.valueChanges.subscribe(value => {
-      if (value) {
+      const numValue = parseFloat(value);
+      if (value && !isNaN(numValue) && numValue > 0) {
         this.discountForm.get('amount')?.setValue('');
       }
     });
 
     this.discountForm.get('amount')?.valueChanges.subscribe(value => {
-      if (value) {
+      const numValue = parseFloat(value);
+      if (value && !isNaN(numValue) && numValue > 0) {
         this.discountForm.get('percent')?.setValue(null);
       }
     });
@@ -397,34 +401,29 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
     const rawData = this.discountForm.getRawValue();
 
     if (rawData.expires_in) {
-      let gregorianDate: Date;
-      
-      if (typeof rawData.expires_in === 'string' && rawData.expires_in.includes('/')) {
-        const jalaliParts = rawData.expires_in.split('/');
-        const jalaliMoment = moment(`${jalaliParts[0]}/${jalaliParts[1]}/${jalaliParts[2]}`, 'jYYYY/jMM/jDD');
-        gregorianDate = jalaliMoment.toDate();
-      } else {
-        gregorianDate = new Date(rawData.expires_in);
-      }
-      
-      const year = gregorianDate.getFullYear();
-      const month = String(gregorianDate.getMonth() + 1).padStart(2, '0');
-      const day = String(gregorianDate.getDate()).padStart(2, '0');
-      rawData.expires_in = `${year}-${month}-${day}`;
+      const m = moment.isMoment(rawData.expires_in)
+        ? rawData.expires_in
+        : moment(rawData.expires_in);
+      rawData.expires_in = m.format('YYYY-MM-DD');
     }
+    const day = rawData.expires_day;
+    const month = rawData.expires_month;
+    const year = rawData.expires_year;
+
+    if (day && month && year) {
+      const gregorianMoment = moment(`${year}/${month}/${day}`, 'jYYYY/jM/jD');
+      rawData.expires_in = gregorianMoment.format('YYYY-MM-DD');
+    }
+    delete rawData.expires_day;
+    delete rawData.expires_month;
+    delete rawData.expires_year;
 
     if (rawData.type === 'product') {
-      if (!rawData.code || rawData.code.trim() === '') {
-        delete rawData.code;
-      }
-      if (!rawData.productId || rawData.productId === 0) {
-        delete rawData.productId;
-      }
+      if (!rawData.code || rawData.code.trim() === '') delete rawData.code;
+      if (!rawData.productId || rawData.productId === 0) delete rawData.productId;
     } else if (rawData.type === 'basket') {
       delete rawData.productId;
-      if (!rawData.code || rawData.code.trim() === '') {
-        delete rawData.code;
-      }
+      if (!rawData.code || rawData.code.trim() === '') delete rawData.code;
     }
 
     Object.keys(rawData).forEach(key => {
@@ -433,41 +432,37 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
       }
     });
 
-    if (rawData.amount === '0' || rawData.amount === 0) {
-      delete rawData.amount;
-    }
-
-    if (rawData.percent === 0) {
-      delete rawData.percent;
-    }
-
-    if (rawData.percent && rawData.amount) {
-      delete rawData.amount;
-    }
+    if (rawData.amount === '0' || rawData.amount === 0) delete rawData.amount;
+    if (rawData.percent === 0) delete rawData.percent;
+    if (rawData.percent && rawData.amount) delete rawData.amount;
 
     return rawData;
   }
 
   populateFormWithDiscountData(discount: any): void {
     let expiresDate: Date | null = null;
-    
+
     if (discount.expires_in) {
       const date = new Date(discount.expires_in);
       if (!isNaN(date.getTime())) {
-        date.setHours(0, 0, 0, 0);
         expiresDate = date;
       }
     }
 
     const percentValue = discount.percent ? Number(discount.percent) : null;
-    const amountValue = discount.amount ? (typeof discount.amount === 'string' ? discount.amount : String(discount.amount)) : '';
-    const codeValue = discount.code === null || discount.code === undefined ? '' : discount.code;
+    const amountValue = discount.amount ? String(discount.amount) : '';
+    const codeValue = discount.code ?? '';
     const productIdValue = discount.productId || 0;
     const limitValue = discount.limit || 0;
-
-    let expiresInValue: any = expiresDate;
-    if (expiresDate) {
-      expiresInValue = moment(expiresDate).format('jYYYY/jMM/jDD');
+    const expiresInValue = expiresDate ? moment(expiresDate) : null;
+    let expires_day = null, expires_month = null, expires_year = null;
+    if (discount.expires_in) {
+      const m = moment(discount.expires_in);
+      if (m.isValid()) {
+        expires_day = +m.format('jD');
+        expires_month = +m.format('jM');
+        expires_year = +m.format('jYYYY');
+      }
     }
 
     this.discountForm.patchValue({
@@ -476,9 +471,11 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
       percent: percentValue,
       amount: amountValue,
       limit: limitValue,
-      expires_in: expiresInValue,
+      expires_day,
+      expires_month,
+      expires_year,
       productId: productIdValue
-    });
+    }, { emitEvent: false });
 
     this.updateValidatorsBasedOnType(discount.type || 'product');
   }
@@ -566,7 +563,7 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
       error: (error) => {
         if (error.status === 409) {
           this.toastr.warning('تخفیف تکراری!', 'امکان ایجاد تخفیف جدید وجود ندارد', { timeOut: 4000 });
-          
+
           if (discountData.code) {
             this.toastr.error(`کد "${discountData.code}" قبلاً استفاده شده است`);
           } else if (discountData.type === 'product' && discountData.productId) {
@@ -654,4 +651,19 @@ export class ManagementDiscountComponent implements OnInit, AfterViewInit {
   shouldShowProductField(): boolean {
     return this.discountForm.get('type')?.value === 'product';
   }
+
+
+  public jalaliDays: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
+  public jalaliMonths = [
+    { value: 1, label: 'فروردین' }, { value: 2, label: 'اردیبهشت' },
+    { value: 3, label: 'خرداد' }, { value: 4, label: 'تیر' },
+    { value: 5, label: 'مرداد' }, { value: 6, label: 'شهریور' },
+    { value: 7, label: 'مهر' }, { value: 8, label: 'آبان' },
+    { value: 9, label: 'آذر' }, { value: 10, label: 'دی' },
+    { value: 11, label: 'بهمن' }, { value: 12, label: 'اسفند' },
+  ];
+  public jalaliYears: number[] = (() => {
+    const currentJYear = +moment().format('jYYYY');
+    return Array.from({ length: 6 }, (_, i) => currentJYear + i);
+  })();
 }
