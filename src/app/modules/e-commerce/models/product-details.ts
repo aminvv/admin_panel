@@ -21,4 +21,12 @@ export interface ProductDetails {
   deliveryCost?: string;        
   returnable?: boolean;     
   insurance?: boolean;        
+
+    create_at?: string | Date;   
+  update_at?: string | Date;    
+  createdBy?: {                 
+    id: number;
+    firstName?: string;
+    lastName?: string;
+  };
 }

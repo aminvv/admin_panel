@@ -75,6 +75,42 @@ loadProduct(id: number) {
     }
   }
 
+
+
+formatDate(dateString: string | Date | null | undefined): string {
+  if (!dateString) return 'نامشخص';
+  
+  let date: Date;
+  if (typeof dateString === 'string') {
+    date = new Date(dateString);
+  } else if (dateString instanceof Date) {
+    date = dateString;
+  } else {
+    return 'نامشخص';
+  }
+  
+  if (isNaN(date.getTime())) return 'نامشخص';
+  
+  return date.toLocaleDateString('fa-IR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+
+
+getSaleTypeLabel(saleType: string): string {
+  const map: { [key: string]: string } = {
+    'CASH': 'نقدی',
+    'CREDIT': 'مدت‌دار',
+    'BOTH': 'نقدی,مدت‌دار'
+  };
+  return map[saleType] || saleType;
+}
+
   toggleProductStatus(): void {
     if (!this.product?.id) return;
 
@@ -108,6 +144,18 @@ loadProduct(id: number) {
     }
   }
 
+
+
+
+
+
+  hasExtraFeatures(): boolean {
+    if (!this.product) return false;
+    return !!(this.product.lifespan || this.product.weight || this.product.thickness || 
+              this.product.saleType || this.product.deliveryTime || 
+              this.product.deliveryCost !== undefined || this.product.returnable !== undefined || 
+              this.product.insurance !== undefined);
+  }
 
 
 

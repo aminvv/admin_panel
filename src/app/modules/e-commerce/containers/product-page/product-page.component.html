@@ -1,32 +1,40 @@
-<app-breadcrumb [path]="routes.PRODUCT"></app-breadcrumb>  
+<app-breadcrumb [path]="routes.PRODUCT"></app-breadcrumb>
+
 <mat-card class="product-info-wrapper">
+  <!-- گالری تصاویر -->
   <div class="product-gallery">
-    <img class="main-product-image" [src]="selectedImage || product?.image?.url" alt="product-main-image">
-    
-    <div class="thumbnail-wrapper" *ngIf="product?.image?.length > 0">
+    <img
+      class="main-product-image"
+      [src]="selectedImage || product?.image?.[0]?.url"
+      alt="product-main-image"
+    />
+
+    <div class="thumbnail-wrapper" *ngIf="product?.image && product!.image!.length > 0">
       <div class="thumbnail-list">
-        <img 
-          *ngFor="let img of product?.image; let i = index" 
-          [src]="img?.url" 
+        <img
+          *ngFor="let img of product?.image; let i = index"
+          [src]="img?.url"
           [alt]="'product-thumbnail-' + i"
           class="thumbnail"
           [class.active]="img?.url === selectedImage"
-          (click)="selectImage(img?.url)">
+          (click)="selectImage(img?.url)"
+        />
       </div>
     </div>
-    
   </div>
 
+  <!-- اطلاعات اصلی -->
   <div class="info-wrapper">
+    <!-- هدر -->
     <div class="info-header">
       <div class="info-inner-wrapper">
-        <h1 class="product-title">{{product?.productName}}</h1>
-        <p class="product-id">شناسه محصول: {{product?.id}}</p>
+        <h1 class="product-title">{{ product?.productName }}</h1>
+        <p class="product-id">شناسه محصول: {{ product?.id }}</p>
       </div>
 
       <div class="admin-status-badge">
         <mat-chip [color]="product?.status ? 'primary' : 'warn'" selected>
-          {{product?.status ? 'فعال' : 'غیرفعال'}}
+          {{ product?.status ? 'فعال' : 'غیرفعال' }}
         </mat-chip>
         <mat-chip *ngIf="product?.active_discount" color="accent" selected>
           تخفیف فعال
@@ -34,12 +42,13 @@
       </div>
     </div>
 
+    <!-- قیمت و موجودی -->
     <div class="price-stock-info">
       <div class="info-card">
         <h3>قیمت‌گذاری</h3>
         <div class="info-row">
           <span>کد محصول:</span>
-          <strong>{{product?.productCode}}</strong>
+          <strong>{{ product?.productCode }}</strong>
         </div>
         <div class="info-row">
           <span>قیمت:</span>
@@ -47,7 +56,7 @@
         </div>
         <div class="info-row">
           <span>تخفیف:</span>
-          <span>{{product?.active_discount ? 'دارد' : 'ندارد'}}</span>
+          <span>{{ product?.active_discount ? 'دارد' : 'ندارد' }}</span>
         </div>
       </div>
 
@@ -55,51 +64,111 @@
         <h3>موجودی</h3>
         <div class="info-row">
           <span>موجودی انبار:</span>
-          <strong [class.low-stock]="(product?.quantity || 0) < 10">{{product?.quantity || 0}} عدد</strong>
+          <strong [class.low-stock]="(product?.quantity || 0) < 10">
+            {{ product?.quantity || 0 }} عدد
+          </strong>
         </div>
         <div class="info-row">
           <span>اسلاگ:</span>
-          <span>{{product?.slug}}</span>
+          <span>{{ product?.slug }}</span>
         </div>
       </div>
     </div>
 
+    <!-- ویژگی‌های تکمیلی -->
+    <div class="extra-features" *ngIf="hasExtraFeatures()">
+      <h3>ویژگی‌های تکمیلی</h3>
+      <div class="features-grid">
+        <div class="feature-item" *ngIf="product?.lifespan">
+          <span class="feature-label">طول عمر:</span>
+          <span class="feature-value">{{ product.lifespan }}</span>
+        </div>
+        <div class="feature-item" *ngIf="product?.weight">
+          <span class="feature-label">وزن:</span>
+          <span class="feature-value">{{ product.weight }}</span>
+        </div>
+        <div class="feature-item" *ngIf="product?.thickness">
+          <span class="feature-label">ضخامت:</span>
+          <span class="feature-value">{{ product.thickness }}</span>
+        </div>
+        <div class="feature-item" *ngIf="product?.saleType">
+          <span class="feature-label">نوع فروش:</span>
+          <span class="feature-value">{{ getSaleTypeLabel(product.saleType) }}</span>
+        </div>
+        <div class="feature-item" *ngIf="product?.deliveryTime">
+          <span class="feature-label">زمان تحویل:</span>
+          <span class="feature-value">{{ product.deliveryTime }}</span>
+        </div>
+<div class="feature-item">
+  <span class="feature-label">هزینه تحویل:</span>
+  <span class="feature-value">{{ product?.deliveryCost || 'مقداری وجود ندارد' }}</span>
+</div>
+        <div class="feature-item" *ngIf="product?.returnable !== undefined">
+          <span class="feature-label">قابل بازگشت:</span>
+          <span class="feature-value">{{ product.returnable ? 'بله' : 'خیر' }}</span>
+        </div>
+        <div class="feature-item" *ngIf="product?.insurance !== undefined">
+          <span class="feature-label">بیمه:</span>
+          <span class="feature-value">{{ product.insurance ? 'دارد' : 'ندارد' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- دکمه‌های عملیاتی -->
     <div class="admin-actions">
       <button mat-raised-button color="primary" (click)="editProduct()">
         <mat-icon>edit</mat-icon>
         ویرایش محصول
       </button>
-      
+
       <button mat-raised-button color="accent" (click)="updateStock()">
         <mat-icon>inventory</mat-icon>
         بروزرسانی موجودی
       </button>
-      
+
       <button mat-raised-button color="warn" (click)="toggleProductStatus()">
-        <mat-icon>{{product?.status ? 'visibility_off' : 'visibility'}}</mat-icon>
-        {{product?.status ? 'غیرفعال کردن' : 'فعال کردن'}}
+        <mat-icon>{{ product?.status ? 'visibility_off' : 'visibility' }}</mat-icon>
+        {{ product?.status ? 'غیرفعال کردن' : 'فعال کردن' }}
       </button>
-      
+
       <button mat-raised-button class="delete-btn" (click)="deleteProduct()">
         <mat-icon>delete_forever</mat-icon>
         حذف محصول
       </button>
     </div>
 
+    <!-- اطلاعات فنی با تاریخ‌های فارسی -->
     <div class="technical-info">
       <div class="info-card">
         <h3>اطلاعات فنی</h3>
         <div class="info-row">
           <span>وضعیت:</span>
-          <span>{{product?.status ? 'فعال' : 'غیرفعال'}}</span>
+          <span>{{ product?.status ? 'فعال' : 'غیرفعال' }}</span>
         </div>
         <div class="info-row">
           <span>تعداد تصاویر:</span>
-          <span>{{product?.image?.length || 0}}</span>
+          <span>{{ product?.image?.length || 0 }}</span>
         </div>
         <div class="info-row">
           <span>تعداد جزئیات:</span>
-          <span>{{product?.details?.length || 0}}</span>
+          <span>{{ product?.details?.length || 0 }}</span>
+        </div>
+
+        <!-- تاریخ ایجاد به فارسی با متد formatDate -->
+        <div class="info-row" *ngIf="product?.create_at">
+          <span>تاریخ ایجاد:</span>
+          <span>{{ formatDate(product.create_at) }}</span>
+        </div>
+
+        <!-- تاریخ بروزرسانی به فارسی با متد formatDate -->
+        <div class="info-row" *ngIf="product?.update_at">
+          <span>آخرین بروزرسانی:</span>
+          <span>{{ formatDate(product.update_at) }}</span>
+        </div>
+
+        <div class="info-row" *ngIf="product?.createdBy">
+          <span>ایجادکننده:</span>
+          <span>{{ product.createdBy?.firstName || '' }} {{ product.createdBy?.lastName || '' }}</span>
         </div>
       </div>
 
@@ -114,20 +183,21 @@
   </div>
 </mat-card>
 
+<!-- تب‌ها -->
 <mat-card class="product-details-tabs">
   <mat-tab-group>
     <mat-tab label="توضیحات">
       <div class="tab-content">
         <h3>توضیحات کامل محصول</h3>
         <div class="description-editor">
-          {{product?.description || 'توضیحی برای این محصول ثبت نشده است.'}}
+          {{ product?.description || 'توضیحی برای این محصول ثبت نشده است.' }}
         </div>
-        
+
         <div class="features-section" *ngIf="product?.details && product!.details!.length > 0">
           <h4>جزئیات محصول</h4>
           <ul>
             <li *ngFor="let detail of product?.details">
-              <strong>{{detail.key}}:</strong> {{detail.value}}
+              <strong>{{ detail.key }}:</strong> {{ detail.value }}
             </li>
           </ul>
         </div>
@@ -138,18 +208,15 @@
       <div class="tab-content">
         <div class="specs-table" *ngIf="product?.details && product!.details!.length > 0">
           <div class="spec-row" *ngFor="let detail of product?.details">
-            <span class="spec-title">{{detail.key}}:</span>
-            <span class="spec-value">{{detail.value}}</span>
+            <span class="spec-title">{{ detail.key }}:</span>
+            <span class="spec-value">{{ detail.value }}</span>
           </div>
         </div>
         <div *ngIf="!product?.details || product!.details!.length === 0" class="no-data">
           <mat-icon>info</mat-icon>
           <p>هیچ جزئیات فنی برای این محصول ثبت نشده است.</p>
         </div>
-        
-
       </div>
     </mat-tab>
   </mat-tab-group>
 </mat-card>
- 
