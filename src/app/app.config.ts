@@ -16,10 +16,6 @@ export class AppConfig {
     hostApi,
     portApi,
     baseURLApi,
-    auth: {
-      email: 'aminviper1378@gmail.com',
-      password: '123456'
-    },
   };
 
   constructor() {

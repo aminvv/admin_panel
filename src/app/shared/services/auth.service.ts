@@ -225,4 +225,24 @@ refreshToken(): Observable<any> {
     return this.http.patch('/Admin/profile', dto, { headers });
   }
 
+  // اضافه کن داخل کلاس AuthService در document 3
+
+forgotPassword(email: string): Observable<any> {
+  const body = new URLSearchParams();
+  body.set('email', email);
+  return this.http.post(`${this.apiUrl}/forgot-password`, body.toString(), {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  });
+}
+
+resetPassword(payload: { email: string; code: string; newPassword: string }): Observable<any> {
+  const body = new URLSearchParams();
+  body.set('email', payload.email);
+  body.set('code', payload.code);
+  body.set('newPassword', payload.newPassword);
+  return this.http.post(`${this.apiUrl}/reset-password`, body.toString(), {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  });
+}
+
 }

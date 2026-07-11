@@ -7,15 +7,18 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AppConfig } from '../../../app.config';
+import { environment } from 'src/environments/environment';
 
 const jwt = new JwtHelperService();
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class 
+AuthService {
   config: any;
   ROUTES: typeof routes = routes;
+  private baseUrl = environment.apiUrl;
 
   constructor(appConfig: AppConfig,
               private http: HttpClient,
@@ -114,20 +117,26 @@ export class AuthService {
     this.errorMessage = payload;
   }
 
-  receiveToken(token) {
-    let user: any = {};
-    // We check if app runs with backend mode
-    if (this.config.isBackend) {
-      user = jwt.decodeToken(token).user;
-      delete user.id;
-    } else {
-      user = {email: this.config.auth.email};
-    }
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    this.receiveLogin();
+
+
+
+
+
+
+receiveToken(token) {
+  let user: any = {};
+  if (this.config.isBackend) {
+    user = jwt.decodeToken(token).user;
+    delete user.id;
+  } else {
+    user = { email: '' };
   }
+
+  localStorage.setItem('token', token);
+  localStorage.setItem('user', JSON.stringify(user));
+  this.receiveLogin();
+}
 
 
 

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { AppConfig } from '../../../../app.config';
 
 @Component({
   selector: 'app-login-form',
@@ -9,24 +8,21 @@ import { AppConfig } from '../../../../app.config';
 })
 export class LoginFormComponent implements OnInit {
   @Output() sendLoginForm = new EventEmitter<any>();
+  @Output() forgotPasswordClick = new EventEmitter<void>();
   public form: UntypedFormGroup;
-  public email: string;
-  public password: string;
 
-  constructor(appConfig: AppConfig) {
-    const config: any = appConfig.getConfig();
-    const creds = config.auth;
-    this.email = creds.email;
-    this.password = creds.password;
-  }
+  public forgotPasswordStep: 'request' | 'reset' = 'request';
+  public forgotPasswordEmail: string = '';
+
+  constructor() {}
 
   public ngOnInit(): void {
     this.form = new UntypedFormGroup({
-      email: new UntypedFormControl(this.email, [
+      email: new UntypedFormControl('', [
         Validators.required,
         Validators.email,
       ]),
-      password: new UntypedFormControl(this.password, [Validators.required]),
+      password: new UntypedFormControl('', [Validators.required]),
     });
   }
 
@@ -34,5 +30,9 @@ export class LoginFormComponent implements OnInit {
     if (this.form.valid) {
       this.sendLoginForm.emit(this.form.value);
     }
+  }
+
+  public onForgotPasswordClick(): void {
+    this.forgotPasswordClick.emit();
   }
 }
