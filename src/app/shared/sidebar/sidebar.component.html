@@ -7,97 +7,100 @@
     <mat-icon>home</mat-icon> داشبورد
   </mat-list-item>
 
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
-  <!-- ======== برگ‌ها ======== -->
-<mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [routerLink]="node.route">
-  <ng-container [ngSwitch]="node.name">
-    <!-- گره‌های خاص با آیکون -->
-    <div *ngSwitchCase="'پانویس'" class="mat-tree-item">
-      <div>
-        <mat-icon>web</mat-icon>
-        <p>{{ node.name }}</p>
-      </div>
-    </div>
-    <div *ngSwitchCase="'درباره ما'" class="mat-tree-item">
-      <div>
-        <mat-icon>info</mat-icon>   <!-- یا about اگر وجود دارد -->
-        <p>{{ node.name }}</p>
-      </div>
-    </div>
-    <div *ngSwitchCase="'تماس با ما'" class="mat-tree-item">
-      <div>
-        <mat-icon>phone</mat-icon>  <!-- یا contact -->
-        <p>{{ node.name }}</p>
-      </div>
-    </div>
-    <!-- حالت پیش‌فرض برای سایر گره‌ها -->
-    <div *ngSwitchDefault class="mat-tree-second-item">
-      <div class="circle"></div>
-      <p>{{ node.name }}</p>
-    </div>
-  </ng-container>
-</mat-tree-node>
+    <!-- ======== برگ‌ها ======== -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [routerLink]="node.route">
+      <ng-container [ngSwitch]="node.name">
+        <!-- گره‌های خاص با آیکون -->
+        <div *ngSwitchCase="'پانویس'" class="mat-tree-item">
+          <div>
+            <mat-icon>web</mat-icon>
+            <p>{{ node.name }}</p>
+          </div>
+        </div>
+        <div *ngSwitchCase="'درباره ما'" class="mat-tree-item">
+          <div>
+            <mat-icon>info</mat-icon> <!-- یا about اگر وجود دارد -->
+            <p>{{ node.name }}</p>
+          </div>
+        </div>
+        <div *ngSwitchCase="'تماس با ما'" class="mat-tree-item">
+          <div>
+            <mat-icon>phone</mat-icon> <!-- یا contact -->
+            <p>{{ node.name }}</p>
+          </div>
+        </div>
+        <!-- حالت پیش‌فرض برای سایر گره‌ها -->
+        <div *ngSwitchDefault class="mat-tree-second-item">
+          <div class="circle"></div>
+          <p>{{ node.name }}</p>
+        </div>
+      </ng-container>
+    </mat-tree-node>
 
-  <!-- ======== گره‌های والد ======== -->
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" class="mat-node">
-    <!-- فروشگاه -->
-    <div *ngIf="node.name === 'فروشگاه'" class="mat-tree-item" matTreeNodeToggle>
-      <div>
-        <mat-icon>shopping_cart</mat-icon>
-        <p class="nodejs-sup" matBadge="NodeJS/.NET" matBadgeColor="primary">{{node.name}}</p>
+    <!-- ======== گره‌های والد ======== -->
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" class="mat-node">
+      <!-- فروشگاه -->
+      <div *ngIf="node.name === 'فروشگاه'" class="mat-tree-item" matTreeNodeToggle>
+        <div>
+          <mat-icon>shopping_cart</mat-icon>
+          <p class="nodejs-sup" matBadge="NodeJS/.NET" matBadgeColor="primary">{{node.name}}</p>
+        </div>
+        <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
+          keyboard_arrow_down
+        </mat-icon>
       </div>
-      <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
-        keyboard_arrow_down
-      </mat-icon>
-    </div>
 
-    <!-- محتوا -->
-    <div *ngIf="node.name === 'محتوا'" class="mat-tree-item" matTreeNodeToggle>
-      <div>
-        <mat-icon>library_books</mat-icon>
-        <p>{{node.name}}</p>
+      <!-- محتوا -->
+      <div *ngIf="node.name === 'محتوا'" class="mat-tree-item" matTreeNodeToggle>
+        <div>
+          <mat-icon>library_books</mat-icon>
+          <p>{{node.name}}</p>
+        </div>
+        <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
+          keyboard_arrow_down
+        </mat-icon>
       </div>
-      <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
-        keyboard_arrow_down
-      </mat-icon>
-    </div>
 
-    <!-- سفارشات -->
-    <div *ngIf="node.name === 'سفارشات'" class="mat-tree-item" matTreeNodeToggle>
-      <div>
-        <mat-icon>receipt_long</mat-icon>
-        <p class="nodejs-sup" matBadge="Admin" matBadgeColor="primary">{{node.name}}</p>
+      <!-- سفارشات -->
+      <div *ngIf="node.name === 'سفارشات'" class="mat-tree-item" matTreeNodeToggle>
+        <div>
+          <mat-icon>receipt_long</mat-icon>
+          <p class="nodejs-sup" [matBadge]="(unreadOrderCount$ | async)?.toString()"
+            [matBadgeHidden]="!(unreadOrderCount$ | async)" matBadgeColor="primary">
+            {{ node.name }}
+          </p>
+        </div>
+        <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
+          keyboard_arrow_down
+        </mat-icon>
       </div>
-      <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
-        keyboard_arrow_down
-      </mat-icon>
-    </div>
 
-    <!-- تخفیفات -->
-    <div *ngIf="node.name === 'تخفیفات'" class="mat-tree-item" matTreeNodeToggle>
-      <div>
-        <mat-icon>local_offer</mat-icon>
-        <p class="nodejs-sup" matBadge="Admin" matBadgeColor="primary">{{node.name}}</p>
+      <!-- تخفیفات -->
+      <div *ngIf="node.name === 'تخفیفات'" class="mat-tree-item" matTreeNodeToggle>
+        <div>
+          <mat-icon>local_offer</mat-icon>
+          <p class="nodejs-sup" matBadge="Admin" matBadgeColor="primary">{{node.name}}</p>
+        </div>
+        <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
+          keyboard_arrow_down
+        </mat-icon>
       </div>
-      <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
-        keyboard_arrow_down
-      </mat-icon>
-    </div>
 
-    <!-- کاربران -->
-    <div *ngIf="node.name === 'کاربران'" class="mat-tree-item" matTreeNodeToggle>
-      <div>
-        <mat-icon>person</mat-icon>
-        <p matBadge="جدید" matBadgeColor="warn">{{node.name}}</p>
+      <!-- کاربران -->
+      <div *ngIf="node.name === 'کاربران'" class="mat-tree-item" matTreeNodeToggle>
+        <div>
+          <mat-icon>person</mat-icon>
+          <p matBadge="جدید" matBadgeColor="warn">{{node.name}}</p>
+        </div>
+        <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
+          keyboard_arrow_down
+        </mat-icon>
       </div>
-      <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
-        keyboard_arrow_down
-      </mat-icon>
-    </div>
-  </mat-tree-node>
+    </mat-tree-node>
 
-</mat-tree>
+  </mat-tree>
 
 
 

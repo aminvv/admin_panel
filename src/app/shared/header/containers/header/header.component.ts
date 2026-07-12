@@ -17,7 +17,7 @@ export class HeaderComponent {
   public user$: Observable<Users>;
   public routers: typeof routes = routes;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(public authService: AuthService, private router: Router) {
     this.user$ = this.authService.getCurrentUserInfo();
   }
 
@@ -27,9 +27,5 @@ export class HeaderComponent {
     this.isShowSidebar.emit(this.isMenuOpened);
   }
 
-  public signOut(): void {
-    this.authService.logoutUser();
 
-    this.router.navigate([this.routers.LOGIN]);
-  }
 }
