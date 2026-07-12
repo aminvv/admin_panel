@@ -1,10 +1,61 @@
-<div
-  class="search"
-  (click)="showInput()"
-  [ngClass]="{ 'show-search-input': isShowInput }"
->
-  <mat-icon class="search-icon" [ngClass]="{ 'open-search': isShowInput }"
-    >search</mat-icon
-  >
-  <input *ngIf="isShowInput" class="search-input" placeholder="Search..." />
+<div class="search" [ngClass]="{ 'show-search-input': isShowInput }">
+  <mat-icon class="search-icon" [ngClass]="{ 'open-search': isShowInput }" (click)="showInput()">
+    search
+  </mat-icon>
+<input
+  *ngIf="isShowInput"
+  class="search-input"
+  placeholder="جستجو..."
+  (input)="onInputChange($any($event.target).value)"
+  autocomplete="off"
+/>
+
+  <div *ngIf="showDropdown" class="search-dropdown">
+    <div *ngIf="isLoading" class="search-dropdown__loading">در حال جستجو...</div>
+
+    <ng-container *ngIf="!isLoading">
+      <div
+        *ngIf="!results.products.length && !results.orders.length && !results.users.length"
+        class="search-dropdown__empty"
+      >
+        نتیجه‌ای یافت نشد
+      </div>
+
+      <div *ngIf="results.products.length" class="search-dropdown__group">
+        <h6 class="search-dropdown__group-title">محصولات</h6>
+        <div
+          *ngFor="let p of results.products"
+          class="search-dropdown__item"
+          (click)="goToProduct(p.id)"
+        >
+          <mat-icon>inventory_2</mat-icon>
+          <span>{{ p.productName }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="results.orders.length" class="search-dropdown__group">
+        <h6 class="search-dropdown__group-title">سفارشات</h6>
+        <div
+          *ngFor="let o of results.orders"
+          class="search-dropdown__item"
+          (click)="goToOrder(o.id)"
+        >
+          <mat-icon>receipt_long</mat-icon>
+          <span>سفارش #{{ o.id }} — {{ o.user?.firstName }} {{ o.user?.lastName }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="results.users.length" class="search-dropdown__group">
+        <h6 class="search-dropdown__group-title">کاربران</h6>
+        <div
+          *ngFor="let u of results.users"
+          class="search-dropdown__item"
+          (click)="goToUser(u.id)"
+        >
+          <mat-icon>person</mat-icon>
+          <span>{{ u.firstName }} {{ u.lastName }} — {{ u.mobile }}</span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
 </div>

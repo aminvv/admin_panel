@@ -1,41 +1,17 @@
-<div class="user-wrapper">
-  <img
-    [matMenuTriggerFor]="userMenu"
-    [src]="avatar()"
-    alt="..."
-    class="user-icon"
-  />
-
-  <mat-menu #userMenu="matMenu" xPosition="before">
-    <div class="user-menu-title">
-      <h4 class="user-menu-title__name">
-        {{ user?.firstName }} {{ user?.lastName }}
-      </h4>
-    </div>
-    <button
-      [routerLink]="routes.PROFILE"
-      class="user-menu__item-title"
-      mat-menu-item
-    >
-      <mat-icon class="user-menu-icon">account_circle</mat-icon>
-      Profile
-    </button>
-    <button class="user-menu__item-title" mat-menu-item>
-      <mat-icon class="user-menu-icon">description</mat-icon>
-      Tasks
-    </button>
-    <button class="user-menu__item-title" mat-menu-item>
-      <mat-icon class="user-menu-icon">email</mat-icon>
-      Messages
-    </button>
-    <div class="sign-button-wrapper">
-      <button (click)="signOutEmit()" class="sign-button" mat-flat-button>
-        Sign out
-      </button>
-    </div>
-  </mat-menu>
-
-  <p class="greeting-text">
-    Hi, <span class="user-name">{{ user?.firstName }}</span>
-  </p>
+<div class="user-avatar" [matMenuTriggerFor]="userMenu">
+  <img *ngIf="hasAvatar()" [src]="avatar()" class="user-avatar__img" />
+  <div *ngIf="!hasAvatar()" class="user-avatar__fallback">
+    {{ getInitials() }}
+  </div>
 </div>
+
+<mat-menu #userMenu="matMenu" xPosition="before">
+  <button mat-menu-item [routerLink]="routes.PROFILE">
+    <mat-icon>account_circle</mat-icon>
+    پروفایل
+  </button>
+  <button mat-menu-item (click)="signOutEmit()">
+    <mat-icon>exit_to_app</mat-icon>
+    خروج
+  </button>
+</mat-menu>

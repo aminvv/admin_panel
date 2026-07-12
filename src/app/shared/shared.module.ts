@@ -29,7 +29,6 @@ import { FileUploaderComponent } from './uploaders/file-uploader/file-uploader.c
 import { DeletePopupComponent } from './popups/delete-popup/delete-popup.component';
 import { FilterComponent } from './filter/filter.component';
 import { PersianNumberPipe } from './pipes/persian-number.pipe';
-import { NotificationsComponent } from './header/components';
 
 @NgModule({
   declarations: [

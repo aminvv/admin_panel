@@ -45,7 +45,7 @@
       <div *ngIf="node.name === 'فروشگاه'" class="mat-tree-item" matTreeNodeToggle>
         <div>
           <mat-icon>shopping_cart</mat-icon>
-          <p class="nodejs-sup" matBadge="NodeJS/.NET" matBadgeColor="primary">{{node.name}}</p>
+          <p class="nodejs-sup"  matBadgeColor="primary">{{node.name}}</p>
         </div>
         <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
           keyboard_arrow_down
@@ -81,7 +81,7 @@
       <div *ngIf="node.name === 'تخفیفات'" class="mat-tree-item" matTreeNodeToggle>
         <div>
           <mat-icon>local_offer</mat-icon>
-          <p class="nodejs-sup" matBadge="Admin" matBadgeColor="primary">{{node.name}}</p>
+          <p class="nodejs-sup"  matBadgeColor="primary">{{node.name}}</p>
         </div>
         <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
           keyboard_arrow_down
@@ -92,7 +92,7 @@
       <div *ngIf="node.name === 'کاربران'" class="mat-tree-item" matTreeNodeToggle>
         <div>
           <mat-icon>person</mat-icon>
-          <p matBadge="جدید" matBadgeColor="warn">{{node.name}}</p>
+          <p  matBadgeColor="warn">{{node.name}}</p>
         </div>
         <mat-icon [ngClass]="{rotateUp: treeControl.isExpanded(node), rotateDown: !treeControl.isExpanded(node)}">
           keyboard_arrow_down

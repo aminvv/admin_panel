@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Users } from '../../../models/users.model';
-
 import { routes } from '../../../../consts';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user',
@@ -9,7 +8,7 @@ import { routes } from '../../../../consts';
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent {
-  @Input() user: Users;
+  @Input() user: any; // دیتای واقعی از AuthService.getCurrentUserInfo() میاد
   @Output() signOut: EventEmitter<void> = new EventEmitter<void>();
   public routes: typeof routes = routes;
 
@@ -17,13 +16,24 @@ export class UserComponent {
     this.signOut.emit();
   }
 
-  firstUserLetter() {
-    return (this.user?.firstName || this.user?.email || 'P')[0].toUpperCase();
+  getInitials(): string {
+    if (!this.user?.fullName) {
+      return (this.user?.email || 'A')[0].toUpperCase();
+    }
+    const parts = this.user.fullName.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return this.user.fullName.substring(0, 2).toUpperCase();
   }
 
-  avatar() {
-    return this.user && this.user.avatar && this.user.avatar.length
-      ? this.user.avatar[0].publicUrl
-      : './assets/profile.png';
+  hasAvatar(): boolean {
+    return !!this.user?.avatar;
+  }
+
+  avatar(): string {
+    if (!this.hasAvatar()) return '';
+    const cleanPath = this.user.avatar.replace(/\\/g, '/');
+    return `${environment.apiUrl}/${cleanPath}`;
   }
 }
