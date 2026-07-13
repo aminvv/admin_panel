@@ -48,11 +48,6 @@ export class DiscountDetailComponent implements OnInit {
   selectedDiscountId: number | null = null;
   showDiscountList = false;
 
-
-
-
-
-
   public jalaliDays: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
   public jalaliMonths = [
     { value: 1, label: 'فروردین' }, { value: 2, label: 'اردیبهشت' },
@@ -66,9 +61,6 @@ export class DiscountDetailComponent implements OnInit {
     const currentJYear = +moment().format('jYYYY');
     return Array.from({ length: 6 }, (_, i) => currentJYear + i);
   })();
-
-
-
 
   constructor(
     private fb: FormBuilder,
@@ -122,6 +114,9 @@ export class DiscountDetailComponent implements OnInit {
 
     if (type === DiscountType.PRODUCT_WITHOUT_CODE) {
       productIdControl?.setValidators([Validators.required, Validators.min(1)]);
+      // فیکس: مقدار قبلی کد پاک بشه، وگرنه با اینکه فیلد مخفیه، همچنان تو payload فرستاده می‌شه
+      // و باعث می‌شه سمت بک‌اند انگار هیچ تغییری اعمال نشده باشه
+      codeControl?.setValue(null);
     }
     else if (type === DiscountType.PRODUCT_WITH_CODE) {
       codeControl?.setValidators([Validators.required, Validators.pattern('^[a-zA-Z0-9]+$')]);
@@ -329,6 +324,9 @@ export class DiscountDetailComponent implements OnInit {
       this.showAmountField = false;
     }
 
+    // چون patchValue با emitEvent:false صدا زده شده، valueChanges روی type فایر نمی‌شه
+    // پس دستی handleTypeChange رو صدا می‌زنیم. این باعث نمی‌شه کد پاک بشه چون
+    // مقدار کد از discount واقعی همین الان با patchValue درست ست شده.
     this.handleTypeChange(formType);
   }
 
