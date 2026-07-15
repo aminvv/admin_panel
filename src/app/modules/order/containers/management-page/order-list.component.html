@@ -11,20 +11,20 @@
       <p class="subtitle">مدیریت و پیگیری کلیه سفارشات سیستم</p>
     </div>
 
-    <div class="header-actions">
-      <button mat-raised-button color="primary" (click)="refresh()">
-        <mat-icon>refresh</mat-icon>
-        بروزرسانی
-      </button>
-      <button mat-raised-button color="accent" (click)="exportToExcel()">
-        <mat-icon>download</mat-icon>
-        خروجی Excel
-      </button>
-      <button mat-raised-button color="warn" (click)="printReport()">
-        <mat-icon>print</mat-icon>
-        چاپ گزارش
-      </button>
-    </div>
+<div class="header-actions">
+  <button mat-raised-button color="primary" type="button" (click)="refresh()">
+    <mat-icon>refresh</mat-icon>
+    <span>بروزرسانی</span>
+  </button>
+  <button mat-raised-button color="accent" type="button" (click)="exportToExcel()">
+    <mat-icon>download</mat-icon>
+    <span>خروجی Excel</span>
+  </button>
+  <button mat-raised-button color="warn" type="button" (click)="printReport()">
+    <mat-icon>print</mat-icon>
+    <span>چاپ گزارش</span>
+  </button>
+</div>
   </div>
 
   <!-- STATS CARDS -->
@@ -35,7 +35,7 @@
           <div class="stat-content">
             <mat-icon class="stat-icon">shopping_cart</mat-icon>
             <div class="stat-info">
-              <div class="stat-value">{{ stats.total }}</div>
+              <div class="stat-value">{{ stats.total |persianNumber}}</div>
               <div class="stat-label">کل سفارشات</div>
             </div>
           </div>
@@ -47,7 +47,7 @@
           <div class="stat-content">
             <mat-icon class="stat-icon">pending</mat-icon>
             <div class="stat-info">
-              <div class="stat-value">{{ stats.pending }}</div>
+              <div class="stat-value">{{ stats.pending |persianNumber}}</div>
               <div class="stat-label">در انتظار پرداخت</div>
             </div>
           </div>
@@ -59,7 +59,7 @@
           <div class="stat-content">
             <mat-icon class="stat-icon">settings</mat-icon>
             <div class="stat-info">
-              <div class="stat-value">{{ stats.processing }}</div>
+              <div class="stat-value">{{ stats.processing |persianNumber}}</div>
               <div class="stat-label">در حال پردازش</div>
             </div>
           </div>
@@ -71,7 +71,7 @@
           <div class="stat-content">
             <mat-icon class="stat-icon">check_circle</mat-icon>
             <div class="stat-info">
-              <div class="stat-value">{{ stats.delivered }}</div>
+              <div class="stat-value">{{ stats.delivered |persianNumber}}</div>
               <div class="stat-label">تحویل شده</div>
             </div>
           </div>
@@ -83,7 +83,7 @@
           <div class="stat-content">
             <mat-icon class="stat-icon">attach_money</mat-icon>
             <div class="stat-info">
-              <div class="stat-value">{{ orderService.formatPrice(stats.revenue) }}</div>
+              <div class="stat-value">{{ orderService.formatPrice(stats.revenue) |persianNumber}}</div>
               <div class="stat-label">درآمد کل از سفارش های تحویل داده شده </div>
             </div>
           </div>

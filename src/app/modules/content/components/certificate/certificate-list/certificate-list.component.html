@@ -1,0 +1,27 @@
+<div class="certificate-list-page">
+  <button class="btn btn--add" (click)="onAddNew()">+ افزودن لوح تقدیر</button>
+
+  <!-- Overlay مودال -->
+  <div class="modal-overlay" *ngIf="showForm" (click)="onCancel()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="onCancel()">×</button>
+      <app-certificate-edit-form
+        [certificate]="selectedCertificate"
+        (createCertificate)="onCreate($event)"
+        (editCertificate)="onUpdate($event)">
+      </app-certificate-edit-form>
+    </div>
+  </div>
+
+  <div class="certificate-table" *ngIf="!loading">
+    <div class="certificate-row" *ngFor="let cert of certificates">
+      <img [src]="cert.image" class="row-thumb" />
+      <span>{{ cert.title }}</span>
+      <span>{{ cert.issuer }}</span>
+      <span>{{ cert.issueDate }}</span>
+      <span [class.active]="cert.isActive">{{ cert.isActive ? 'فعال' : 'غیرفعال' }}</span>
+      <button (click)="onEdit(cert)">ویرایش</button>
+      <button (click)="onDelete(cert.id!)">حذف</button>
+    </div>
+  </div>
+</div>

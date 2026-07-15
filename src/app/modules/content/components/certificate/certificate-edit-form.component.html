@@ -1,0 +1,78 @@
+<section class="add-certificate">
+    <h2 class="add-certificate__title">
+        {{ certificate?.id ? 'ویرایش لوح تقدیر' : 'افزودن لوح تقدیر جدید' }}
+    </h2>
+    <form [formGroup]="form" (ngSubmit)="save()" class="certificate__form">
+
+        <div class="form-group">
+            <label class="form-label">آپلود تصویر لوح تقدیر</label>
+            <label class="upload-wrapper" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)">
+                <div class="upload-area" [class.drag-over]="isDragOver">
+                    <div class="upload-content">
+                        <i>📁</i>
+                        <div class="upload-text">برای آپلود کلیک کنید یا فایل را اینجا بکشید</div>
+                        <span>فرمت‌های مجاز: JPG, PNG, GIF, WebP</span>
+                    </div>
+                </div>
+                <input id="certImageUpload" type="file" accept="image/*" class="file-input"
+                    (change)="onFileChange($event)" />
+            </label>
+        </div>
+
+        <div class="preview-list" *ngIf="selectedFiles.length > 0">
+            <div class="preview-item" *ngFor="let file of selectedFiles; let i = index">
+                <img [src]="file.preview" class="preview-thumb" [class.blur]="file.isUploading" alt="preview" />
+                <div *ngIf="file.isUploading" class="loading-overlay">
+                    <svg version="1.1" width="40px" height="40px" viewBox="0 0 50 50">
+                        <path fill="#000"
+                            d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                            <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25"
+                                dur="0.6s" repeatCount="indefinite" />
+                        </path>
+                    </svg>
+                </div>
+                <div *ngIf="file.uploadError" class="status error">
+                    ❌ خطا در آپلود
+                </div>
+                <button type="button" class="btn btn--remove" (click)="removeFile(i)">×</button>
+            </div>
+        </div>
+        <div class="error-message" *ngIf="selectedFiles.length === 0">
+            یک تصویر برای لوح تقدیر الزامی است
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">عنوان لوح تقدیر</label>
+            <input class="form-input" formControlName="title" placeholder="مثلاً: گواهی استاندارد ملی" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">صادرکننده</label>
+            <input class="form-input" formControlName="issuer" placeholder="مثلاً: سازمان استاندارد ملی ایران" />
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">تاریخ</label>
+                <input class="form-input" formControlName="issueDate" placeholder="مثلاً: ۱۴۰۳" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">ترتیب نمایش</label>
+                <input class="form-input" type="number" formControlName="order" />
+            </div>
+        </div>
+
+        <div class="form-group form-checkbox">
+            <label>
+                <input type="checkbox" formControlName="isActive" />
+                نمایش در سایت اصلی
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn--submit">
+            {{ certificate?.id ? 'ذخیره تغییرات' : 'افزودن لوح تقدیر' }}
+        </button>
+    </form>
+</section>

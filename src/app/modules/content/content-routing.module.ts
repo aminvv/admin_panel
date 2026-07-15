@@ -1,4 +1,4 @@
-import {RouterModule, Routes} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import {
@@ -6,8 +6,9 @@ import {
   BlogEditPageComponent,
   BlogPageComponent,
   ManagementPageComponent,
-
 } from './containers';
+import { CertificateListComponent } from './components/certificate/certificate-list/certificate-list.component';
+
 
 const routes: Routes = [
   {
@@ -34,6 +35,10 @@ const routes: Routes = [
     path: 'blog',
     component: BlogPageComponent,
   },
+  {
+    path: 'certificates',
+    component: CertificateListComponent,
+  },
 ];
 
 @NgModule({
@@ -42,6 +47,5 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-
 export class ContentRoutingModule {
 }

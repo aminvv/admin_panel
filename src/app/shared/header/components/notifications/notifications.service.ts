@@ -1,4 +1,3 @@
-// notification.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable,  } from 'rxjs';
@@ -51,4 +50,13 @@ export class NotificationService {
       map((list) => list.filter((n) => n.type === 'order' && !n.isRead).length),
     );
   }
+
+  markAsReadByOrderId(orderId: number): void {
+  const match = this.notificationsSubject.value.find(
+    (n) => n.orderId === orderId && !n.isRead,
+  );
+  if (match) {
+    this.markAsRead(match.id);
+  }
+}
 }

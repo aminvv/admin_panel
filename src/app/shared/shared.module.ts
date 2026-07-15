@@ -44,7 +44,8 @@ import { PersianNumberPipe } from './pipes/persian-number.pipe';
     DateMenuComponent,
     SettingsMenuComponent,
     ChatPopupComponent,
-    PersianNumberPipe
+    PersianNumberPipe,
+    
   ],
   imports: [
     HeaderModule,
@@ -82,4 +83,4 @@ import { PersianNumberPipe } from './pipes/persian-number.pipe';
     PersianNumberPipe
   ],
 })
-export class SharedModule {}
+export class SharedModule { }

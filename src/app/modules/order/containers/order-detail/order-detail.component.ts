@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrderService, OrderDetail } from '../../services/order.service';
 import { DeletePopupComponent } from 'src/app/shared/popups/delete-popup/delete-popup.component';
+import { NotificationService } from 'src/app/shared/header/components/notifications/notifications.service';
 
 
 
@@ -24,15 +25,20 @@ export class OrderDetailComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    public orderService: OrderService
+    public orderService: OrderService,
+     private notificationService: NotificationService,
   ) {}
 
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.orderId = +params['id'];
-      this.loadOrder();
-    });
-  }
+ngOnInit(): void {
+  this.route.params.subscribe(params => {
+    this.orderId = +params['id'];
+    this.loadOrder();
+  });
+
+  this.notificationService.notifications$.subscribe(() => {
+    this.notificationService.markAsReadByOrderId(this.orderId);
+  });
+}
 
 loadOrder(): void {
   this.loading = true;

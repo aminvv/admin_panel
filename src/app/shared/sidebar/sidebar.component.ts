@@ -22,6 +22,7 @@ const TREE_DATA: any = [
     children: [
       { name: 'مدیریت بلاگ', route: routes.MANAGEMENT_BLOG, active: 'active' },
       { name: 'ایجاد وبلاگ', route: routes.BLOG_CREATE, active: 'active' },
+      { name: 'لوح تقدیرها', route: routes.CERTIFICATE_LIST, active: 'active' },
     ]
   },
   {

@@ -18,12 +18,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 // import { ProductsService } from './services';
 import { ContentRoutingModule } from './content-routing.module';
 import { SharedModule } from '../../shared/shared.module';
-import { BlogEditFormComponent, BlogCardComponent  } from './components';
-import { ManagementPageComponent ,  BlogPageComponent, BlogEditPageComponent, BlogCreatePageComponent } from './containers';
+import { BlogEditFormComponent, BlogCardComponent } from './components';
+import { ManagementPageComponent, BlogPageComponent, BlogEditPageComponent, BlogCreatePageComponent } from './containers';
 import { BaseService } from 'src/app/shared/services/base.service';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { CloudinaryService } from 'src/app/shared/services/cloudinary-upload.service';
-import { ProductService } from '../e-commerce/services';
+import { CertificateListComponent } from './components/certificate/certificate-list/certificate-list.component';
+import { CertificateEditFormComponent } from './components/certificate/certificate-edit-form.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,11 @@ import { ProductService } from '../e-commerce/services';
     BlogEditPageComponent,
     BlogEditFormComponent,
     BlogCreatePageComponent,
-    
+
+    CertificateListComponent,
+    CertificateEditFormComponent
+    ,
+
   ],
   imports: [
     CommonModule,
@@ -57,8 +62,8 @@ import { ProductService } from '../e-commerce/services';
     CKEditorModule,
   ],
   providers: [
-    
-    BaseService,CloudinaryService
+
+    BaseService, CloudinaryService
   ]
 })
 export class ContentModule { }

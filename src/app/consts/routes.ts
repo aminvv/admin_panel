@@ -25,7 +25,7 @@ export enum routes {
   BLOG_EDIT = '/content/edit',
   BLOG_CREATE = '/content/create',
   BLOG = '/content/blog',
-
+  CERTIFICATE_LIST = '/content/certificates',
 
   // --- Order ---//
 
