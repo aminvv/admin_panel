@@ -1,0 +1,18 @@
+<div class="spotlight-list-page">
+  <app-product-spotlight-edit-form
+    [spotlight]="selectedSpotlight"
+    (createSpotlight)="onCreate($event)"
+    (editSpotlight)="onUpdate($event)">
+  </app-product-spotlight-edit-form>
+
+  <div class="spotlight-table" *ngIf="!loading">
+    <div class="spotlight-row" *ngFor="let item of spotlights">
+      <img [src]="item.image" class="row-thumb" />
+      <span>{{ item.title }}</span>
+      <span>{{ item.tag }}</span>
+      <span [class.active]="item.isActive">{{ item.isActive ? 'فعال' : 'غیرفعال' }}</span>
+      <button (click)="onEdit(item)">ویرایش</button>
+      <button (click)="onDelete(item.id!)">حذف</button>
+    </div>
+  </div>
+</div>

@@ -141,7 +141,8 @@ export class CertificateEditFormComponent implements OnChanges {
 
 
 
-    public resetForm(): void {
+
+   public resetForm(): void {
     this.form.reset({
       title: '',
       issuer: '',
@@ -151,7 +152,6 @@ export class CertificateEditFormComponent implements OnChanges {
     });
     this.selectedFiles = [];
   }
-
 
   removeFile(index: number): void {
     const img = this.selectedFiles[index];
@@ -164,7 +164,7 @@ export class CertificateEditFormComponent implements OnChanges {
 
   public save(): void {
     if (this.selectedFiles.length === 0) {
-      alert('لطفاً یک تصویر برای لوح تقدیر انتخاب کنید');
+      alert('لطفاً یک تصویر برای لوح تقدیر انتخاب کنید'); 
       return;
     }
 

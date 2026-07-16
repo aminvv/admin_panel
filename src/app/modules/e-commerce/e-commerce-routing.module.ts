@@ -1,4 +1,4 @@
-import {RouterModule, Routes} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import {
@@ -7,6 +7,8 @@ import {
   ProductPageComponent,
   ProductEditPageComponent
 } from './containers';
+import { ProductSpotlightListComponent } from './components/product-spotlight/product-spotlight-list/product-spotlight-list.component'; // 👈 این ایمپورت رو عوض کن
+import { SlideListComponent } from './components/slide/slide-list.component/slide-list.component';
 
 const routes: Routes = [
   {
@@ -33,7 +35,11 @@ const routes: Routes = [
     path: 'product/:id',
     component: ProductPageComponent,
   },
-  
+  {
+    path: 'product-spotlight',
+    component: ProductSpotlightListComponent, 
+  },
+{ path: 'slides', component: SlideListComponent },
 ];
 
 @NgModule({
@@ -42,6 +48,5 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-
 export class ECommerceRoutingModule {
 }

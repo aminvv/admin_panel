@@ -1,0 +1,66 @@
+<section class="add-spotlight">
+    <h2 class="add-spotlight__title">
+        {{ slide?.id ? 'ویرایش اسلاید' : 'افزودن اسلاید جدید' }}
+    </h2>
+    <form [formGroup]="form" (ngSubmit)="save()" class="spotlight__form">
+
+        <div class="form-group">
+            <label class="form-label">آپلود تصویر اسلاید</label>
+            <label class="upload-wrapper" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)">
+                <div class="upload-area" [class.drag-over]="isDragOver">
+                    <div class="upload-content">
+                        <i>📁</i>
+                        <div class="upload-text">برای آپلود کلیک کنید یا فایل را اینجا بکشید</div>
+                    </div>
+                </div>
+                <input type="file" accept="image/*" class="file-input" (change)="onFileChange($event)" />
+            </label>
+        </div>
+
+        <div class="preview-list" *ngIf="selectedFiles.length > 0">
+            <div class="preview-item" *ngFor="let file of selectedFiles; let i = index">
+                <img [src]="file.preview" class="preview-thumb" [class.blur]="file.isUploading" />
+                <button type="button" class="btn btn--remove" (click)="removeFile(i)">×</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">عنوان</label>
+            <input class="form-input" formControlName="title" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">توضیحات</label>
+            <textarea class="form-input" rows="3" formControlName="description"></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">لینک</label>
+                <input class="form-input" formControlName="link" placeholder="/products" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">متن لینک</label>
+                <input class="form-input" formControlName="linkText" placeholder="مشاهده محصول" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">ترتیب نمایش</label>
+                <input class="form-input" type="number" formControlName="order" />
+            </div>
+            <div class="form-group form-checkbox">
+                <label>
+                    <input type="checkbox" formControlName="isActive" />
+                    نمایش در سایت اصلی
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn--submit">
+            {{ slide?.id ? 'ذخیره تغییرات' : 'افزودن' }}
+        </button>
+    </form>
+</section>

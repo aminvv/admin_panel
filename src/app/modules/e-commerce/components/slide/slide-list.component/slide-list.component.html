@@ -1,0 +1,18 @@
+<div class="spotlight-list-page">
+  <app-slide-edit-form
+    [slide]="selectedSlide"
+    (createSlide)="onCreate($event)"
+    (editSlide)="onUpdate($event)">
+  </app-slide-edit-form>
+
+  <div class="spotlight-table" *ngIf="!loading">
+    <div class="spotlight-row" *ngFor="let item of slides">
+      <img [src]="item.image" class="row-thumb" />
+      <span>{{ item.title }}</span>
+      <span>{{ item.order }}</span>
+      <span [class.active]="item.isActive">{{ item.isActive ? 'فعال' : 'غیرفعال' }}</span>
+      <button (click)="onEdit(item)">ویرایش</button>
+      <button (click)="onDelete(item.id!)">حذف</button>
+    </div>
+  </div>
+</div>

@@ -18,13 +18,16 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { MatPaginatorModule } from '@angular/material/paginator';
 
-// import { ProductsService } from './services';
 import { ECommerceRoutingModule } from './e-commerce-routing.module';
 import { SharedModule } from '../../shared/shared.module';
 import { ProductEditFormComponent, ProductCardComponent } from './components';
 import { ManagementPageComponent,  ProductPageComponent, ProductEditPageComponent, ProductCreatePageComponent } from './containers';
 import { BaseService } from 'src/app/shared/services/base.service';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { ProductSpotlightEditFormComponent } from './components/product-spotlight/product-spotlight-edit-form.component';
+import { ProductSpotlightListComponent } from './components/product-spotlight/product-spotlight-list/product-spotlight-list.component';
+import { SlideEditFormComponent } from './components/slide/slide-edit-form.component';
+import { SlideListComponent } from './components/slide/slide-list.component/slide-list.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,12 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     ProductCardComponent,
     ProductEditPageComponent,
     ProductEditFormComponent,
-    ProductCreatePageComponent
+    ProductCreatePageComponent,
+    ProductSpotlightEditFormComponent,
+    ProductSpotlightListComponent,
+    SlideEditFormComponent,
+     SlideListComponent,
+    
   ],
   imports: [
     CommonModule,

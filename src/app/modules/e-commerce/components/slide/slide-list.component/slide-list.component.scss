@@ -1,0 +1,148 @@
+.spotlight-list-page {
+  padding: 24px;
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.btn--add {
+  align-self: flex-start;
+  padding: 10px 22px;
+  background: #1f2937;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: #111827;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.modal-box {
+  position: relative;
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 2;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+}
+
+.spotlight-table {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.spotlight-row {
+  display: grid;
+  grid-template-columns: 70px 1.5fr 90px 80px auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1f2f4;
+  font-size: 13px;
+  color: #374151;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: #fafafa;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  span.active {
+    color: #16a34a;
+    font-weight: 600;
+  }
+
+  button {
+    padding: 6px 14px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:first-of-type {
+      color: #2563eb;
+      border-color: #93c5fd;
+
+      &:hover {
+        background: #eff6ff;
+      }
+    }
+
+    &:last-of-type {
+      color: #dc2626;
+      border-color: #fca5a5;
+
+      &:hover {
+        background: #fef2f2;
+      }
+    }
+  }
+}
+
+.row-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .spotlight-row {
+    grid-template-columns: 1fr;
+    text-align: center;
+
+    .row-thumb {
+      margin: 0 auto;
+    }
+  }
+}

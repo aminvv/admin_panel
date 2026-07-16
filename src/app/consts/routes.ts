@@ -17,6 +17,8 @@ export enum routes {
   PRODUCT_EDIT = '/e-commerce/edit',
   PRODUCT_CREATE = '/e-commerce/create',
   PRODUCT = '/e-commerce/product',
+  PRODUCT_SPOTLIGHT = '/e-commerce/product-spotlight',
+  PRODUCT_SLID = '/e-commerce/slides',
 
 
   // --- Content ---//

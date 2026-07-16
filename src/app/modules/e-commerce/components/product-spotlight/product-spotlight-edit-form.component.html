@@ -1,0 +1,87 @@
+<section class="add-spotlight">
+    <h2 class="add-spotlight__title">
+        {{ spotlight?.id ? 'ویرایش محصول ویژه' : 'افزودن محصول ویژه' }}
+    </h2>
+    <form [formGroup]="form" (ngSubmit)="save()" class="spotlight__form">
+
+        <div class="form-group">
+            <label class="form-label">آپلود تصویر محصول</label>
+            <label class="upload-wrapper" (drop)="onFileDrop($event)" (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)">
+                <div class="upload-area" [class.drag-over]="isDragOver">
+                    <div class="upload-content">
+                        <i>📁</i>
+                        <div class="upload-text">برای آپلود کلیک کنید یا فایل را اینجا بکشید</div>
+                    </div>
+                </div>
+                <input type="file" accept="image/*" class="file-input" (change)="onFileChange($event)" />
+            </label>
+        </div>
+
+        <div class="preview-list" *ngIf="selectedFiles.length > 0">
+            <div class="preview-item" *ngFor="let file of selectedFiles; let i = index">
+                <img [src]="file.preview" class="preview-thumb" [class.blur]="file.isUploading" />
+                <button type="button" class="btn btn--remove" (click)="removeFile(i)">×</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">برچسب (Tag)</label>
+            <input class="form-input" formControlName="tag" placeholder="مثلاً: محصول ویژه" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">عنوان</label>
+            <input class="form-input" formControlName="title" />
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">توضیحات</label>
+            <textarea class="form-input" rows="3" formControlName="description"></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">متن دکمه</label>
+                <input class="form-input" formControlName="ctaText" placeholder="مشاهده محصولات" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">لینک دکمه</label>
+                <input class="form-input" formControlName="ctaLink" placeholder="/products" />
+            </div>
+        </div>
+
+        <!-- آمارها -->
+        <div class="form-group">
+            <label class="form-label">آمارها (۳ مورد)</label>
+            <div formArrayName="stats" class="repeater">
+                <div class="repeater-row" *ngFor="let stat of stats.controls; let i = index" [formGroupName]="i">
+                    <input class="form-input" formControlName="value" placeholder="مقدار (مثلاً 15)" />
+                    <input class="form-input" formControlName="label" placeholder="برچسب (مثلاً سال ضمانت)" />
+                </div>
+            </div>
+        </div>
+
+        <!-- annotation ها -->
+        <div class="form-group">
+            <label class="form-label">مشخصات فنی روی تصویر (annotation)</label>
+            <div formArrayName="annotations" class="repeater">
+                <div class="repeater-row" *ngFor="let ann of annotations.controls; let i = index" [formGroupName]="i">
+                    <input class="form-input" formControlName="value" placeholder="مقدار (مثلاً 5mm)" />
+                    <input class="form-input" formControlName="label" placeholder="توضیح (مثلاً ضخامت لایه)" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group form-checkbox">
+            <label>
+                <input type="checkbox" formControlName="isActive" />
+                نمایش این محصول در سایت اصلی
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn--submit">
+            {{ spotlight?.id ? 'ذخیره تغییرات' : 'افزودن' }}
+        </button>
+    </form>
+</section> 

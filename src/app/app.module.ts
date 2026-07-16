@@ -27,11 +27,12 @@ import { JalaliDateAdapter } from './shared/adapter/jalali-date-adapter';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
-  declarations: [AppComponent, NotFoundComponent],
+  declarations: [AppComponent, NotFoundComponent, ],
   imports: [
     BrowserModule,
     SharedModule,
     AuthModule,
+    
     DashboardModule,
     BrowserAnimationsModule,
     RouterModule,

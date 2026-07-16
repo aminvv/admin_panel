@@ -14,6 +14,8 @@ const TREE_DATA: any = [
     children: [
       { name: 'مدیریت محصولات', route: routes.MANAGEMENT, active: 'active' },
       { name: ' ایجاد محصولات', route: routes.PRODUCT_CREATE, active: 'active' },
+      { name: ' محصولات برجسته', route: routes.PRODUCT_SPOTLIGHT, active: 'active' },
+      { name: ' اسلاید', route: routes.PRODUCT_SLID, active: 'active' },
     ]
   },
 
